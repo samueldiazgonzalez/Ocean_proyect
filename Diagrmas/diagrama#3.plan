@@ -1,0 +1,37 @@
+@startuml
+top to bottom direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam actorStyle awesome
+
+actor "Usuario" as Usuario
+
+rectangle "valoracion" {
+
+  usecase "Evaluación Post-Viaje" as UC3
+  usecase "Solicitar Evaluación" as UC3_1
+  usecase "Calificar Servicios" as UC3_2
+  usecase "Escribir Reseña" as UC3_3
+  usecase "Subir Fotos" as UC3_3A
+  usecase "Verificar Autenticidad" as UC3_4
+  usecase "Rechazar" as UC3_A2
+  usecase "Notificar" as UC3_A3
+  usecase "Publicar Reseña" as UC3_5
+
+  ' Relaciones principales
+  UC3 ..> UC3_1 : <<include>>
+  UC3 ..> UC3_2 : <<include>>
+  UC3 ..> UC3_3 : <<include>>
+  UC3_3 <.. UC3_3A : <<extend>>
+  UC3 ..> UC3_4 : <<include>>
+  UC3 ..> UC3_5 : <<include>>
+  UC3_4 <.. UC3_A2 : <<extend>>
+
+  ' Nueva relación: Rechazar incluye a Notificar
+  UC3_A2 ..> UC3_A3 : <<include>>
+}
+
+Usuario --> UC3 
+
+@enduml
+
