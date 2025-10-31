@@ -1,0 +1,51 @@
+@startuml
+
+actor Usuario
+actor Banco
+actor PSE
+actor "Wallet Digital" as Wallet
+actor "Pasarela de Pago" as Pasarela
+
+rectangle "Ocean - Búsqueda y Reserva de Hotel" {
+  
+  usecase "Buscar y Reservar Hotel" as UC1
+  usecase "Ingresar Destino y Fechas" as UC1_1
+  usecase "Mostrar Opciones con Filtros" as UC1_2
+  usecase "Seleccionar Hotel y Habitación" as UC1_3
+  usecase "Verificar Disponibilidad" as UC1_4
+  usecase "Procesar Pago" as UC1_5
+  usecase "Confirmar Reserva y Enviar Comprobante" as UC1_6
+  
+  ' Casos de uso extendidos (flujos alternativos)
+  usecase "Sugerir Hoteles Similares" as UC1_A1
+  usecase "Pagar con Tarjeta" as UC1_Tarjeta
+  usecase "Pagar con PSE" as UC1_PSE
+  usecase "Pagar con Wallet" as UC1_Wallet
+  usecase "Notificar Pago Fallido y Reintento" as UC1_A2
+  
+  ' Flujo principal con include
+  UC1 ..> UC1_1 : <<include>>
+  UC1 ..> UC1_2 : <<include>>
+  UC1 ..> UC1_3 : <<include>>
+  UC1 ..> UC1_4 : <<include>>
+  UC1 ..> UC1_5 : <<include>>
+  UC1 ..> UC1_6 : <<include>>
+  
+  ' Flujos alternativos con extend
+  UC1_4 <.. UC1_A1 : <<extend>>
+  UC1_5 <.. UC1_Tarjeta : <<extend>>
+  UC1_5 <.. UC1_PSE : <<extend>>
+  UC1_5 <.. UC1_Wallet : <<extend>>
+  UC1_5 <.. UC1_A2 : <<extend>>
+}
+
+' Conexión con Usuario
+Usuario --> UC1
+
+' Conexiones con sistemas de pago
+Banco --> UC1_Tarjeta
+Pasarela --> UC1_Tarjeta
+PSE --> UC1_PSE
+Wallet --> UC1_Wallet
+
+@enduml
