@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
       let visible = true;
 
       if (activeCategories.length > 0 && !activeCategories.includes(categoria)) visible = false;
-      if (valorados && rating < 4.8) visible = false;
+      if (valorados && rating < 5.0) visible = false;
       if (disponibles && !disponible) visible = false;
       if (precio < min || precio > max) visible = false;
 
