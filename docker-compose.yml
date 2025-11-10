@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8080:80"    # mapear 8080 en el host a 80 en el contenedor
+    volumes:
+      - ./:/var/www/html:delegated
+    restart: unless-stopped
+    environment:
+      # Si vas a usar variables en PHP (por ejemplo para DB), defínelas aquí o en un archivo .env
+      - PHP_DISPLAY_ERRORS=1
+
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: app_db
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: password
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: unless-stopped
+
+volumes:
+  db_data: {}
