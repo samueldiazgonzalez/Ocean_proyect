@@ -10,6 +10,5 @@ vendor
 /tmp
 *.zip
 *.tar.gz
-# Evita incluir archivos multimedia pesados (si quieres mantener el video en la imagen, quítalo)
 *loginvideo*.mp4
 */loginvideo*.mp4
