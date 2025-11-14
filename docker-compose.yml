@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   web:
     build:
@@ -10,6 +12,33 @@ services:
     restart: unless-stopped
     environment:
       PHP_DISPLAY_ERRORS: 1
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: OceanDB
+      MYSQL_USER: root
+      MYSQL_PASSWORD: rootpass
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    restart: always
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: usuario
+      PMA_PASSWORD: usuariopass
 
 volumes:
-  db_data: {}
+  db_data:
