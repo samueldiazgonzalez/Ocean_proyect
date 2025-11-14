@@ -1,2 +1,0 @@
-stripe>=24.0
-python-dotenv>=25.1.1
