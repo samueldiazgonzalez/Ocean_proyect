@@ -1,0 +1,456 @@
+@startuml
+
+
+class Usuario {
+  - id: String
+  - nombre: String
+  - email: String
+  - telefono: String
+  - password: String
+  - fechaRegistro: Date
+  - estado: EstadoUsuario
+  --
+  + registrarse(): boolean
+  + iniciarSesion(): boolean
+  + actualizarPerfil(): void
+  + cerrarSesion(): void
+}
+
+class Viajero {
+  - preferencias: List<Preferencia>
+  - historialViajes: List<Reserva>
+  - documentoIdentidad: String
+  - direccion: String
+  --
+  + buscarServicios(criterios: CriterioBusqueda): List<Servicio>
+  + seleccionarServicio(servicio: Servicio): void
+  + realizarReserva(datosReserva: DatosReserva): Reserva
+  + consultarMisReservas(): List<Reserva>
+  + cancelarReserva(reservaId: String): boolean
+  + modificarReserva(reservaId: String, cambios: Map): boolean
+  + calificarServicio(reservaId: String, calificacion: Calificacion): void
+}
+
+class Proveedor {
+  - nombreEmpresa: String
+  - nit: String
+  - serviciosOfrecidos: List<Servicio>
+  - calificacionPromedio: float
+  --
+  + publicarServicio(servicio: Servicio): boolean
+  + actualizarInventario(servicioId: String, cupos: int): void
+  + gestionarDisponibilidad(servicioId: String, fechas: List<Date>): void
+  + verReservasRecibidas(): List<Reserva>
+  + generarReportesVentas(periodo: Periodo): Reporte
+  + configurarPoliticas(politicas: Politicas): void
+}
+
+class Administrador {
+  - permisos: List<Permiso>
+  - rol: RolAdmin
+  --
+  + gestionarUsuarios(accion: Accion, usuario: Usuario): boolean
+  + moderarContenido(contenidoId: String, decision: Decision): void
+  + generarAnalytics(parametros: Map): Reporte
+  + configurarSistema(configuracion: Configuracion): void
+  + gestionarLogs(filtros: Map): List<Log>
+  + supervisarTransacciones(): List<Transaccion>
+}
+
+class Servicio {
+  - id: String
+  - nombre: String
+  - descripcion: String
+  - categoria: CategoriaServicio
+  - precioBase: decimal
+  - proveedorId: String
+  - ubicacion: Ubicacion
+  - imagenes: List<String>
+  - calificacion: float
+  - estado: EstadoServicio
+  --
+  + verificarDisponibilidad(fecha: Date, cantidad: int): boolean
+  + calcularPrecioFinal(fecha: Date, cantidad: int): decimal
+  + aplicarDescuento(descuento: Descuento): decimal
+  + obtenerDetalles(): Map
+}
+
+class Hotel {
+  - estrellas: int
+  - tipoHabitaciones: List<TipoHabitacion>
+  - serviciosIncluidos: List<String>
+  - politicaCancelacion: String
+  --
+  + consultarHabitacionesDisponibles(fechas: RangoFechas): List<Habitacion>
+  + verificarDisponibilidadTiempoReal(fechas: RangoFechas): boolean
+}
+
+class Itinerario {
+  - id: String
+  - destinoPrincipal: String
+  - destinos: List<String>
+  - actividades: List<Actividad>
+  - duracion: int
+  - serviciosIncluidos: List<Servicio>
+  --
+  + generarPlanViaje(): PlanViaje
+  + validarItinerario(): boolean
+  + calcularPrecioTotal(): decimal
+}
+
+class Reserva {
+  - id: String
+  - viajeroId: String
+  - servicioId: String
+  - fechaReserva: Date
+  - fechaServicio: Date
+  - cantidadPersonas: int
+  - precioTotal: decimal
+  - estado: EstadoReserva
+  - codigoConfirmacion: String
+  --
+  + crearReservaTemporal(datos: DatosReserva): String
+  + confirmarReservaDefinitiva(pagoId: String): boolean
+  + cancelar(): boolean
+  + modificar(cambios: Map): boolean
+  + generarVoucher(): Voucher
+  + obtenerDetalles(): Map
+}
+
+class ReservaTemporal {
+  - tiempoExpiracion: DateTime
+  - minutosValidez: int = 15
+  --
+  + validarVigencia(): boolean
+  + extenderTiempo(minutos: int): void
+  + convertirADefinitiva(): Reserva
+  + liberar(): void
+}
+
+class Pago {
+  - id: String
+  - reservaId: String
+  - monto: decimal
+  - metodoPago: MetodoPago
+  - fechaPago: DateTime
+  - estadoPago: EstadoPago
+  - referenciaBancaria: String
+  --
+  + procesarPago(): boolean
+  + validarTransaccion(): boolean
+  + generarComprobante(): Comprobante
+  + procesarReembolso(monto: decimal): boolean
+}
+
+class MetodoPago {
+  - tipo: TipoPago
+  - detalles: Map
+  --
+  + validar(): boolean
+  + procesar(monto: decimal): ResultadoPago
+}
+
+class PagoTarjeta {
+  - numeroTarjeta: String
+  - nombreTitular: String
+  - fechaVencimiento: String
+  - cvv: String
+  - tipoTarjeta: TipoTarjeta
+  --
+  + validarDatosTarjeta(): boolean
+  + enviarAPasarela(): ResultadoPago
+}
+
+class PagoPSE {
+  - bancoId: String
+  - tipoDocumento: String
+  - numeroDocumento: String
+  --
+  + validarCuenta(): boolean
+  + enviarASistemaACH(): ResultadoPago
+}
+
+class PagoWallet {
+  - walletProvider: String
+  - cuentaId: String
+  - token: String
+  --
+  + validarSaldo(): boolean
+  + procesarTransaccion(): ResultadoPago
+}
+
+class CriterioBusqueda {
+  - destino: String
+  - fechaInicio: Date
+  - fechaFin: Date
+  - cantidadPersonas: int
+  - presupuestoMax: decimal
+  - categoria: CategoriaServicio
+  - filtros: Map<String, Object>
+  --
+  + validar(): boolean
+  + aplicarFiltros(servicios: List<Servicio>): List<Servicio>
+}
+
+class Buscador {
+  --
+  + buscarServicios(criterios: CriterioBusqueda): List<Servicio>
+  + consultarAPIsExternas(criterios: CriterioBusqueda): List<Servicio>
+  + generarRecomendaciones(viajero: Viajero): List<Servicio>
+  + aplicarFiltrosOrdenamiento(servicios: List, filtros: Map): List<Servicio>
+}
+
+class Inventario {
+  - servicioId: String
+  - fecha: Date
+  - cuposDisponibles: int
+  - cuposReservados: int
+  - cuposBloqueados: int
+  --
+  + verificarDisponibilidad(cantidad: int): boolean
+  + bloquearCupos(cantidad: int, tiempo: int): boolean
+  + liberarCupos(cantidad: int): void
+  + actualizarInventario(accion: AccionInventario, cantidad: int): void
+}
+
+class VerificadorDisponibilidad {
+  --
+  + verificarLocal(servicioId: String, fecha: Date): boolean
+  + consultarAPIsExternas(servicioId: String, fecha: Date): boolean
+  + validarRestricciones(servicio: Servicio, datos: Map): boolean
+  + calcularPrecioFinal(servicio: Servicio, fecha: Date): decimal
+}
+
+class Notificacion {
+  - id: String
+  - destinatarioId: String
+  - tipo: TipoNotificacion
+  - mensaje: String
+  - fechaEnvio: DateTime
+  - estado: EstadoNotificacion
+  --
+  + enviar(): boolean
+  + registrarEnvio(): void
+}
+
+class ServicioNotificacion {
+  --
+  + enviarEmail(destinatario: String, asunto: String, mensaje: String): boolean
+  + enviarSMS(telefono: String, mensaje: String): boolean
+  + enviarNotificacionPush(usuario: String, mensaje: String): boolean
+  + generarMensajeConfirmacion(reserva: Reserva): String
+}
+
+class Comprobante {
+  - id: String
+  - pagoId: String
+  - fechaEmision: DateTime
+  - monto: decimal
+  - formato: FormatoDocumento
+  --
+  + generar(): File
+  + enviarPorEmail(email: String): boolean
+}
+
+class Voucher {
+  - id: String
+  - reservaId: String
+  - codigoQR: String
+  - detallesServicio: Map
+  --
+  + generar(): File
+  + validar(): boolean
+}
+
+class PlanViaje {
+  - itinerarioId: String
+  - fechas: RangoFechas
+  - serviciosIncluidos: List<Servicio>
+  - precioTotal: decimal
+  --
+  + generar(): File
+  + actualizar(): void
+}
+
+class Calificacion {
+  - id: String
+  - viajeroId: String
+  - servicioId: String
+  - puntuacion: int
+  - comentario: String
+  - fotos: List<String>
+  - fechaCalificacion: DateTime
+  - verificado: boolean
+  --
+  + validar(): boolean
+  + publicar(): boolean
+  + responder(respuesta: String): void
+}
+
+class Politicas {
+  - politicaCancelacion: String
+  - tiempoAnticipacion: int
+  - penalizacion: decimal
+  - restricciones: Map
+  --
+  + aplicar(reserva: Reserva): void
+  + validar(datos: Map): boolean
+}
+
+class Configuracion {
+  - parametros: Map<String, Object>
+  - limites: Map<String, Object>
+  --
+  + obtenerParametro(clave: String): Object
+  + actualizarParametro(clave: String, valor: Object): void
+}
+
+class Reporte {
+  - id: String
+  - tipo: TipoReporte
+  - periodo: Periodo
+  - datos: Map
+  - fechaGeneracion: DateTime
+  --
+  + generar(): File
+  + exportar(formato: FormatoExportacion): File
+}
+
+class Log {
+  - id: String
+  - timestamp: DateTime
+  - nivel: NivelLog
+  - usuario: String
+  - accion: String
+  - detalles: Map
+  --
+  + registrar(): void
+  + consultar(filtros: Map): List<Log>
+}
+
+class Ubicacion {
+  - pais: String
+  - ciudad: String
+  - direccion: String
+  - coordenadas: Coordenadas
+  --
+  + obtenerDistancia(otraUbicacion: Ubicacion): float
+}
+
+class RangoFechas {
+  - fechaInicio: Date
+  - fechaFin: Date
+  --
+  + validar(): boolean
+  + getDuracion(): int
+}
+
+' ===== ENUMERACIONES =====
+enum EstadoUsuario {
+  ACTIVO
+  INACTIVO
+  SUSPENDIDO
+  ELIMINADO
+}
+
+enum EstadoReserva {
+  PENDIENTE
+  CONFIRMADA
+  CANCELADA
+  COMPLETADA
+  EN_PROCESO
+}
+
+enum EstadoPago {
+  PENDIENTE
+  APROBADO
+  RECHAZADO
+  REEMBOLSADO
+}
+
+enum TipoPago {
+  TARJETA_CREDITO
+  TARJETA_DEBITO
+  PSE
+  WALLET
+  EFECTIVO
+}
+
+enum EstadoServicio {
+  ACTIVO
+  INACTIVO
+  AGOTADO
+  MODERACION
+}
+
+enum CategoriaServicio {
+  HOTEL
+  TRANSPORTE
+  TOUR
+  ACTIVIDAD
+  PAQUETE_COMPLETO
+}
+
+' Herencia de Usuario
+Usuario <|-- Viajero
+Usuario <|-- Proveedor
+Usuario <|-- Administrador
+
+' Herencia de Servicio
+Servicio <|-- Hotel
+Servicio <|-- Itinerario
+
+' Herencia de MetodoPago
+MetodoPago <|-- PagoTarjeta
+MetodoPago <|-- PagoPSE
+MetodoPago <|-- PagoWallet
+
+' Herencia de Reserva
+Reserva <|-- ReservaTemporal
+
+' Asociaciones principales
+Viajero "1" -- "0..*" Reserva : realiza >
+Proveedor "1" -- "0..*" Servicio : ofrece >
+Servicio "1" -- "0..*" Reserva : tiene >
+Reserva "1" -- "1" Pago : requiere >
+Pago "1" -- "1" MetodoPago : usa >
+Reserva "1" -- "1" Voucher : genera >
+Pago "1" -- "1" Comprobante : genera >
+
+' Asociaciones de búsqueda
+Viajero "1" -- "1" CriterioBusqueda : define >
+Buscador "1" -- "0..*" Servicio : busca >
+CriterioBusqueda "1" -- "1" Buscador : usa >
+
+' Asociaciones de inventario
+Servicio "1" -- "0..*" Inventario : tiene >
+VerificadorDisponibilidad -- Inventario : consulta >
+
+' Asociaciones de notificación
+Reserva "1" -- "0..*" Notificacion : genera >
+ServicioNotificacion -- Notificacion : envía >
+
+' Asociaciones de calificación
+Viajero "1" -- "0..*" Calificacion : escribe >
+Servicio "1" -- "0..*" Calificacion : recibe >
+
+' Asociaciones de políticas
+Proveedor "1" -- "0..*" Politicas : define >
+Servicio "1" -- "1" Politicas : tiene >
+
+' Asociaciones de reportes
+Proveedor "1" -- "0..*" Reporte : genera >
+Administrador "1" -- "0..*" Reporte : consulta >
+
+' Asociaciones de ubicación
+Servicio "1" -- "1" Ubicacion : tiene >
+Viajero "1" -- "0..1" Ubicacion : reside en >
+
+' Asociaciones de log
+Log -- Usuario : registra acción de >
+
+' Asociaciones con itinerario
+Itinerario "1" -- "1..*" Servicio : incluye >
+Itinerario "1" -- "1" PlanViaje : genera >
+
+@enduml

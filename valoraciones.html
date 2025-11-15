@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Valoraciones</title>
+    <meta name="description" content="Página de valoraciones / reseñas" />
+    <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/">Inicio</a> › <span>Valoraciones</span>
+        </nav>
+        <h1>Valoraciones</h1>
+    </header>
+
+    <main>
+        <section id="new-review">
+            <h2>Dejar una valoración</h2>
+            <form id="reviewForm" action="#" method="post" novalidate>
+                <label>
+                    Nombre
+                    <input type="text" name="name" required />
+                </label>
+                <label>
+                    Valoración
+                    <textarea name="review" rows="4" required></textarea>
+                </label>
+                <label>
+                    Puntuación
+                    <select name="rating" required>
+                        <option value="">--</option>
+                        <option value="5">5 — Excelente</option>
+                        <option value="4">4 — Muy buena</option>
+                        <option value="3">3 — Buena</option>
+                        <option value="2">2 — Regular</option>
+                        <option value="1">1 — Mala</option>
+                    </select>
+                </label>
+                <button type="submit">Enviar</button>
+            </form>
+        </section>
+
+        <section id="reviews">
+            <h2>Reseñas recientes</h2>
+            <ul id="reviewsList" aria-live="polite">
+                <!-- Reseñas dinámicas -->
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <small>&copy; <span id="year"></span> Tu sitio</small>
+    </footer>
+
+    <script>
+        // Simple client-side interactivity (no persistence)
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        const form = document.getElementById('reviewForm');
+        const list = document.getElementById('reviewsList');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const data = new FormData(form);
+            const li = document.createElement('li');
+            li.innerHTML = '<strong>' + escapeHtml(data.get('name')) + '</strong> — ' +
+                                         'Puntuación: ' + escapeHtml(data.get('rating')) +
+                                         '<p>' + escapeHtml(data.get('review')) + '</p>';
+            list.prepend(li);
+            form.reset();
+        });
+
+        function escapeHtml(s) {
+            return String(s).replace(/[&<>"']/g, c =>
+                ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])
+            );
+        }
+    </script>
+</body>
+</html></html>
