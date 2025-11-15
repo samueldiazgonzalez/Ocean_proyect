@@ -1,3 +1,22 @@
+<?php
+session_start(); // inicia la sesión
+
+// Conexión a la base de datos 
+$servername = "db";
+$username   = "root";
+$password   = "rootpass";
+$dbname     = "OceanDB";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+    die("❌ Conexión fallida: " . $conn->connect_error);
+}
+
+// Variable para saber si hay sesión activa
+$logged_in = isset($_SESSION['user_id']);
+?>
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -35,15 +54,21 @@
           <i class="fas fa-search search-icon"></i>
           <input type="text" id="search" class="search-input" placeholder="Buscar destinos, tours, hospedajes...">
         </div>
-        <nav class="main-nav">
-          <a href="#"><i class="fas fa-home"></i> Inicio</a>
-          <a href="#"><i class="fas fa-map"></i> Explorar</a>
-          <a href="#"><i class="fas fa-bookmark"></i> Mis Reservas</a>
-          <a href="#"><i class="fas fa-tags"></i> Ofertas</a>
-          <a href="#"><i class="fas fa-question-circle"></i> Ayuda</a>
-          <a href="login.html" class="btn-login"><i class="fas fa-user"></i> Iniciar Sesión</a>
-          <a href="roles.html" class="btn-register"><i class="fas fa-user-plus"></i> Regístrate</a>
-        </nav>
+     <nav class="main-nav">
+  <a href="#"><i class="fas fa-home"></i> Inicio</a>
+  <a href="#"><i class="fas fa-map"></i> Explorar</a>
+  <a href="#"><i class="fas fa-bookmark"></i> Mis Reservas</a>
+  <a href="#"><i class="fas fa-tags"></i> Ofertas</a>
+  <a href="#"><i class="fas fa-question-circle"></i> Ayuda</a>
+
+  <?php if ($logged_in): ?>
+    <a href="perfil.php" class="btn-login"><i class="fas fa-user"></i> Mi Perfil</a>
+    <a href="logout.php" class="btn-register"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+  <?php else: ?>
+    <a href="login.html" class="btn-login"><i class="fas fa-user"></i> Iniciar Sesión</a>
+    <a href="roles.html" class="btn-register"><i class="fas fa-user-plus"></i> Regístrate</a>
+  <?php endif; ?>
+</nav>
       </div>
     </div>
   </header>
