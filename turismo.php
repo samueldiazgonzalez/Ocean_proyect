@@ -208,8 +208,9 @@ $logged_in = isset($_SESSION['user_id']);
             <div class="card-price">Desde $95,000 COP</div>
             <div class="card-actions">
               <button class="btn-reserve">
-                <i class="fas fa-calendar-check"></i> Reservar ahora
-              </button>
+                <a href="vista/Cartagena.html" class="btn-reserve">
+                 <i class="fas fa-calendar-check"></i> Reservar ahora</a>         
+                 </button>
               <button class="btn-favorite" aria-label="Agregar a favoritos">
                 <i class="far fa-heart"></i>
               </button>
@@ -241,9 +242,10 @@ $logged_in = isset($_SESSION['user_id']);
             </div>
             <div class="card-price">Desde $180,000 COP</div>
             <div class="card-actions">
-              <button class="btn-reserve">
-                <i class="fas fa-calendar-check"></i> Reservar ahora
-              </button>
+             <button class="btn-reserve">
+                <a href="vista/San andres.html" class="btn-reserve">
+                 <i class="fas fa-calendar-check"></i> Reservar ahora</a>         
+                 </button>
               <button class="btn-favorite" aria-label="Agregar a favoritos">
                 <i class="far fa-heart"></i>
               </button>
@@ -276,8 +278,9 @@ $logged_in = isset($_SESSION['user_id']);
             <div class="card-price">Desde $70,000 COP</div>
             <div class="card-actions">
               <button class="btn-reserve">
-                <i class="fas fa-calendar-check"></i> Reservar ahora
-              </button>
+                <a href="vista/Tayrona.html" class="btn-reserve">
+                 <i class="fas fa-calendar-check"></i> Reservar ahora</a>         
+                 </button>
               <button class="btn-favorite" aria-label="Agregar a favoritos">
                 <i class="far fa-heart"></i>
               </button>
@@ -309,9 +312,10 @@ $logged_in = isset($_SESSION['user_id']);
             </div>
             <div class="card-price">Desde $120,000 COP</div>
             <div class="card-actions">
-              <button class="btn-reserve">
-                <i class="fas fa-calendar-check"></i> Reservar ahora
-              </button>
+               <button class="btn-reserve">
+                <a href="vista/Santa marta.html" class="btn-reserve">
+                 <i class="fas fa-calendar-check"></i> Reservar ahora</a>         
+                 </button>
               <button class="btn-favorite" aria-label="Agregar a favoritos">
                 <i class="far fa-heart"></i>
               </button>
@@ -343,9 +347,10 @@ $logged_in = isset($_SESSION['user_id']);
             </div>
             <div class="card-price">Desde $150,000 COP</div>
             <div class="card-actions">
-              <button class="btn-reserve">
-                <i class="fas fa-calendar-check"></i> Reservar ahora
-              </button>
+             <button class="btn-reserve">
+                <a href="vista/Guajira.html" class="btn-reserve">
+                 <i class="fas fa-calendar-check"></i> Reservar ahora</a>         
+                 </button>
               <button class="btn-favorite" aria-label="Agregar a favoritos">
                 <i class="far fa-heart"></i>
               </button>
@@ -378,9 +383,10 @@ $logged_in = isset($_SESSION['user_id']);
             </div>
             <div class="card-price">Desde $250,000 COP</div>
             <div class="card-actions">
-              <button class="btn-reserve">
-                <i class="fas fa-calendar-check"></i> Reservar ahora
-              </button>
+            <button class="btn-reserve">
+                <a href="vista/Amazonas.html" class="btn-reserve">
+                 <i class="fas fa-calendar-check"></i> Reservar ahora</a>         
+                 </button>
               <button class="btn-favorite" aria-label="Agregar a favoritos">
                 <i class="far fa-heart"></i>
               </button>
