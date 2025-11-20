@@ -208,7 +208,7 @@ $logged_in = isset($_SESSION['user_id']);
             <div class="card-price">Desde $95,000 COP</div>
             <div class="card-actions">
               <button class="btn-reserve">
-                <a href="vista/Cartagena.html" class="btn-reserve">
+                <a href="vista/Cartagena.php" class="btn-reserve">
                  <i class="fas fa-calendar-check"></i> Reservar ahora</a>         
                  </button>
               <button class="btn-favorite" aria-label="Agregar a favoritos">
@@ -243,7 +243,7 @@ $logged_in = isset($_SESSION['user_id']);
             <div class="card-price">Desde $180,000 COP</div>
             <div class="card-actions">
              <button class="btn-reserve">
-                <a href="vista/San andres.html" class="btn-reserve">
+                <a href="vista/San andres.php" class="btn-reserve">
                  <i class="fas fa-calendar-check"></i> Reservar ahora</a>         
                  </button>
               <button class="btn-favorite" aria-label="Agregar a favoritos">
@@ -278,7 +278,7 @@ $logged_in = isset($_SESSION['user_id']);
             <div class="card-price">Desde $70,000 COP</div>
             <div class="card-actions">
               <button class="btn-reserve">
-                <a href="vista/Tayrona.html" class="btn-reserve">
+                <a href="vista/Tayrona.php" class="btn-reserve">
                  <i class="fas fa-calendar-check"></i> Reservar ahora</a>         
                  </button>
               <button class="btn-favorite" aria-label="Agregar a favoritos">
@@ -313,7 +313,7 @@ $logged_in = isset($_SESSION['user_id']);
             <div class="card-price">Desde $120,000 COP</div>
             <div class="card-actions">
                <button class="btn-reserve">
-                <a href="vista/Santa marta.html" class="btn-reserve">
+                <a href="vista/Santa marta.php" class="btn-reserve">
                  <i class="fas fa-calendar-check"></i> Reservar ahora</a>         
                  </button>
               <button class="btn-favorite" aria-label="Agregar a favoritos">
@@ -348,7 +348,7 @@ $logged_in = isset($_SESSION['user_id']);
             <div class="card-price">Desde $150,000 COP</div>
             <div class="card-actions">
              <button class="btn-reserve">
-                <a href="vista/Guajira.html" class="btn-reserve">
+                <a href="vista/Guajira.php" class="btn-reserve">
                  <i class="fas fa-calendar-check"></i> Reservar ahora</a>         
                  </button>
               <button class="btn-favorite" aria-label="Agregar a favoritos">
@@ -384,7 +384,7 @@ $logged_in = isset($_SESSION['user_id']);
             <div class="card-price">Desde $250,000 COP</div>
             <div class="card-actions">
             <button class="btn-reserve">
-                <a href="vista/Amazonas.html" class="btn-reserve">
+                <a href="vista/Amazonas.php" class="btn-reserve">
                  <i class="fas fa-calendar-check"></i> Reservar ahora</a>         
                  </button>
               <button class="btn-favorite" aria-label="Agregar a favoritos">
