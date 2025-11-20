@@ -113,36 +113,43 @@ $logged_in = isset($_SESSION['user_id']);
               <div class="rating-info">⭐ 4.9 · 320 reseñas</div>
             </div>
 
-            <div class="dates">
-              <label>Fechas</label>
-              <div class="date-inputs">
-                <input type="date" id="checkin" />
-                <input type="date" id="checkout" />
-              </div>
-            </div>
+          <form action="../reservar.php" method="POST" class="reserve-form">
+  <input type="hidden" name="destino_id" value="2"> <!-- ID del destino en la tabla destinos -->
 
-            <div class="guests">
-              <label>Huéspedes</label>
-              <select id="guests">
-                <option value="1">1 huésped</option>
-                <option value="2">2 huéspedes</option>
-                <option value="3">3 huéspedes</option>
-                <option value="4">4 huéspedes</option>
-              </select>
-            </div>
+  <div class="dates">
+    <label>Fechas</label>
+    <div class="date-inputs">
+      <input type="date" name="checkin" required />
+      <input type="date" name="checkout" required />
+    </div>
+  </div>
 
-            <div class="total-row">
-              <div>Total estimado:</div>
-              <div class="total" id="totalPrice">$0 COP</div>
-            </div>
+  <div class="guests">
+    <label>Huéspedes</label>
+    <select name="huespedes" required>
+      <option value="1">1 huésped</option>
+      <option value="2">2 huéspedes</option>
+      <option value="3">3 huéspedes</option>
+      <option value="4">4 huéspedes</option>
+    </select>
+  </div>
 
-            <div class="fees">
-              <p>🧹 Tarifa de limpieza: $50.000 COP</p>
-              <p>💼 Servicio Airbnb: $30.000 COP</p>
-              <p>💰 Impuestos: 19%</p>
-            </div>
+  <div class="total-row">
+    <div>Total estimado:</div>
+    <div class="total" id="totalPrice">$0 COP</div>
+  </div>
 
-            <button class="book-btn" id="reserveBtn">Reservar ahora</button>
+  <div class="fees">
+    <p>🧹 Tarifa de limpieza: $50.000 COP</p>
+    <p>💼 Servicio Airbnb: $30.000 COP</p>
+    <p>💰 Impuestos: 19%</p>
+  </div>
+
+  <button type="submit" class="book-btn">
+    <i class="fas fa-calendar-check"></i> Reservar ahora
+  </button>
+</form>
+
 
             <div class="info">
               <p>Incluye asesoría turística y comparativa de precios.</p>
@@ -151,6 +158,7 @@ $logged_in = isset($_SESSION['user_id']);
           </div>
         </aside>
       </div>
+
 
       <!-- RESTO DEL CONTENIDO -->
       <main class="info-section-wrapper">
@@ -236,7 +244,7 @@ $logged_in = isset($_SESSION['user_id']);
           </div>
 
           <!-- COMENTARIOS -->
-          <section class="section review-section">
+            <section class="section review-section">
             <h3>Opiniones y Valoraciones</h3>
             <div class="rating-box">
               <p>Tu valoración:</p>
@@ -249,42 +257,54 @@ $logged_in = isset($_SESSION['user_id']);
               </div>
             </div>
 
-            <textarea id="commentInput" maxlength="250" placeholder="Escribe tu experiencia..."></textarea>
-            <div class="comment-footer">
-              <small id="charCount">0 / 250</small>
-              <button class="book-btn" id="submitReview"> publicar </button>
-            </div>
+     <form action="../reseñar.php" method="POST" class="review-form">
+  <input type="hidden" name="destino_id" value="4"> <!-- ID del destino en la tabla destinos -->
 
-            <div class="reviews-list" id="reviewsList">
-              <h4>Reseñas recientes</h4>
-
-              <div class="review">
-                <div class="review-header">
-                  <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="avatar" class="review-avatar">
-                  <div>
-                    <strong>Camila R.</strong>
-                    <div class="review-stars">⭐⭐⭐⭐⭐</div>
-                  </div>
-                </div>
-                <p>Excelente experiencia, el lugar es hermoso y muy bien ubicado. El anfitrión fue muy amable.</p>
-              </div>
-
-              <div class="review">
-                <div class="review-header">
-                  <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="avatar" class="review-avatar">
-                  <div>
-                    <strong>Andrés P.</strong>
-                    <div class="review-stars">⭐⭐⭐⭐</div>
-                  </div>
-                </div>
-                <p>Todo estuvo muy bien, aunque el wifi podría ser un poco más rápido.</p>
-              </div>
-            </div>
-          </section>
-        </section>
-      </main>
-    </div>
+  <div class="rating-box">
+    <p>Tu valoración:</p>
+    <select name="rating" required>
+      <option value="1">⭐</option>
+      <option value="2">⭐⭐</option>
+      <option value="3">⭐⭐⭐</option>
+      <option value="4">⭐⭐⭐⭐</option>
+      <option value="5">⭐⭐⭐⭐⭐</option>
+    </select>
   </div>
+
+  <textarea name="comentario" maxlength="250" placeholder="Escribe tu experiencia..." required></textarea>
+
+  <button type="submit" class="book-btn">Publicar reseña</button>
+</form>
+
+         <?php
+$conn = new mysqli("db", "root", "rootpass", "OceanDB");
+if ($conn->connect_error) die("Error DB: " . $conn->connect_error);
+
+$sql = "SELECT u.username, r.comentario, r.rating, r.created_at
+        FROM reseñas r
+        JOIN usuarios u ON r.usuario_id = u.id
+        WHERE r.destino_id=4
+        ORDER BY r.created_at DESC
+        LIMIT 10";
+$result = $conn->query($sql);
+?>
+
+<div class="reviews-list">
+  <h4>Reseñas recientes</h4>
+  <?php while($row = $result->fetch_assoc()): ?>
+    <div class="review">
+      <div class="review-header">
+        <img src="https://i.pravatar.cc/50?u=<?php echo $row['username']; ?>" alt="avatar" class="review-avatar">
+        <div>
+          <strong><?php echo htmlspecialchars($row['username']); ?></strong>
+          <div class="review-stars"><?php echo str_repeat("⭐", $row['rating']); ?></div>
+        </div>
+      </div>
+      <p><?php echo htmlspecialchars($row['comentario']); ?></p>
+    </div>
+  <?php endwhile; ?>
+</div>
+
 
   <!-- TOAST -->
   <div id="toast" class="toast hidden"></div>
