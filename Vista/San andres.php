@@ -159,6 +159,13 @@ $logged_in = isset($_SESSION['user_id']);
         </aside>
       </div>
 
+      <form action="../favorito.php" method="POST" class="favorite-form">
+  <input type="hidden" name="destino_id" value="1"> <!-- ID real del destino -->
+  <button type="submit" class="favorite-btn">
+    ❤️ Guardar en Favoritos
+  </button>
+</form>
+
 
       <!-- RESTO DEL CONTENIDO -->
       <main class="info-section-wrapper">

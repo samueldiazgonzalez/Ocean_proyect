@@ -161,7 +161,7 @@ $logged_in = isset($_SESSION['user_id']);
               <p class="policy">Cancelación gratuita hasta 5 días antes del check-in.</p>
             </div>
 
-            <form action="favorito.php" method="POST" class="favorite-form">
+            <form action="../favorito.php" method="POST" class="favorite-form">
   <input type="hidden" name="destino_id" value="1"> <!-- ID real del destino -->
   <button type="submit" class="favorite-btn">
     ❤️ Guardar en Favoritos
