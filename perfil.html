@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ocean - Perfil</title>
+
+  <link rel="stylesheet" href="perfil_estilo.css">
+  <script src="funcionalidades.js" defer></script>
+
+  <!-- Iconos Remix Icons -->
+  <link rel="stylesheet" href="assets/icons/remixicon.css">
+</head>
+
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h2 class="brand">Ocean System</h2>
+
+    <nav class="sidebar-menu">
+      <a href="#"><i class="ri-home-4-line"></i> Inicio</a>
+      <a href="#"><i class="ri-earth-line"></i> Explorar</a>
+      <a href="#"><i class="ri-bookmark-line"></i> Reservas</a>
+      <a class="active" href="#"><i class="ri-user-3-line"></i> Mi Perfil</a>
+      <a href="#"><i class="ri-settings-3-line"></i> Configuración</a>
+      <a href="#"><i class="ri-logout-box-r-line"></i> Cerrar Sesión</a>
+    </nav>
+  </aside>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="main">
+
+    <!-- ENCABEZADO DEL PERFIL -->
+    <section class="profile-header">
+      <img src="https://i.pravatar.cc/250" alt="Foto de Perfil" class="avatar">
+      <div>
+        <h1>Juan Martínez</h1>
+        <p class="sub">Miembro desde Enero 2024</p>
+      </div>
+      <button class="btn-primary edit-btn">
+        <i class="ri-edit-line"></i> Editar Perfil
+      </button>
+    </section>
+
+    <!-- ESTADÍSTICAS -->
+    <section class="stats">
+
+      <div class="stat-card">
+        <i class="ri-plane-line"></i>
+        <h2>5</h2>
+        <p>Viajes Completados</p>
+      </div>
+
+      <div class="stat-card">
+        <i class="ri-star-line"></i>
+        <h2>4.8</h2>
+        <p>Calificación Promedio</p>
+      </div>
+
+      <div class="stat-card">
+        <i class="ri-chat-3-line"></i>
+        <h2>12</h2>
+        <p>Reseñas Realizadas</p>
+      </div>
+
+      <div class="stat-card">
+        <i class="ri-heart-line"></i>
+        <h2>19</h2>
+        <p>Favoritos</p>
+      </div>
+
+    </section>
+
+    <!-- CONTENIDO DIVIDIDO -->
+    <div class="grid">
+
+      <!-- INFORMACIÓN PERSONAL -->
+      <div class="card">
+        <h3><i class="ri-id-card-line"></i> Información Personal</h3>
+        <p><strong>Nombre completo:</strong> Juan Esteban Martínez</p>
+        <p><strong>Correo:</strong> juan@example.com</p>
+        <p><strong>Teléfono:</strong> +57 320 555 1234</p>
+        <p><strong>Ciudad:</strong> Bogotá, Colombia</p>
+        <button class="btn-secondary">Actualizar Información</button>
+      </div>
+
+      <!-- PREFERENCIAS -->
+      <div class="card">
+        <h3><i class="ri-compass-3-line"></i> Preferencias de Viaje</h3>
+        <span class="tag">Playas</span>
+        <span class="tag">Aventura</span>
+        <span class="tag">Gastronomía</span>
+        <span class="tag">Senderismo</span>
+        <button class="btn-secondary">Editar Preferencias</button>
+      </div>
+
+      <!-- SEGURIDAD -->
+      <div class="card">
+        <h3><i class="ri-shield-keyhole-line"></i> Seguridad</h3>
+        <p>• Contraseña: Último cambio hace 2 meses</p>
+        <p>• Verificación en dos pasos: <strong>Activada</strong></p>
+        <p>• Actividad reciente: Inicio de sesión (Bogotá – hace 2h)</p>
+        <button class="btn-secondary">Gestionar Seguridad</button>
+      </div>
+
+      <!-- ACTIVIDAD RECIENTE -->
+      <div class="card">
+        <h3><i class="ri-time-line"></i> Actividad Reciente</h3>
+        <ul class="activity">
+          <li><i class="ri-check-line"></i> Reserva completada: Tour Islas del Rosario</li>
+          <li><i class="ri-edit-2-line"></i> Reseña publicada: Cañón del Chicamocha</li>
+          <li><i class="ri-heart-3-line"></i> Agregado a favoritos: Eje Cafetero</li>
+          <li><i class="ri-login-circle-line"></i> Inicio de sesión desde Chrome</li>
+        </ul>
+      </div>
+
+    </div>
+  </main>
+
+</body>
+</html>
