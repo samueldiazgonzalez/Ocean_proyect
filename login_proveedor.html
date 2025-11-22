@@ -1,25 +1,37 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Login Proveedor</title>
-  <link rel="stylesheet" href="Registro_proveedor.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Proveedor</title>
+
+    <!-- Vincular mismo CSS del Registro -->
+    <link rel="stylesheet" href="registro_provedor.css">
 </head>
 <body>
 
-<section class="card big-card">
-  <h2 class="title">Acceso Proveedores</h2>
+    <section class="provider-form" style="max-width: 420px;">
 
-  <form action="login_proveedor.php" method="POST" class="provider-login">
-    <label>Correo electrónico *</label>
-    <input type="email" class="input-edit" name="correo" required>
+        <h3 class="form-title">Acceso de Proveedores</h3>
+        <p class="form-subtitle">Ingresa tus credenciales para acceder al panel.</p>
 
-    <label>Contraseña *</label>
-    <input type="password" class="input-edit" name="password" required>
+        <form action="login_proveedor.php" method="POST" class="provider-login">
 
-    <button type="submit" class="btn-primary">Ingresar</button>
-  </form>
-</section>
+            <div class="form-group">
+                <label for="correo">Correo electrónico *</label>
+                <input type="email" id="correo" name="correo" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Contraseña *</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <button type="submit" class="btn-primary">Ingresar</button>
+
+        </form>
+
+    </section>
 
 </body>
 </html>
