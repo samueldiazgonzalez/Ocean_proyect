@@ -122,6 +122,32 @@ $reservas = $stmt->get_result();
         </form>
       </div>
     </div>
+    
+<?php
+$sql = "SELECT d.titulo, d.ubicacion, d.precio 
+        FROM favoritos f 
+        JOIN destinos d ON f.destino_id = d.id 
+        WHERE f.usuario_id=?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$favoritos = $stmt->get_result();
+?>
+
+<div class="card">
+  <h3>❤️ Mis Favoritos</h3>
+  <?php if ($favoritos->num_rows > 0): ?>
+    <?php while($fav = $favoritos->fetch_assoc()): ?>
+      <p><strong><?php echo $fav['titulo']; ?></strong> — 
+         <?php echo $fav['ubicacion']; ?> — 
+         $<?php echo number_format($fav['precio']); ?> COP</p>
+    <?php endwhile; ?>
+  <?php else: ?>
+    <p>No tienes destinos favoritos aún.</p>
+  <?php endif; ?>
+</div>
+
+
   </main>
 </body>
 </html>
