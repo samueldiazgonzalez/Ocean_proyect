@@ -1,0 +1,139 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    font-family: Arial, sans-serif;
+    background: url('images/login.jpeg') no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.login-container {
+background: transparent;
+backdrop-filter: blur(30px);
+padding: 2.5rem;
+border-radius: 15px;
+box-shadow: 0 15px 35px rgba(175, 168, 168, 0.1);
+width: 350px;
+border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.login-container h2 {
+margin-bottom: 2rem;
+text-align: center;
+color: #000000;
+font-weight: 600;
+}
+
+.input-box {
+position: relative;
+margin-bottom: 1.5rem;
+}
+
+.input-box label {
+display: block;
+margin-bottom: 0.5rem;
+color: #000000;
+font-weight: 500;
+}
+
+.input-box input {
+width: 100%;
+padding: 12px 45px 12px 15px;
+border: 2px solid #e1e1e1;
+border-radius: 8px;
+background-color: transparent;
+font-size: 16px;
+transition: all 0.3s ease;
+outline: none;
+}
+
+.input-box input:focus {
+border-color: #007bff;
+box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.input-box i {
+position: absolute;
+right: 20px;
+top: 50%;
+transform: translateY(-2%);
+color: #007bff;
+font-size: 20px;
+pointer-events: none;
+}
+
+.remember-forgot {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 1.5rem;
+font-size: 14px;
+}
+
+.remember-forgot label {
+display: flex;
+align-items: center;
+gap: 5px;
+cursor: pointer;
+}
+
+.remember-forgot a {
+color: rgba(13, 10, 194, 0.925);
+text-decoration: none;
+}
+
+.remember-forgot a:hover {
+text-decoration: underline;
+}
+
+.login-container button {
+width: 100%;
+padding: 12px;
+background: linear-gradient(135deg, #007bff, #0056b3);
+color: #fff;
+border: none;
+border-radius: 8px;
+font-size: 16px;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.3s ease;
+margin-bottom: 1.5rem;
+}
+
+.login-container button:hover {
+transform: translateY(-2px);
+box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+}
+
+.register_link {
+text-align: center;
+font-size: 14px;
+}
+
+.register_link p {
+color: #000000;
+margin-bottom: 5px;
+}
+
+.register_link a {
+color: #007bff;
+text-decoration: none;
+font-weight: 600;
+}
+
+.register_link a:hover {
+text-decoration: underline;
+}
+
+.input-box.icon-top i {
+top: 35%;
+}
+
+.input-box.icon-center i {
+top: 55%;
+}

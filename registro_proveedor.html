@@ -1,0 +1,46 @@
+<form action="Registro_proveedor.php" method="POST" enctype="multipart/form-data" class="provider-form">
+
+  <h3>Información del Proveedor</h3>
+  <label>Nombre de la Empresa *</label>
+  <input type="text" name="empresa" required placeholder="Ej: Hotel Caribe S.A.">
+
+  <label>Tipo de Proveedor *</label>
+  <select name="tipo" required>
+    <option value="">Seleccione...</option>
+    <option value="Hotel">Hotel</option>
+    <option value="Agencia">Agencia de Viajes</option>
+    <option value="Guía">Guía Turístico</option>
+    <option value="Transporte">Transporte</option>
+    <option value="Otro">Otro</option>
+  </select>
+
+  <label>Correo electrónico *</label>
+  <input type="email" name="correo" required>
+
+  <label>Teléfono / WhatsApp *</label>
+  <input type="text" name="telefono" required>
+
+ <label>Ciudad *</label>
+<input type="text" class="input-edit" name="ciudad" required placeholder="Ej: Cartagena">
+
+<label>Direccion *</label>
+<input type="text" class="input-edit" name="direccion" required placeholder="Ej: Calle 123 #45-67">
+
+
+  <label>Registro Nacional de Turismo (RNT)</label>
+  <input type="text" name="rnt" placeholder="Ej: RNT-12345">
+
+  <label>Idiomas disponibles</label>
+  <input type="text" name="idiomas" placeholder="Ej: Español, Inglés">
+
+  <label>Descripción / Perfil *</label>
+  <textarea name="descripcion" rows="4" required></textarea>
+
+  <label>Logo / Imagen *</label>
+  <input type="file" name="logo" accept="image/*" required>
+
+  <label>Contraseña *</label>
+  <input type="password" name="password" required>
+
+  <button type="submit" class="btn-primary">Registrar Proveedor</button>
+</form>

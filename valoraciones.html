@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Valoraciones</title>
+    <meta name="description" content="Opiniones y valoraciones de usuarios" />
+    <link rel="stylesheet" href="valoracoin.css" />
+</head>
+
+<body>
+    <header class="header">
+        <nav class="breadcrumb">
+            <a href="/">Inicio</a>
+            <span>›</span>
+            <span class="current">Valoraciones</span>
+        </nav>
+        
+    <center>
+        <h1 class="title">Valoracion del servicio</h1>
+    </center>
+    </header>
+
+    <main class="container">
+
+        <!-- Formulario -->
+        <section class="card">
+            <h2 class="section-title">Dejar una valoración</h2>
+
+            <form id="reviewForm" class="form" novalidate>
+                <div class="form-group">
+                    <label for="name">Nombre</label>
+                    <input id="name" name="name" type="text" placeholder="Tu nombre" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="review">Comentario</label>
+                    <textarea id="review" name="review" rows="4" placeholder="Escribe tu opinión..." required></textarea>
+                </div>
+
+                <!-- Estrellas -->
+                <div class="form-group">
+                    <label>Puntuación</label>
+                    <div class="stars" id="starRating">
+                        <span data-value="1">★</span>
+                        <span data-value="2">★</span>
+                        <span data-value="3">★</span>
+                        <span data-value="4">★</span>
+                        <span data-value="5">★</span>
+                    </div>
+                    <input type="hidden" name="rating" id="rating" required>
+                </div>
+
+                <button type="submit" class="btn">Enviar valoración</button>
+            </form>
+        </section>
+
+        <!-- Lista de reseñas -->
+        <section class="card">
+            <h2 class="section-title">Reseñas recientes</h2>
+            <ul id="reviewsList" class="reviews-list" aria-live="polite"></ul>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <small>&copy; <span id="year"></span> Tu sitio profesional</small>
+    </footer>
+
+    <script>
+        // Año dinámico
+        document.getElementById("year").textContent = new Date().getFullYear();
+
+        const form = document.getElementById("reviewForm");
+        const list = document.getElementById("reviewsList");
+        const stars = document.querySelectorAll("#starRating span");
+        const ratingInput = document.getElementById("rating");
+
+        // Estrellas interactivas
+        stars.forEach(star => {
+            star.addEventListener("mouseover", () => highlightStars(star.dataset.value));
+            star.addEventListener("click", () => selectStars(star.dataset.value));
+            star.addEventListener("mouseleave", () => highlightStars(ratingInput.value));
+        });
+
+        function highlightStars(value) {
+            stars.forEach(star => {
+                star.classList.toggle("active", star.dataset.value <= value);
+            });
+        }
+
+        function selectStars(value) {
+            ratingInput.value = value;
+            highlightStars(value);
+        }
+
+        // Reseñas dinámicas
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            if (!ratingInput.value) {
+                alert("Por favor selecciona una puntuación.");
+                return;
+            }
+
+            const data = new FormData(form);
+            const li = document.createElement("li");
+            li.classList.add("review-item");
+
+            li.innerHTML = `
+                <div class="review-header">
+                    <strong>${escapeHtml(data.get("name"))}</strong>
+                    <div class="rating-stars">
+                        ${"★".repeat(data.get("rating"))}
+                        ${"☆".repeat(5 - data.get("rating"))}
+                    </div>
+                </div>
+                <p class="review-text">${escapeHtml(data.get("review"))}</p>
+            `;
+
+            li.classList.add("fade-in");
+            list.prepend(li);
+            form.reset();
+            ratingInput.value = "";
+            highlightStars(0);
+        });
+
+        // Sanitizar texto
+        function escapeHtml(str) {
+            return String(str).replace(/[&<>"']/g, c =>
+                ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])
+            );
+        }
+    </script>
+
+</body>
+</html>

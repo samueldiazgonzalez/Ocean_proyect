@@ -1,0 +1,51 @@
+@startuml
+actor Usuario
+actor Banco
+actor PSE
+actor "Wallet Digital" as Wallet
+actor "Pasarela de Pago" as Pasarela
+
+rectangle "Ocean - Planificación de Viaje Completo" {
+  
+  usecase "Planificar Viaje Completo" as UC2
+  usecase "Crear Itinerario" as UC2_1
+  usecase "Sugerir Destinos y Actividades" as UC2_2
+  usecase "Agregar Servicios al Carrito" as UC2_3
+  usecase "Calcular Precios y Optimizar" as UC2_4
+  usecase "Confirmar Selección" as UC2_5
+  usecase "Procesar Pago" as UC2_6
+  usecase "Generar Plan de Viaje Detallado" as UC2_7
+  
+  ' Casos de uso extendidos (flujos alternativos)
+  usecase "Guardar en Borradores" as UC2_A1
+  usecase "Pagar con Tarjeta" as UC2_Tarjeta
+  usecase "Pagar con PSE" as UC2_PSE
+  usecase "Pagar con Wallet" as UC2_Wallet
+  usecase "Notificar Pago Fallido y Reintento" as UC2_A2
+  
+  ' Flujo principal con include
+  UC2 ..> UC2_1 : <<include>>
+  UC2 ..> UC2_2 : <<include>>
+  UC2 ..> UC2_3 : <<include>>
+  UC2 ..> UC2_4 : <<include>>
+  UC2 ..> UC2_5 : <<include>>
+  UC2 ..> UC2_6 : <<include>>
+  UC2 ..> UC2_7 : <<include>>
+  
+  ' Flujos alternativos con extend
+  UC2 <.. UC2_A1 : <<extend>>
+  UC2_6 <.. UC2_Tarjeta : <<extend>>
+  UC2_6 <.. UC2_PSE : <<extend>>
+  UC2_6 <.. UC2_Wallet : <<extend>>
+  UC2_6 <.. UC2_A2 : <<extend>>
+}
+
+' Conexión con Usuario
+Usuario --> UC2
+
+' Conexiones con sistemas de pago
+Banco --> UC2_Tarjeta
+Pasarela --> UC2_Tarjeta
+PSE --> UC2_PSE
+Wallet --> UC2_Wallet
+@enduml

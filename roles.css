@@ -1,0 +1,72 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: url('images/roles.png') no-repeat center center/cover;
+    background-size: cover;
+    display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+min-height: 100vh;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 20px;
+}
+
+p {
+    text-align: center;
+}
+
+button {
+    display: block;
+    width: 200px;
+    margin: 10px auto;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #0056b3;
+    color: white;
+}
+.roles-container {
+background:transparent;
+backdrop-filter: blur(30px);
+padding: 2.5rem;
+border-radius: 15px;
+box-shadow: 0 15px 35px rgba(175, 168, 168, 0.1);
+width: 350px;
+border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.roles-container h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #333333;
+}
+.roles-container button {
+    background: linear-gradient(135deg, #2238b7, #218838);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 1.5rem;
+}
+.roles-container button:hover {
+    background: linear-gradient(135deg, #1e2fa3, #1c7430);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+.roles-container button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
