@@ -51,8 +51,7 @@ $conn->close();
     <h2 class="brand">Ocean System</h2>
     <nav class="sidebar-menu">
       <a href="turismo.php"><i class="ri-home-4-line"></i> Inicio</a>
-      <a href="#"><i class="ri-earth-line"></i> Explorar</a>
-      <a href="#"><i class="ri-bookmark-line"></i> Reservas</a>
+      <a href="mis_reservas.php"><i class="ri-bookmark-line"></i> Reservas</a>
       <a class="active" href="perfil.php"><i class="ri-user-3-line"></i> Mi Perfil</a>
       <a href="#"><i class="ri-settings-3-line"></i> Configuración</a>
       <a href="logout.php"><i class="ri-logout-box-r-line"></i> Cerrar Sesión</a>
@@ -107,6 +106,36 @@ $reservas = $stmt->get_result();
 </div>
 
 
+<?php
+$sql = "SELECT r.comentario, r.rating, r.created_at, d.titulo 
+        FROM reseñas r
+        JOIN destinos d ON r.destino_id = d.id
+        WHERE r.usuario_id = ?
+        ORDER BY r.created_at DESC
+        LIMIT 3"; // solo las últimas 3
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+?>
+
+<div class="card">
+  <h3>📝 Mis Reseñas</h3>
+  <?php if ($result->num_rows > 0): ?>
+    <?php while($row = $result->fetch_assoc()): ?>
+      <div class="review">
+        <strong><?php echo htmlspecialchars($row['titulo']); ?></strong><br>
+        <span><?php echo str_repeat("⭐", $row['rating']); ?></span><br>
+        <p><?php echo htmlspecialchars($row['comentario']); ?></p>
+        <small><?php echo $row['created_at']; ?></small>
+      </div>
+      <hr>
+    <?php endwhile; ?>
+    <a href="mis_resenas.php" class="btn-secondary">Ver más reseñas</a>
+  <?php else: ?>
+    <p>No has publicado reseñas aún.</p>
+  <?php endif; ?>
+</div>
     <!-- GRID DE INFORMACIÓN -->
     <div class="grid">
       <!-- INFORMACIÓN PERSONAL CIUDAD AUN NO SE AÑADIO EN LA BASE DE DATOS SAAAAA -->
