@@ -1,103 +1,147 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const products = document.querySelectorAll(".product-card");
-  const sortSelect = document.getElementById("sort");
-  const viewBtns = document.querySelectorAll(".view-btn");
-  const productsGrid = document.getElementById("products");
-  const resultsCount = document.getElementById("results-count");
-  const minPrice = document.getElementById("min-price");
-  const maxPrice = document.getElementById("max-price");
-  const priceRange = document.getElementById("price-range");
-  const filters = document.querySelectorAll("input[type=checkbox][name=categoria], input#valorados, input#disponibles");
-  const searchInput = document.getElementById("search"); // 👈 buscador
+    // 1. Obtención de Elementos del DOM
+    const productsContainer = document.getElementById("products"); 
+    const products = Array.from(productsContainer.querySelectorAll(".product-card"));
+    const sortSelect = document.getElementById("sort");
+    const viewBtns = document.querySelectorAll(".view-btn");
+    const resultsCount = document.getElementById("results-count");
+    const minPriceInput = document.getElementById("min-price"); 
+    const maxPriceInput = document.getElementById("max-price"); 
+    const priceRangeDisplay = document.getElementById("price-range"); 
+    
+    // Lista unificada de todos los filtros de checkbox (IMPORTANTE: incluye name=duracion)
+    const filters = document.querySelectorAll("input[type=checkbox][name=categoria], input[type=checkbox][name=duracion], input#valorados, input#disponibles");
+    const searchInput = document.getElementById("search");
 
-  // Actualizar rango de precio
-  function updatePriceDisplay() {
-    priceRange.textContent = `COP $${parseInt(minPrice.value).toLocaleString()} - COP $${parseInt(maxPrice.value).toLocaleString()}`;
-    filterProducts();
-  }
+    // 2. Funciones de Ayuda
+    function formatPrice(number) {
+        return new Intl.NumberFormat('es-CO', { 
+            style: 'currency', 
+            currency: 'COP', 
+            minimumFractionDigits: 0 
+        }).format(number);
+    }
 
-  minPrice.addEventListener("input", updatePriceDisplay);
-  maxPrice.addEventListener("input", updatePriceDisplay);
-  
-  // Filtrar productos
-  function filterProducts() {
-    let activeCategories = Array.from(document.querySelectorAll("input[name=categoria]:checked")).map(el => el.value);
-    let valorados = document.getElementById("valorados").checked;
-    let disponibles = document.getElementById("disponibles").checked;
-    let min = parseInt(minPrice.value);
-    let max = parseInt(maxPrice.value);
-    let searchText = searchInput.value.toLowerCase(); // 👈 texto del buscador
+    function updatePriceDisplay() {
+        let minVal = parseInt(minPriceInput.value);
+        let maxVal = parseInt(maxPriceInput.value);
+        if (minVal > maxVal) {
+             [minVal, maxVal] = [maxVal, minVal]; 
+             minPriceInput.value = minVal;
+             maxPriceInput.value = maxVal;
+        }
 
-    let visibleCount = 0;
+        priceRangeDisplay.textContent = `${formatPrice(minVal)} - ${formatPrice(maxVal)}`;
+        applyAllChanges(); 
+    }
 
-    products.forEach(p => {
-      let precio = parseInt(p.dataset.precio);
-      let rating = parseFloat(p.dataset.rating);
-      let disponible = p.dataset.disponible === "true";
-      let categoria = p.dataset.categoria;
-      let titulo = p.querySelector(".card-title").textContent.toLowerCase();
-      let descripcion = p.querySelector(".card-content").textContent.toLowerCase(); // 👈 también busca en descripción
+    // 3. Lógica de Ordenamiento
+    function sortProducts(list) {
+        const sortBy = sortSelect.value;
+        list.sort((a, b) => {
+            const pa = parseInt(a.dataset.precio);
+            const pb = parseInt(b.dataset.precio);
+            const ra = parseFloat(a.dataset.rating);
+            const rb = parseFloat(b.dataset.rating);
 
-      let visible = true;
+            switch (sortBy) {
+                case "asc": return pa - pb;
+                case "desc": return pb - pa;
+                case "rating": return rb - ra;
+                case "newest": return 0; 
+                default: return 0;
+            }
+        });
+        list.forEach(card => productsContainer.appendChild(card));
+    }
 
-      if (activeCategories.length > 0 && !activeCategories.includes(categoria)) visible = false;
-      if (valorados && rating < 4.8) visible = false;
-      if (disponibles && !disponible) visible = false;
-      if (precio < min || precio > max) visible = false;
-      if (searchText && !(titulo.includes(searchText) || descripcion.includes(searchText))) visible = false;
+    // 4. Lógica Principal: Filtrar y Reordenar
+    function applyAllChanges() {
+        // Obtenemos los valores de todos los filtros
+        const activeCategories = Array.from(document.querySelectorAll("input[name=categoria]:checked")).map(el => el.value);
+        const activeDurations = Array.from(document.querySelectorAll("input[name=duracion]:checked")).map(el => el.value); // NUEVO
+        const valoradosChecked = document.getElementById("valorados").checked;
+        const disponiblesChecked = document.getElementById("disponibles").checked;
+        const minPrice = parseInt(minPriceInput.value);
+        const maxPrice = parseInt(maxPriceInput.value);
+        const searchText = searchInput.value.toLowerCase().trim();
 
-      p.style.display = visible ? "flex" : "none";
-      if (visible) visibleCount++;
+        let visibleProducts = [];
+        let totalCount = 0;
+
+        products.forEach(p => {
+            // Lectura de data attributes
+            const precio = parseInt(p.dataset.precio);
+            const rating = parseFloat(p.dataset.rating);
+            const disponible = p.dataset.disponible === "true";
+            const categoria = p.dataset.categoria;
+            const productoDuracion = p.dataset.duracion; // LEEMOS data-duracion
+            
+            // Lectura de contenido
+            const titulo = p.querySelector(".card-title").textContent.toLowerCase();
+            const contenido = p.querySelector(".card-content").textContent.toLowerCase();
+
+            let visible = true;
+            
+            // FILTRO 1: Categoría
+            if (activeCategories.length > 0 && !activeCategories.includes(categoria)) visible = false;
+            
+            // FILTRO 2: Duración (NUEVO)
+            if (activeDurations.length > 0 && !activeDurations.includes(productoDuracion)) visible = false;
+            
+            // FILTRO 3: Mejor valorados
+            if (valoradosChecked && rating < 4.8) visible = false;
+            
+            // FILTRO 4: Disponibles
+            if (disponiblesChecked && !disponible) visible = false;
+            
+            // FILTRO 5: Rango de Precio
+            if (precio < minPrice || precio > maxPrice) visible = false;
+            
+            // FILTRO 6: Búsqueda de Texto
+            if (searchText && !(titulo.includes(searchText) || contenido.includes(searchText))) visible = false;
+
+            // ACTUALIZAR VISIBILIDAD y LISTA
+            if (visible) {
+                p.style.display = "flex";
+                visibleProducts.push(p);
+                totalCount++;
+            } else {
+                p.style.display = "none";
+            }
+        });
+
+        // Aplicar ordenamiento a la lista filtrada
+        sortProducts(visibleProducts);
+
+        // Actualizar Contador
+        resultsCount.textContent = `Mostrando ${totalCount} de ${products.length} experiencias`;
+    }
+
+    // 5. Lógica de Cambio de Vista
+    viewBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+            viewBtns.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+
+            if (btn.dataset.view === "list") {
+                productsContainer.classList.remove("products-grid");
+                productsContainer.classList.add("products-list");
+            } else {
+                productsContainer.classList.remove("products-list");
+                productsContainer.classList.add("products-grid");
+            }
+        });
     });
 
-    resultsCount.textContent = `Mostrando ${visibleCount} experiencias`;
-  }
+    // 6. Event Listeners (Se escuchan todos los filtros)
+    filters.forEach(f => f.addEventListener("change", applyAllChanges));
+    searchInput.addEventListener("input", applyAllChanges);
+    sortSelect.addEventListener("change", applyAllChanges); 
+    minPriceInput.addEventListener("input", updatePriceDisplay);
+    maxPriceInput.addEventListener("input", updatePriceDisplay);
 
-  filters.forEach(f => f.addEventListener("change", filterProducts));
-
-  // Ordenar productos
-  sortSelect.addEventListener("change", () => {
-    let cards = Array.from(productsGrid.children);
-
-    let sorted = cards.sort((a, b) => {
-      let pa = parseInt(a.dataset.precio);
-      let pb = parseInt(b.dataset.precio);
-      let ra = parseFloat(a.dataset.rating);
-      let rb = parseFloat(b.dataset.rating);
-
-      switch (sortSelect.value) {
-        case "asc": return pa - pb;
-        case "desc": return pb - pa;
-        case "rating": return rb - ra;
-        case "newest": return Math.random() - 0.5; // ejemplo random
-        default: return 0;
-      }
-    });
-
-    productsGrid.innerHTML = "";
-    sorted.forEach(c => productsGrid.appendChild(c));
-  });
-
-  // Cambiar vista
-  viewBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-      viewBtns.forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-
-      if (btn.dataset.view === "list") {
-        productsGrid.classList.add("list-view");
-        products.forEach(p => p.style.flexDirection = "row");
-      } else {
-        productsGrid.classList.remove("list-view");
-        products.forEach(p => p.style.flexDirection = "column");
-      }
-    });
-  });
-
-  // Evento buscador
-  searchInput.addEventListener("input", filterProducts);
-
-  // Inicializar
-  updatePriceDisplay();
-  filterProducts();
+    // 7. Inicialización
+    updatePriceDisplay();
+    applyAllChanges();
 });
