@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const maxPrice = document.getElementById("max-price");
   const priceRange = document.getElementById("price-range");
   const filters = document.querySelectorAll("input[type=checkbox][name=categoria], input#valorados, input#disponibles");
+  const searchInput = document.getElementById("search"); // 👈 buscador
 
   // Actualizar rango de precio
   function updatePriceDisplay() {
@@ -17,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   minPrice.addEventListener("input", updatePriceDisplay);
   maxPrice.addEventListener("input", updatePriceDisplay);
-
+  
   // Filtrar productos
   function filterProducts() {
     let activeCategories = Array.from(document.querySelectorAll("input[name=categoria]:checked")).map(el => el.value);
@@ -25,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let disponibles = document.getElementById("disponibles").checked;
     let min = parseInt(minPrice.value);
     let max = parseInt(maxPrice.value);
+    let searchText = searchInput.value.toLowerCase(); // 👈 texto del buscador
 
     let visibleCount = 0;
 
@@ -33,6 +35,8 @@ document.addEventListener("DOMContentLoaded", () => {
       let rating = parseFloat(p.dataset.rating);
       let disponible = p.dataset.disponible === "true";
       let categoria = p.dataset.categoria;
+      let titulo = p.querySelector(".card-title").textContent.toLowerCase();
+      let descripcion = p.querySelector(".card-content").textContent.toLowerCase(); // 👈 también busca en descripción
 
       let visible = true;
 
@@ -40,6 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (valorados && rating < 4.8) visible = false;
       if (disponibles && !disponible) visible = false;
       if (precio < min || precio > max) visible = false;
+      if (searchText && !(titulo.includes(searchText) || descripcion.includes(searchText))) visible = false;
 
       p.style.display = visible ? "flex" : "none";
       if (visible) visibleCount++;
@@ -88,6 +93,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+
+  // Evento buscador
+  searchInput.addEventListener("input", filterProducts);
 
   // Inicializar
   updatePriceDisplay();
