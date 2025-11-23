@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrador - Ocean System</title>
+
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+</head>
+
+<body>
+
+    <div id="admin-panel-wrapper"> 
+        
+        <aside class="sidebar">
+            <h2 class="brand">Admin Ocean</h2>
+            
+            <div class="admin-profile-sidebar">
+                <img src="https://i.pravatar.cc/95?img=25" alt="Avatar Admin" class="profile-avatar-sidebar">
+                <div class="profile-info">
+                    <p class="profile-name">Ana María L.</p>
+                    <p class="profile-role">Administrador Principal</p>
+                </div>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <a class="nav-link active" href="#dashboard" data-view="dashboard"><i class="ri-dashboard-line"></i> Dashboard</a>
+                <a class="nav-link" href="#suppliers" data-view="suppliers"><i class="ri-handshake-line"></i> Proveedores</a>
+                <a class="nav-link" href="#services_directory" data-view="services_directory"><i class="ri-earth-line"></i> Servicios (Directorio)</a> 
+                <a class="nav-link" href="#reviews" data-view="reviews"><i class="ri-star-line"></i> Reseñas (Calidad)</a>
+                <a class="nav-link" href="#users" data-view="users"><i class="ri-group-line"></i> Usuarios Registrados</a>
+                
+                <hr style="border-top: 1px solid rgba(255, 255, 255, 0.1); margin: 20px 0;">
+                
+                <a class="nav-link" href="#" id="logout-btn-sidebar"><i class="ri-logout-box-r-line"></i> Cerrar Sesión</a>
+            </nav>
+        </aside>
+
+        <main class="main">
+            <header id="view-header" class="profile-header">
+                <div style="display: flex; align-items: center;">
+                    <img src="https://i.pravatar.cc/95?img=1" alt="Admin Avatar" class="avatar" style="margin-right: 20px;">
+                    <div>
+                        <h1 id="view-title">Dashboard</h1>
+                        <p class="sub">Bienvenido al Panel de Monitoreo Operacional</p>
+                    </div>
+                </div>
+                <button class="btn-primary" style="display: none;"></button>
+            </header>
+            <section id="main-content-area" class="content-area">
+                 <p>Cargando contenido...</p>
+            </section>
+        </main>
+        
+        <div id="detail-modal" class="modal">
+            <div class="modal-content card">
+                <span class="close-button" id="close-modal-btn">&times;</span>
+                <h3 id="modal-title" style="margin-bottom: 20px;">Detalle de Auditoría</h3>
+                <div id="modal-body-content"></div>
+                <div class="modal-actions" style="border-top: 1px solid #eee; padding-top: 15px; text-align: right; margin-top: 20px;">
+                    <button class="btn-primary">Generar Reporte</button>
+                </div>
+            </div>
+        </div>
+    </div> 
+
+    <script src="funciones.js" defer></script>
+</body>
+</html>
