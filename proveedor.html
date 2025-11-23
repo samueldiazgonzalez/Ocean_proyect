@@ -1,137 +1,109 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ocean - Perfil Empresa</title>
-
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Panel Proveedor</title>
   <link rel="stylesheet" href="proveedor.css">
-  <script src="funcionalidades_proveedor.js" defer></script>
-  
-  <link rel="stylesheet" href="assets/icons/remixicon.css">
-
 </head>
-
 <body>
-
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <h2 class="brand">Ocean System</h2>
-
-    <nav class="sidebar-menu">
-      <a href="#"><i class="ri-home-4-line"></i> Inicio</a>
-      <a href="#"><i class="ri-earth-line"></i> Explorar</a>
-      <a href="#"><i class="ri-briefcase-4-line"></i> Empresas</a>
-      <a class="active" href="#"><i class="ri-building-line"></i> Perfil Empresa</a>
-      <a href="#"><i class="ri-settings-3-line"></i> Configuración</a>
-      <a href="#"><i class="ri-logout-box-r-line"></i> Cerrar Sesión</a>
-    </nav>
-  </aside>
-
-  <!-- MAIN -->
-  <main class="main">
-
-    <!-- HEADER DE EMPRESA -->
-    <section class="profile-header">
-      <img src="https://i.pravatar.cc/250?u=empresa" alt="Logo Empresa" class="avatar">
-
-      <div>
-        <h1>Caribbean Tours S.A.</h1>
-        <p class="sub">Proveedor de servicios turísticos desde 2010</p>
+  <div class="app">
+    <aside class="sidebar" aria-label="Barra lateral">
+      <div class="brand">
+        <div class="logo">PT</div>
+        <div class="brand-text">
+          <div>Portal</div>
+          <div class="subtitle">Proveedores</div>
+        </div>
       </div>
 
-      <button class="btn-primary edit-btn">
-        <i class="ri-edit-line"></i> Editar Perfil
-      </button>
-    </section>
+      <nav class="nav" role="navigation" aria-label="Navegación">
+        <a class="nav-link active" href="proveedor.html" data-page="dashboard">Dashboard</a>
+        <a class="nav-link" href="servicios.html" data-page="services">Mis Servicios</a>
+        <a class="nav-link" href="perfil.html" data-page="profile">Perfil</a>
+        <a class="nav-link" href="clientes.html" data-page="clients">Clientes</a>
+        <a class="nav-link" href="configuracion.html" data-page="settings">Ajustes</a>
+      </nav>
 
-    <!-- ESTADÍSTICAS EMPRESARIALES -->
-    <section class="stats">
+      <div class="foot">Soporte · Términos · Centro de ayuda</div>
+    </aside>
 
-      <div class="stat-card">
-        <i class="ri-map-pin-line"></i>
-        <h2>248</h2>
-        <p>Experiencias Publicadas</p>
-      </div>
+    <main class="main">
+      <header class="topbar">
+        <div class="title-block">
+          <h1>Panel de Proveedor</h1>
+          <p class="muted">Perfil público · Gestiona tus servicios</p>
+        </div>
 
-      <div class="stat-card">
-        <i class="ri-star-smile-line"></i>
-        <h2>4.9</h2>
-        <p>Calificación Promedio</p>
-      </div>
+        <div class="top-actions">
+          <div class="search">
+            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M21 21l-4.35-4.35M10.5 18A7.5 7.5 0 1010.5 3a7.5 7.5 0 000 15z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <input id="search" placeholder="Buscar servicio, cliente, ruta..." />
+          </div>
 
-      <div class="stat-card">
-        <i class="ri-user-follow-line"></i>
-        <h2>5.3k</h2>
-        <p>Clientes Atendidos</p>
-      </div>
+          <button id="btnEditProfile" class="small-btn">Editar perfil</button>
 
-      <div class="stat-card">
-        <i class="ri-shield-check-line"></i>
-        <h2>12</h2>
-        <p>Años de Experiencia</p>
-      </div>
+          <div class="avatar" title="Avatar">
+            <!-- Avatar: ruta local subida (ajusta si mueves la imagen) -->
+            <img src="imagenes\imagen_proveedor.jpg" alt="">
+          </div>
+        </div>
+      </header>
 
-    </section>
+      <section class="grid">
+        <aside class="card profile-card">
+          <div class="profile-header">
+            <div class="profile-photo">
+              <img src="imagenes\imagen_proveedor.jpg" alt="">
+            </div>
+            <div class="profile-meta">
+              <h2 id="provName">Javier Pérez</h2>
+              <p id="provRole">Proveedor Turistico-Hotelero</p>
+              <div class="rating">⭐ <span id="provRating">4.4</span> · <span class="muted">40 reseñas</span></div>
+              <div id="provLocation" class="muted">Cartagena, Colombia</div>
+            </div>
+          </div>
 
-    <!-- GRID PRINCIPAL -->
-    <div class="grid">
+          <div class="bio">
+            <strong>Biografía</strong>
+            <p id="provBio" class="muted">Proveedor turistico con 5 años de experiencia.</p>
+          </div>
 
-      <!-- INFORMACIÓN EMPRESARIAL -->
-      <div class="card">
-        <h3><i class="ri-building-2-line"></i> Información Empresarial</h3>
-        <p><strong>Razón Social:</strong> Caribbean Tours S.A.</p>
-        <p><strong>NIT:</strong> 901.458.232-1</p>
-        <p><strong>Correo corporativo:</strong> contacto@caribbeantours.com</p>
-        <p><strong>Teléfono:</strong> +57 301 452 9988</p>
-        <p><strong>Sede Principal:</strong> Cartagena, Colombia</p>
-        <button class="btn-secondary">Actualizar Información</button>
-      </div>
+          <div class="profile-actions">
+            <button class="btn ghost" id="btnViewPublic">Ver perfil público</button>
+            <button class="btn primary" id="btnContact">Contactar</button>
+          </div>
 
-      <!-- SERVICIOS OFRECIDOS -->
-      <div class="card">
-        <h3><i class="ri-suitcase-line"></i> Servicios Ofrecidos</h3>
-        <span class="tag">Tours Guiados</span>
-        <span class="tag">Experiencias Premium</span>
-        <span class="tag">Transporte Turístico</span>
-        <span class="tag">Excursiones<br>Marítimas</span>
-        <span class="tag">Actividades Familiares</span>
-        <button class="btn-secondary">Editar Servicios</button>
-      </div>
+          <div class="note">Información del proveedor. Actualiza tu perfil para mejorar la visibilidad en la plataforma.</div>
+        </aside>
 
-      <!-- CERTIFICACIONES -->
-      <div class="card">
-        <h3><i class="ri-award-line"></i> Certificaciones</h3>
-        <p>• Norma Técnica Sectorial NTS–TS 003</p>
-        <p>• Registro Nacional de Turismo (RNT)</p>
-        <p>• Empresa Sostenible Categoría Oro</p>
-        <p>• Aliado Certificado Ocean System</p>
-        <button class="btn-secondary">Gestionar Certificaciones</button>
-      </div>
+        <section class="content-column">
+          <div class="section-header">
+            <h3>Gestionar servicios</h3>
+            <div class="pill" id="serviceCount">0 servicios</div>
+          </div>
 
-      <!-- POLÍTICAS Y DOCUMENTOS -->
-      <div class="card">
-        <h3><i class="ri-file-shield-line"></i> Documentos Legales</h3>
-        <p>• Póliza de Responsabilidad Civil Vigente</p>
-        <p>• Reglamento Interno para Pasajeros</p>
-        <p>• Política de Seguridad Turística</p>
-        <p>• Declaración de Sostenibilidad</p>
-        <button class="btn-secondary">Subir Documento</button>
-      </div>
+          <div id="servicesList" class="services">
+            <!-- Servicios generados por JS -->
+          </div>
 
-      <!-- ACTIVIDAD RECIENTE -->
-      <div class="card" style="grid-column: span 2;">
-        <h3><i class="ri-time-line"></i> Actividad Reciente</h3>
-        <ul class="activity">
-          <li><i class="ri-check-line"></i> Nueva experiencia publicada: “Tour Islas Barú VIP”</li>
-          <li><i class="ri-star-line"></i> Reseña recibida: 5.0 ⭐ de Laura Gómez</li>
-          <li><i class="ri-wallet-3-line"></i> Reserva completada: 15 pasajeros</li>
-          <li><i class="ri-shield-user-line"></i> Certificación ambiental actualizada</li>
-        </ul>
-      </div>
+          <div class="add-service">
+            <button class="btn primary" id="btnAddService">+ Añadir servicio</button>
+          </div>
 
-    </div>
-  </main>
+          <div class="card note">
+            <strong>Consejo:</strong> Completa el perfil y añade fotos o descripciones detalladas de cada servicio para atraer más clientes.
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
 
+  <!-- Modal -->
+  <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" hidden>
+    <div class="modal" id="modal"></div>
+  </div>
+
+  <script src="proveedor.js" defer></script>
 </body>
 </html>

@@ -22,8 +22,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: rootpass
       MYSQL_DATABASE: OceanDB
-      MYSQL_USER: root
-      MYSQL_PASSWORD: rootpass
     ports:
       - "3306:3306"
     volumes:
