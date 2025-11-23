@@ -234,7 +234,7 @@ body {
   .left-col, .right-col { width: 100%; }
 }
 
-/* Evitar que la derecha se meta dentro */
+
 .right-col {
   flex: 1;
   min-width: 400px;
@@ -243,7 +243,7 @@ body {
   gap: 20px;
 }
 
-/* Espacio correcto del panel vacío */
+
 .empty-panel {
   display: flex;
   flex-direction: column;
@@ -252,7 +252,7 @@ body {
   min-height: 260px;
 }
 
-/* Ajuste de cards de la izquierda para que no desborden */
+
 .services .service {
   width: 100%;
   max-width: 100%;
