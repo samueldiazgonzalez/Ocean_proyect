@@ -16,7 +16,6 @@ if ($conn->connect_error) {
 $logged_in = isset($_SESSION['user_id']);
 ?>
 
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -25,7 +24,6 @@ $logged_in = isset($_SESSION['user_id']);
   <title>Ocean - Tu plataforma de experiencias turísticas</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="estilos.css">
-  <script src="script.js"></script>
 </head>
 <body>
   
@@ -37,7 +35,7 @@ $logged_in = isset($_SESSION['user_id']);
           <span><i class="fas fa-envelope"></i> info@oceansystem.com</span>
         </div>
         <div class="social-links">
-          <a href="#"><i class="fab fa-facebook"></i></a>
+          <a href="https://www.facebook.com"><i class="fab fa-facebook"></i></a>
           <a href="#"><i class="fab fa-instagram"></i></a>
           <a href="#"><i class="fab fa-twitter"></i></a>
           <a href="#"><i class="fab fa-whatsapp"></i></a>
@@ -54,21 +52,19 @@ $logged_in = isset($_SESSION['user_id']);
           <i class="fas fa-search search-icon"></i>
           <input type="text" id="search" class="search-input" placeholder="Buscar destinos, tours, hospedajes...">
         </div>
-     <nav class="main-nav">
-  <a href="#"><i class="fas fa-home"></i> Inicio</a>
-  <a href="#"><i class="fas fa-map"></i> Explorar</a>
-  <a href="#"><i class="fas fa-bookmark"></i> Mis Reservas</a>
-  <a href="#"><i class="fas fa-tags"></i> Ofertas</a>
-  <a href="#"><i class="fas fa-question-circle"></i> Ayuda</a>
+        <nav class="main-nav">
+          <a href="turismo.php"><i class="fas fa-home"></i> Inicio</a>
+          <a href="mis_reservas.php"><i class="fas fa-bookmark"></i> Mis Reservas</a>
+          <a href="#"><i class="fas fa-tags"></i> Ofertas</a>
+          <a href="#"><i class="fas fa-question-circle"></i> Ayuda</a>
 
-  <?php if ($logged_in): ?>
-    <a href="perfil.php" class="btn-login"><i class="fas fa-user"></i> Mi Perfil</a>
-    <a href="logout.php" class="btn-register"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
-  <?php else: ?>
-    <a href="login.html" class="btn-login"><i class="fas fa-user"></i> Iniciar Sesión</a>
-    <a href="roles.html" class="btn-register"><i class="fas fa-user-plus"></i> Regístrate</a>
-  <?php endif; ?>
-</nav>
+          <?php if ($logged_in): ?>
+            <a href="perfil.php" class="btn-login"><i class="fas fa-user"></i> Mi Perfil</a>
+          <?php else: ?>
+            <a href="login.html" class="btn-login"><i class="fas fa-user"></i> Iniciar Sesión</a>
+            <a href="roles.html" class="btn-register"><i class="fas fa-user-plus"></i> Regístrate</a>
+          <?php endif; ?>
+        </nav>
       </div>
     </div>
   </header>
@@ -207,10 +203,9 @@ $logged_in = isset($_SESSION['user_id']);
             </div>
             <div class="card-price">Desde $95,000 COP</div>
             <div class="card-actions">
-              <button class="btn-reserve">
-                <a href="vista/Cartagena.php" class="btn-reserve">
-                 <i class="fas fa-calendar-check"></i> Reservar ahora</a>         
-                 </button>
+              <a href="vista/Cartagena.php" class="btn-reserve">
+                <i class="fas fa-calendar-check"></i> Reservar ahora
+              </a>
               <button class="btn-favorite" aria-label="Agregar a favoritos">
                 <i class="far fa-heart"></i>
               </button>
@@ -242,10 +237,9 @@ $logged_in = isset($_SESSION['user_id']);
             </div>
             <div class="card-price">Desde $180,000 COP</div>
             <div class="card-actions">
-             <button class="btn-reserve">
-                <a href="vista/San andres.php" class="btn-reserve">
-                 <i class="fas fa-calendar-check"></i> Reservar ahora</a>         
-                 </button>
+              <a href="vista/San andres.php" class="btn-reserve">
+                <i class="fas fa-calendar-check"></i> Reservar ahora
+              </a>
               <button class="btn-favorite" aria-label="Agregar a favoritos">
                 <i class="far fa-heart"></i>
               </button>
@@ -277,10 +271,9 @@ $logged_in = isset($_SESSION['user_id']);
             </div>
             <div class="card-price">Desde $70,000 COP</div>
             <div class="card-actions">
-              <button class="btn-reserve">
-                <a href="vista/Tayrona.php" class="btn-reserve">
-                 <i class="fas fa-calendar-check"></i> Reservar ahora</a>         
-                 </button>
+              <a href="vista/Tayrona.php" class="btn-reserve">
+                <i class="fas fa-calendar-check"></i> Reservar ahora
+              </a>
               <button class="btn-favorite" aria-label="Agregar a favoritos">
                 <i class="far fa-heart"></i>
               </button>
@@ -312,10 +305,9 @@ $logged_in = isset($_SESSION['user_id']);
             </div>
             <div class="card-price">Desde $120,000 COP</div>
             <div class="card-actions">
-               <button class="btn-reserve">
-                <a href="vista/Santa marta.php" class="btn-reserve">
-                 <i class="fas fa-calendar-check"></i> Reservar ahora</a>         
-                 </button>
+              <a href="vista/Santa marta.php" class="btn-reserve">
+                <i class="fas fa-calendar-check"></i> Reservar ahora
+              </a>
               <button class="btn-favorite" aria-label="Agregar a favoritos">
                 <i class="far fa-heart"></i>
               </button>
@@ -347,10 +339,9 @@ $logged_in = isset($_SESSION['user_id']);
             </div>
             <div class="card-price">Desde $150,000 COP</div>
             <div class="card-actions">
-             <button class="btn-reserve">
-                <a href="vista/Guajira.php" class="btn-reserve">
-                 <i class="fas fa-calendar-check"></i> Reservar ahora</a>         
-                 </button>
+              <a href="vista/Guajira.php" class="btn-reserve">
+                <i class="fas fa-calendar-check"></i> Reservar ahora
+              </a>
               <button class="btn-favorite" aria-label="Agregar a favoritos">
                 <i class="far fa-heart"></i>
               </button>
@@ -383,10 +374,9 @@ $logged_in = isset($_SESSION['user_id']);
             </div>
             <div class="card-price">Desde $250,000 COP</div>
             <div class="card-actions">
-            <button class="btn-reserve">
-                <a href="vista/Amazonas.php" class="btn-reserve">
-                 <i class="fas fa-calendar-check"></i> Reservar ahora</a>         
-                 </button>
+              <a href="vista/Amazonas.php" class="btn-reserve">
+                <i class="fas fa-calendar-check"></i> Reservar ahora
+              </a>
               <button class="btn-favorite" aria-label="Agregar a favoritos">
                 <i class="far fa-heart"></i>
               </button>
@@ -396,5 +386,37 @@ $logged_in = isset($_SESSION['user_id']);
       </div>
     </main>
   </div>
+
+  <!-- Script movido al final del body para asegurar que el DOM esté cargado -->
+ <script src="./script.js"></script>
+ <script>
+document.addEventListener("DOMContentLoaded", function() {
+  const searchInput = document.getElementById("search");
+  const products = document.querySelectorAll(".product-card");
+  const resultsCount = document.getElementById("results-count");
+
+  searchInput.addEventListener("input", function() {
+    const searchText = searchInput.value.toLowerCase().trim();
+    let visibleCount = 0;
+
+    products.forEach(function(product) {
+      const titulo = product.querySelector(".card-title").textContent.toLowerCase();
+      const contenido = product.querySelector(".card-content").textContent.toLowerCase();
+      
+      if (searchText === "" || titulo.includes(searchText) || contenido.includes(searchText)) {
+        product.style.display = "flex";
+        visibleCount++;
+      } else {
+        product.style.display = "none";
+      }
+    });
+
+    resultsCount.textContent = "Mostrando " + visibleCount + " experiencias";
+  });
+
+  console.log("Buscador activado correctamente");
+});
+</script>
+
 </body>
 </html>

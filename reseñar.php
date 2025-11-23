@@ -28,6 +28,6 @@ $stmt = $conn->prepare("INSERT INTO reseñas (usuario_id, destino_id, comentario
 $stmt->bind_param("iisi", $user_id, $destino_id, $comentario, $rating);
 $stmt->execute();
 
-header("Location: vistas/Cartagena.php"); // vuelve a la vista
+header("Location: perfil.php"); // vuelve a la vista
 exit();
 ?>
