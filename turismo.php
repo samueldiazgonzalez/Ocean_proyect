@@ -70,7 +70,8 @@ $logged_in = isset($_SESSION['user_id']);
   </header>
 
   
-  <section class="hero-banner" style="background-image: linear-gradient(135deg, rgba(0, 102, 204, 0.8), rgba(0, 180, 216, 0.7)), url('imagenes/iStock-1165965255%20copia.webp'); background-size: cover; background-position: center;">
+  <section class="hero-banner" style="background-image: linear-gradient(135deg, rgba(0, 102, 204, 0.8), rgba(0, 180, 216, 0.7)), 
+  url('imagenes/3.-el-turismo-como-actividad-economica-min-1-scaled.jpg'); background-size: cover; background-position: center;">
     <div class="hero-content">
       <h1 class="hero-title">Descubre Colombia como nunca antes</h1>
       <p class="hero-subtitle">Conectamos viajeros con las mejores agencias locales para experiencias únicas e inolvidables</p>
@@ -215,8 +216,8 @@ $logged_in = isset($_SESSION['user_id']);
 
         <div class="product-card" data-precio="180000" data-rating="4.7" data-disponible="false" data-categoria="Playas">
           <div class="card-image">
-            <img src="imagenes/parque-nacional-tayrona-colombia-2024-1.jpg" alt="Escapada a San Andrés, Colombia">
-            <div class="availability-badge unavailable">Agotado</div>
+            <img src="imagenes/decameron-aquarium.jpg" alt="Escapada a San Andrés, Colombia">
+            <div class="availability-badge unavailable">Disponible</div>
           </div>
           <div class="card-content">
             <h4 class="card-title">Escapada a San Andrés</h4>
@@ -249,7 +250,7 @@ $logged_in = isset($_SESSION['user_id']);
 
         <div class="product-card" data-precio="70000" data-rating="4.8" data-disponible="true" data-categoria="Guías locales">
           <div class="card-image">
-            <img src="imagenes/images.jpeg" alt="Guía local en Parque Tayrona, Colombia">
+            <img src="imagenes/parque-nacional-tayrona-colombia-2024-1.jpg" alt="Guía local en Parque Tayrona, Colombia">
             <div class="availability-badge available">Disponible</div>
           </div>
           <div class="card-content">
@@ -317,8 +318,8 @@ $logged_in = isset($_SESSION['user_id']);
 
         <div class="product-card" data-precio="150000" data-rating="4.5" data-disponible="false" data-categoria="Paquetes completos">
           <div class="card-image">
-            <img src="imagenes/parque-flamingos-camarones-guajira-colombia-5-©-Tristan-Quevilly-400x300.jpg.webp" alt="Tour desierto La Guajira, Colombia">
-            <div class="availability-badge unavailable">Agotado</div>
+            <img src="imagenes/istockphoto-1311459420-612x612.jpg" alt="Tour desierto La Guajira, Colombia">
+            <div class="availability-badge unavailable">Disponible</div>
           </div>
           <div class="card-content">
             <h4 class="card-title">Tour desierto La Guajira</h4>
