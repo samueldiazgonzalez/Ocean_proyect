@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mis Servicios - Proveedor</title>
+  <link rel="stylesheet" href="servicios.css">
+</head>
+<body>
+  <div class="wrapper">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">PT</div>
+        <div class="brand-text">
+          <div>Portal</div>
+          <div class="subtitle">Proveedores</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a href="proveedor.html">Dashboard</a>
+        <a class="active" href="servicios.html">Mis Servicios</a>
+        <a href="perfil.html">Perfil</a>
+        <a href="clientes.html">Clientes</a>
+        <a href="configuracion.html">Ajustes</a>
+      </nav>
+
+      <div class="foot">Soporte · Términos · Centro de ayuda</div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <h1>Mis Servicios</h1>
+        <div class="actions">
+          <input id="search" placeholder="Buscar servicio..." />
+          <select id="statusFilter">
+            <option value="all">Todos</option>
+            <option value="Activo">Activos</option>
+            <option value="Pausado">Pausados</option>
+          </select>
+          <button id="btnExport" class="btn">Exportar CSV</button>
+          <button id="btnAdd" class="btn primary">+ Añadir</button>
+        </div>
+      </header>
+
+      <section class="content">
+        <aside class="left-col">
+          <div id="servicesList" class="services"></div>
+        </aside>
+
+        <section class="right-col">
+          <div id="serviceDetail" class="card hidden">
+            <h3 id="detailTitle">Detalle</h3>
+
+            <div class="form-row">
+              <label>Título</label>
+              <input id="detail_title" />
+            </div>
+
+            <div class="form-row">
+              <label>Descripción</label>
+              <textarea id="detail_desc" rows="4"></textarea>
+            </div>
+
+            <div class="form-row">
+              <label>Tarifa</label>
+              <input id="detail_rate" />
+            </div>
+
+            <div class="form-row">
+              <label>Duración (horas)</label>
+              <input id="detail_duration" type="number" step="0.5" min="0"/>
+            </div>
+
+            <div class="form-row">
+              <label>Inicio</label>
+              <input id="detail_start" type="time" />
+            </div>
+
+            <div class="form-row">
+              <label>Fin</label>
+              <input id="detail_end" type="time" />
+            </div>
+
+            <div class="form-actions">
+              <button id="detailCancel" class="btn ghost">Cancelar</button>
+              <button id="detailSave" class="btn primary">Guardar</button>
+            </div>
+          </div>
+
+          <div id="emptyRight" class="card">
+            <p>Selecciona un servicio a la izquierda para ver o editar los detalles.</p>
+            <!-- usa la imagen local -->
+            <img src="imagenes/imagen_proveedor.jpg" alt="avatar proveedor">
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="servicios.js" defer></script>
+</body>
+</html>
