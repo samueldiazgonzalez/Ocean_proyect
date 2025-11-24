@@ -14,13 +14,17 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  /* ===== 2. CALCULO TOTAL RESERVA ===== */
+  /* ===== 2. CALCULO TOTAL RESERVA (MODIFICADO) ===== */
   const checkin = document.getElementById("checkin");
   const checkout = document.getElementById("checkout");
   const guests = document.getElementById("guests");
   const totalPrice = document.getElementById("totalPrice");
+  
+  // MODIFICACIÓN: Obtenemos el precio desde el DOM (HTML)
+  const priceElement = document.getElementById("pricePerNight");
+  // Leemos el valor numérico del atributo 'data-price'. Usamos '|| 0' como seguridad.
+  const pricePerNight = parseInt(priceElement.getAttribute("data-price")) || 0; 
 
-  const pricePerNight = 250000; // Precio base por noche COP
   const formatterCOP = new Intl.NumberFormat("es-CO", {
     style: "currency",
     currency: "COP",
@@ -34,7 +38,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (checkin.value && checkout.value && outDate > inDate) {
       const nights = (outDate - inDate) / (1000*60*60*24);
-      const total = nights * pricePerNight * numGuests;
+      // El cálculo usa el precio obtenido dinámicamente
+      const total = nights * pricePerNight * numGuests; 
       totalPrice.textContent = formatterCOP.format(total);
     } else {
       totalPrice.textContent = "$0";
