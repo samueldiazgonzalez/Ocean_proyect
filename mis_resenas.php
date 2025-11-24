@@ -10,9 +10,9 @@ if ($conn->connect_error) die("Error DB: " . $conn->connect_error);
 
 $user_id = $_SESSION['user_id'];
 
-$sql = "SELECT r.comentario, r.rating, r.created_at, d.titulo 
+$sql = "SELECT r.comentario, r.rating, r.created_at, s.titulo 
         FROM reseñas r
-        JOIN destinos d ON r.destino_id = d.id
+        JOIN servicios s ON r.servicio_id = s.id
         WHERE r.usuario_id = ?
         ORDER BY r.created_at DESC";
 $stmt = $conn->prepare($sql);
@@ -20,7 +20,6 @@ $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
