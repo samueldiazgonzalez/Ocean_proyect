@@ -1,0 +1,402 @@
+/* ==== RESET ==== */
+* {
+    margin: 0;
+    padding: 0;
+    /* La propiedad box-sizing: border-box es clave y está correctamente usada */
+    box-sizing: border-box; 
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f5faff;
+    color: #333;
+    line-height: 1.5;
+}
+
+/* ----------------------------------- */
+
+/* ==== LAYOUT GENERAL Y HEADER ==== */
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 20px;
+}
+
+/* --- Header Top (Barra Azul) --- */
+.header-top {
+    background: #004080;
+    color: #fff;
+    font-size: 14px;
+    padding: 8px 0;
+}
+
+.header-top .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.contact-info span {
+    margin-right: 15px;
+}
+
+.social-links a {
+    color: #fff;
+    margin-left: 10px;
+    transition: color 0.3s;
+}
+
+.social-links a:hover {
+    color: #ffd700;
+}
+
+/* --- Header Main (Barra Blanca) --- */
+.header-main {
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+}
+
+.header-main .container {
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+    color: #004080;
+}
+
+/* --- Búsqueda --- */
+.search-container {
+    position: relative;
+    /* Optimización: usar flex-grow/shrink para un mejor control del espacio */
+    flex: 1 1 300px; 
+    max-width: 400px; /* Limitar el tamaño máximo en pantallas grandes */
+    margin: 0 20px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 35px 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+}
+
+.search-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #777;
+}
+
+/* --- Navegación Principal --- */
+.main-nav {
+    display: flex; 
+    gap: 15px; 
+    align-items: center;
+}
+
+.main-nav a {
+    text-decoration: none;
+    color: #004080;
+    font-weight: 500;
+    transition: color 0.3s;
+    /* Añadido: asegurar que los iconos tengan espacio */
+    white-space: nowrap; 
+}
+
+.main-nav a:hover {
+    color: #0099cc;
+}
+
+/* --- Botones de Acción --- */
+.btn-login {
+    background: #004080;
+    color: #fff !important;
+    padding: 8px 12px;
+    border-radius: 20px;
+    /* Añadido: margen para separarse del enlace Ayuda */
+    margin-left: 15px;
+}
+
+.btn-register {
+    background: #0099cc; 
+    color: #fff !important;
+    padding: 8px 12px;
+    border-radius: 20px;
+}
+
+/* --- Enlace Activo --- */
+.main-nav a.active {
+    color: #0099cc; 
+    border-bottom: 2px solid #ffd700;
+    padding-bottom: 5px;
+}
+
+/* ----------------------------------- */
+
+/* ==== CENTRO DE AYUDA / help-container ==== */
+.help-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.help-section-title {
+    color: #004080; 
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    text-align: center;
+    border-bottom: 3px solid #ffd700; 
+    padding-bottom: 15px;
+    font-weight: 700;
+}
+
+.faq-section h2 {
+    color: #333;
+    font-size: 1.8em;
+    margin-bottom: 25px;
+    border-left: 5px solid #004080;
+    padding-left: 10px;
+}
+
+/* --- Acordeón (FAQ) --- */
+.accordion-item {
+    margin-bottom: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s ease;
+}
+
+.accordion-item:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.accordion-header {
+    background-color: #f8f8f8;
+    color: #333;
+    padding: 18px 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: 1.1em;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.accordion-header:hover {
+    background-color: #e6f1ff; 
+}
+
+.accordion-icon {
+    font-size: 1.2em;
+    color: #004080; 
+    transition: transform 0.3s ease;
+}
+
+.accordion-item.active .accordion-icon {
+    transform: rotate(180deg);
+}
+
+.accordion-content {
+    padding: 15px 20px;
+    background-color: #ffffff;
+    border-top: 1px solid #eeeeee;
+    display: none; 
+    line-height: 1.6;
+    color: #555;
+}
+
+/* --- Tarjeta de Contacto y Formulario --- */
+.contact-card {
+    background-color: #e6f7ff; 
+    padding: 40px;
+    border-radius: 12px;
+    text-align: center;
+    margin-top: 50px;
+    border: 1px solid #b3d9ff;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+.contact-card h3 {
+    color: #004080; 
+    font-size: 1.6em;
+    margin-bottom: 15px;
+}
+
+.contact-card p {
+    font-size: 1.1em;
+    color: #444;
+    margin-bottom: 25px;
+}
+
+.contact-details-footer {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.contact-card .contact-detail {
+    margin: 15px 0;
+    font-size: 1.2em;
+    font-weight: 500;
+}
+
+.contact-card .contact-detail i {
+    margin-right: 10px;
+    color: #0099cc; 
+}
+
+.contact-card .contact-detail a {
+    color: #004080;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.contact-card .contact-detail a:hover {
+    color: #ffd700;
+    text-decoration: underline;
+}
+
+/* --- Formulario de Soporte --- */
+.support-form {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff; 
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #004080;
+}
+
+.support-form input[type="text"],
+.support-form input[type="email"],
+.support-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 1em;
+}
+
+.support-form textarea {
+    resize: vertical;
+}
+
+.btn-submit {
+    background: #0099cc; 
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: background 0.3s;
+    width: 100%;
+}
+
+.btn-submit:hover {
+    background: #007099;
+}
+
+.message-status {
+    margin-top: 15px;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.message-status.success {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+}
+
+.message-status.error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+}
+
+
+/* ----------------------------------- */
+
+/* ==== FOOTER ==== */
+.footer {
+    padding: 20px; 
+    text-align: center; 
+    border-top: 1px solid #ddd;
+    background-color: #fff;
+    color: #666;
+    font-size: 0.9em;
+}
+
+/* ----------------------------------- */
+
+/* ==== RESPONSIVE ==== */
+@media(max-width: 900px) {
+    .header-main .container {
+        flex-wrap: wrap;
+    }
+    .search-container {
+        order: 3;
+        width: 100%;
+        margin-top: 10px;
+    }
+    .main-nav {
+        order: 4;
+        width: 100%;
+        text-align: center;
+        margin-top: 10px;
+        /* Esto asegura que los enlaces y botones restantes se centren horizontalmente */
+        justify-content: center;
+    }
+    .main-nav a {
+        /* Asegura que los enlaces no se rompan y tengan espacio entre sí */
+        white-space: nowrap; 
+        margin: 5px 10px;
+    }
+    .help-container {
+        margin: 20px auto;
+    }
+}
+@media (max-width: 600px) {
+    .header-top .container {
+        flex-direction: column;
+    }
+    .social-links {
+        margin-top: 5px;
+    }
+    .main-nav a {
+        /* Usamos flexbox en el padre, inline-block no es estrictamente necesario, pero es seguro */
+        display: inline-block; 
+        margin: 5px 8px;
+    }
+    .help-section-title {
+        font-size: 2em;
+    }
+    .contact-card {
+        padding: 20px;
+    }
+}

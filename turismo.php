@@ -55,8 +55,8 @@ $logged_in = isset($_SESSION['user_id']);
         <nav class="main-nav">
           <a href="turismo.php"><i class="fas fa-home"></i> Inicio</a>
           <a href="mis_reservas.php"><i class="fas fa-bookmark"></i> Mis Reservas</a>
-          <a href="#"><i class="fas fa-tags"></i> Ofertas</a>
-          <a href="#"><i class="fas fa-question-circle"></i> Ayuda</a>
+         
+          <a href="ayuda.html" class="active"><i class="fas fa-question-circle"></i> Ayuda</a>
 
           <?php if ($logged_in): ?>
             <a href="perfil.php" class="btn-login"><i class="fas fa-user"></i> Mi Perfil</a>
@@ -70,7 +70,8 @@ $logged_in = isset($_SESSION['user_id']);
   </header>
 
   
-  <section class="hero-banner" style="background-image: linear-gradient(135deg, rgba(0, 102, 204, 0.8), rgba(0, 180, 216, 0.7)), url('imagenes/iStock-1165965255%20copia.webp'); background-size: cover; background-position: center;">
+  <section class="hero-banner" style="background-image: linear-gradient(135deg, rgba(0, 102, 204, 0.8), rgba(0, 180, 216, 0.7)), 
+  url('imagenes/3.-el-turismo-como-actividad-economica-min-1-scaled.jpg'); background-size: cover; background-position: center;">
     <div class="hero-content">
       <h1 class="hero-title">Descubre Colombia como nunca antes</h1>
       <p class="hero-subtitle">Conectamos viajeros con las mejores agencias locales para experiencias únicas e inolvidables</p>
@@ -177,219 +178,57 @@ $logged_in = isset($_SESSION['user_id']);
         </div>
       </div>
 
-      <div class="products-grid" id="products">
-        <div class="product-card" data-precio="95000" data-rating="4.9" data-disponible="true" data-categoria="Tours de aventura">
-          <div class="card-image">
-            <img src="imagenes/Cartagena_Colombia.webp" alt="Tour histórico en Cartagena de Indias, Colombia">
-            <div class="availability-badge available">Disponible</div>
-            <div class="card-badge">Destacado</div>
+     <?php
+// adaptafcion vista de servicios en turismo.php siu
+$sql = "SELECT id, titulo, descripcion, tarifa, duracion, imagenes, categoria, estado 
+        FROM servicios 
+        WHERE estado='Activo' 
+        ORDER BY created_at DESC";
+$result = $conn->query($sql);
+?>
+
+<div class="products-grid" id="products">
+  <?php if ($result->num_rows > 0): ?>
+    <?php while($row = $result->fetch_assoc()): ?>
+      <?php 
+        $imagenes = json_decode($row['imagenes'], true);
+        $img = $imagenes[0] ?? "imagenes/default.jpg";
+      ?>
+      <div class="product-card" 
+           data-precio="<?php echo intval($row['tarifa']); ?>" 
+           data-rating="5.0" 
+           data-disponible="true" 
+           data-categoria="<?php echo htmlspecialchars($row['categoria']); ?>">
+        <div class="card-image">
+          <img src="<?php echo $img; ?>" alt="<?php echo htmlspecialchars($row['titulo']); ?>">
+          <div class="availability-badge available">Disponible</div>
+        </div>
+        <div class="card-content">
+          <h4 class="card-title"><?php echo htmlspecialchars($row['titulo']); ?></h4>
+          <p><?php echo htmlspecialchars($row['descripcion']); ?></p>
+          <div class="card-features">
+            <span class="feature-tag"><i class="fas fa-clock"></i> <?php echo $row['duracion']; ?> horas</span>
           </div>
-          <div class="card-content">
-            <h4 class="card-title">Tour por Cartagena histórica</h4>
-            <div class="card-rating">
-              <div class="rating-stars">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-              </div>
-              <span class="rating-number">4.9 (127 reseñas)</span>
-            </div>
-            <div class="card-features">
-              <span class="feature-tag"><i class="fas fa-clock"></i> 6 horas</span>
-              <span class="feature-tag"><i class="fas fa-users"></i> Grupo pequeño</span>
-              <span class="feature-tag"><i class="fas fa-camera"></i> Fotos incluidas</span>
-            </div>
-            <div class="card-price">Desde $95,000 COP</div>
-            <div class="card-actions">
-              <a href="vista/Cartagena.php" class="btn-reserve">
-                <i class="fas fa-calendar-check"></i> Reservar ahora
-              </a>
-              <button class="btn-favorite" aria-label="Agregar a favoritos">
-                <i class="far fa-heart"></i>
-              </button>
-            </div>
+          <div class="card-price">Desde $<?php echo number_format($row['tarifa'],0); ?> COP</div>
+          <div class="card-actions">
+            <a href="ver_servicio.php?id=<?php echo $row['id']; ?>" class="btn-reserve">
+              <i class="fas fa-calendar-check"></i> Reservar ahora
+            </a>
+            <button class="btn-favorite" aria-label="Agregar a favoritos">
+              <i class="far fa-heart"></i>
+            </button>
           </div>
         </div>
 
-        <div class="product-card" data-precio="180000" data-rating="4.7" data-disponible="false" data-categoria="Playas">
-          <div class="card-image">
-            <img src="imagenes/parque-nacional-tayrona-colombia-2024-1.jpg" alt="Escapada a San Andrés, Colombia">
-            <div class="availability-badge unavailable">Agotado</div>
-          </div>
-          <div class="card-content">
-            <h4 class="card-title">Escapada a San Andrés</h4>
-            <div class="card-rating">
-              <div class="rating-stars">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="far fa-star"></i>
-              </div>
-              <span class="rating-number">4.7 (89 reseñas)</span>
-            </div>
-            <div class="card-features">
-              <span class="feature-tag"><i class="fas fa-plane"></i> Vuelos incluidos</span>
-              <span class="feature-tag"><i class="fas fa-bed"></i> 3 noches</span>
-              <span class="feature-tag"><i class="fas fa-umbrella-beach"></i> Todo incluido</span>
-            </div>
-            <div class="card-price">Desde $180,000 COP</div>
-            <div class="card-actions">
-              <a href="vista/San andres.php" class="btn-reserve">
-                <i class="fas fa-calendar-check"></i> Reservar ahora
-              </a>
-              <button class="btn-favorite" aria-label="Agregar a favoritos">
-                <i class="far fa-heart"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="product-card" data-precio="70000" data-rating="4.8" data-disponible="true" data-categoria="Guías locales">
-          <div class="card-image">
-            <img src="imagenes/images.jpeg" alt="Guía local en Parque Tayrona, Colombia">
-            <div class="availability-badge available">Disponible</div>
-          </div>
-          <div class="card-content">
-            <h4 class="card-title">Guía local en Parque Tayrona</h4>
-            <div class="card-rating">
-              <div class="rating-stars">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-              </div>
-              <span class="rating-number">4.8 (95 reseñas)</span>
-            </div>
-            <div class="card-features">
-              <span class="feature-tag"><i class="fas fa-hiking"></i> Senderismo</span>
-              <span class="feature-tag"><i class="fas fa-leaf"></i> Naturaleza</span>
-              <span class="feature-tag"><i class="fas fa-map"></i> Guía experto</span>
-            </div>
-            <div class="card-price">Desde $70,000 COP</div>
-            <div class="card-actions">
-              <a href="vista/Tayrona.php" class="btn-reserve">
-                <i class="fas fa-calendar-check"></i> Reservar ahora
-              </a>
-              <button class="btn-favorite" aria-label="Agregar a favoritos">
-                <i class="far fa-heart"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="product-card" data-precio="120000" data-rating="4.6" data-disponible="true" data-categoria="Tours de aventura">
-          <div class="card-image">
-            <img src="imagenes/29SANTAMARTA_1.jpg" alt="Aventura en Santa Marta, Colombia">
-            <div class="availability-badge available">Disponible</div>
-          </div>
-          <div class="card-content">
-            <h4 class="card-title">Aventura en Santa Marta</h4>
-            <div class="card-rating">
-              <div class="rating-stars">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
-              </div>
-              <span class="rating-number">4.6 (73 reseñas)</span>
-            </div>
-            <div class="card-features">
-              <span class="feature-tag"><i class="fas fa-mountain"></i> Sierra Nevada</span>
-              <span class="feature-tag"><i class="fas fa-water"></i> Playas</span>
-              <span class="feature-tag"><i class="fas fa-camera"></i> Tour fotográfico</span>
-            </div>
-            <div class="card-price">Desde $120,000 COP</div>
-            <div class="card-actions">
-              <a href="vista/Santa marta.php" class="btn-reserve">
-                <i class="fas fa-calendar-check"></i> Reservar ahora
-              </a>
-              <button class="btn-favorite" aria-label="Agregar a favoritos">
-                <i class="far fa-heart"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="product-card" data-precio="150000" data-rating="4.5" data-disponible="false" data-categoria="Paquetes completos">
-          <div class="card-image">
-            <img src="imagenes/parque-flamingos-camarones-guajira-colombia-5-©-Tristan-Quevilly-400x300.jpg.webp" alt="Tour desierto La Guajira, Colombia">
-            <div class="availability-badge unavailable">Agotado</div>
-          </div>
-          <div class="card-content">
-            <h4 class="card-title">Tour desierto La Guajira</h4>
-            <div class="card-rating">
-              <div class="rating-stars">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
-              </div>
-              <span class="rating-number">4.5 (112 reseñas)</span>
-            </div>
-            <div class="card-features">
-              <span class="feature-tag"><i class="fas fa-sun"></i> Desierto</span>
-              <span class="feature-tag"><i class="fas fa-bed"></i> 2 noches</span>
-              <span class="feature-tag"><i class="fas fa-users"></i> Grupo pequeño</span>
-            </div>
-            <div class="card-price">Desde $150,000 COP</div>
-            <div class="card-actions">
-              <a href="vista/Guajira.php" class="btn-reserve">
-                <i class="fas fa-calendar-check"></i> Reservar ahora
-              </a>
-              <button class="btn-favorite" aria-label="Agregar a favoritos">
-                <i class="far fa-heart"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="product-card" data-precio="250000" data-rating="5.0" data-disponible="true" data-categoria="Tours de aventura">
-          <div class="card-image">
-            <img src="imagenes/viajescomfama-amazonas-01.jpg" alt="Expedición en el Amazonas, Colombia">
-            <div class="availability-badge available">Disponible</div>
-            <div class="card-badge">Premium</div>
-          </div>
-          <div class="card-content">
-            <h4 class="card-title">Expedición al Amazonas</h4>
-            <div class="card-rating">
-              <div class="rating-stars">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-              </div>
-              <span class="rating-number">5.0 (45 reseñas)</span>
-            </div>
-            <div class="card-features">
-              <span class="feature-tag"><i class="fas fa-tree"></i> Selva</span>
-              <span class="feature-tag"><i class="fas fa-ship"></i> Paseo en bote</span>
-              <span class="feature-tag"><i class="fas fa-binoculars"></i> Avistamiento</span>
-            </div>
-            <div class="card-price">Desde $250,000 COP</div>
-            <div class="card-actions">
-              <a href="vista/Amazonas.php" class="btn-reserve">
-                <i class="fas fa-calendar-check"></i> Reservar ahora
-              </a>
-              <button class="btn-favorite" aria-label="Agregar a favoritos">
-                <i class="far fa-heart"></i>
-              </button>
-            </div>
-          </div>
-        </div>
       </div>
-    </main>
-  </div>
+    <?php endwhile; ?>
+  <?php else: ?>
+    <p>No hay servicios disponibles en este momento.</p>
+  <?php endif; ?>
+</div>
 
-  <!-- Script movido al final del body para asegurar que el DOM esté cargado -->
- <script src="./script.js"></script>
- <script>
+  <script src="./script.js"></script>
+  <script>
 document.addEventListener("DOMContentLoaded", function() {
   const searchInput = document.getElementById("search");
   const products = document.querySelectorAll(".product-card");

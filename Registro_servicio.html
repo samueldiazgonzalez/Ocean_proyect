@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,109 +6,93 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Servicio Turístico</title>
     <link rel="stylesheet" href="Registro_servicio.css">
-    <script src="funcionalidades_registro.js"></script>
+    <script src="Registroservanima.js" defer></script>
 </head>
-
 <body>
 
 <section class="card big-card">
+    <h2 class="title">Registrar Servicio Turístico</h2>
 
-  <h2 class="title">Registrar Servicio Turístico</h2>
+   <form id="registerService" action="registro_servicio.php" method="POST" enctype="multipart/form-data">
+        
 
-  <form id="registerService" action="Registro_php.php" method="POST" enctype="multipart/form-data">
+        <div class="form-step active">
+            <h3 class="form-section-title">Fase 1: Información General del Servicio</h3>
+            <label>Categoría *</label>
+            <select class="input-edit" name="categoria" required>
+                <option value="">Seleccione una categoría</option>
+                <option value="experiencias">Experiencias</option>
+                <option value="servicios">Servicios</option>
+                <option value="alojamiento">Alojamiento</option>
+            </select>
+            
+            <label>Nombre del Servicio *</label>
+            <input type="text" class="input-edit" name="nombre_servicio" required placeholder="Ej: Tour por el centro histórico">
+            
+            <label>Descripción Detallada *</label>
+            <textarea class="input-edit" name="descripcion" rows="5" required placeholder="Describe el servicio en detalle..."></textarea>
+            
+            <button type="button" class="btn-primary next-step-btn">Siguiente</button>
+        </div>
 
-    <!-- Información General -->
-    <h3 class="form-section-title">Información General</h3>
+        <div class="form-step">
+            <h3 class="form-section-title">Fase 2: Operación y Precios</h3>
+            <label>Duración (horas) *</label>
+            <input type="number" class="input-edit" name="duracion" required placeholder="Ej: 3">
+            
+            <label>Precio Base (COP) *</label>
+            <input type="number" class="input-edit" name="precio" step="0.01" required placeholder="Ej: 50.00">
+            
+            <label>Horarios Disponibles</label>
+            <input type="text" class="input-edit" name="horarios" placeholder="Ej: 9:00 AM - 5:00 PM">
+            
+            <button type="button" class="btn-secondary prev-step-btn">Anterior</button>
+            <button type="button" class="btn-primary next-step-btn">Siguiente</button>
+        </div>
 
-    <label>Nombre del Servicio *</label>
-    <input type="text" class="input-edit" name="name" required placeholder="Ej: Tour por las Islas del Rosario">
+      
+        <div class="form-step">
+            <h3 class="form-section-title">Fase 3: Requisitos e Imágenes</h3>
+            <label>Edad Mínima *</label>
+            <input type="number" class="input-edit" name="edad_minima" required placeholder="Ej: 18">
+            
+            <label>Capacidad Máxima</label>
+            <input type="number" class="input-edit" name="capacidad" placeholder="Ej: 15">
+            
+            <label>Subir Imágenes del Servicio</label>
+            <input type="file" class="input-edit" name="imagenes[]" multiple accept="image/*">
+            
+            <button type="button" class="btn-secondary prev-step-btn">Anterior</button>
+            <button type="button" class="btn-primary next-step-btn">Siguiente</button>
+        </div>
 
-    <!-- CATEGORÍA -->
-    <label>Categoría *</label>
-    <select class="input-edit" name="category" required>
-      <option value="">Seleccione una categoría</option>
-      <option value="Aventura">Aventura</option>
-      <option value="Senderismo">Senderismo</option>
-      <option value="Cultura">Cultura</option>
-      <option value="Gastronomía">Gastronomía</option>
-      <option value="Naturaleza">Naturaleza</option>
-      <option value="Playa">Playa</option>
-      <option value="Hospedaje">Hospedaje</option>
-      <option value="Transporte">Transporte</option>
-    </select>
+      
+        <div class="form-step">
+            <h3 class="form-section-title">Fase 4: Etiquetas y Notas Finales</h3>
+            <label>Etiquetas (separadas por comas)</label>
+            <input type="text" class="input-edit" name="etiquetas" placeholder="Ej: aventura, familia, cultural">
+            
+            <label>Incluye</label>
+            <textarea class="input-edit" name="incluye" rows="3" placeholder="Ej: Guía turístico, transporte, almuerzo"></textarea>
+            
+            <label>Notas Adicionales</label>
+            <textarea class="input-edit" name="notas" rows="3" placeholder="Información adicional importante..."></textarea>
+            
+            <button type="button" class="btn-secondary prev-step-btn">Anterior</button>
+            <button type="submit" class="btn-primary">Registrar Servicio</button>
+        </div>
+    </form>
 
-    <label>Descripción Detallada *</label>
-    <textarea class="input-edit" name="description" rows="5" required placeholder="Describe el servicio..."></textarea>
 
-    <!-- Información Operativa -->
-    <h3 class="form-section-title">Información Operativa</h3>
-
-    <label>Duración *</label>
-    <input type="text" class="input-edit" name="duration" required placeholder="Ej: 4 horas / 2 días">
-
-    <label>Capacidad Máxima *</label>
-    <input type="number" class="input-edit" name="capacity" required placeholder="Ej: 15 personas">
-
-    <label>Idiomas Disponibles *</label>
-    <input type="text" class="input-edit" name="languages" required placeholder="Ej: Español, Inglés...">
-
-    <label>Ubicación Exacta *</label>
-    <input type="text" class="input-edit" name="location" required placeholder="Ej: Cartagena, Colombia">
-
-    <label>Punto de Encuentro *</label>
-    <input type="text" class="input-edit" name="meetingPoint" required placeholder="Ej: Muelle La Bodeguita">
-
-    <label>Itinerario Detallado *</label>
-    <textarea class="input-edit" name="itinerary" rows="4" required></textarea>
-
-    <!-- Precios -->
-    <h3 class="form-section-title">Precios</h3>
-
-    <label>Precio Base (USD) *</label>
-    <input type="number" class="input-edit" name="price" required placeholder="Ej: 120">
-
-    <label>Incluye *</label>
-    <textarea class="input-edit" name="includes" rows="3" required></textarea>
-
-    <label>No Incluye *</label>
-    <textarea class="input-edit" name="notIncludes" rows="3" required></textarea>
-
-    <!-- YA QUITÉ POLÍTICAS DE CANCELACIÓN -->
-
-    <!-- Requisitos -->
-    <h3 class="form-section-title">Requisitos del Servicio</h3>
-
-    <label>Edad Mínima</label>
-    <input type="number" class="input-edit" name="minAge">
-
-    <label>Condición Física (opcional)</label>
-    <input type="text" class="input-edit" name="conditions">
-
-    <!-- Imágenes -->
-    <h3 class="form-section-title">Imágenes del Servicio</h3>
-
-    <label>Imagen Principal *</label>
-    <input type="file" class="input-edit" name="mainImage" id="mainImage" accept="image/*" required>
-    <div id="mainPreview" class="image-preview"></div>
-
-    <label>Galería (máx. 10 imágenes)</label>
-    <input type="file" class="input-edit" name="gallery[]" id="gallery" accept="image/*" multiple>
-    <div id="galleryPreview" class="image-preview-grid"></div>
-
-    <!-- TAGS -->
-    <h3 class="form-section-title">Etiquetas / Tags</h3>
-
-    <label>Etiquetas</label>
-    <input type="text" class="input-edit" name="tags" placeholder="Ej: aventura, snorkel, playa...">
-
-    <label>Notas Importantes</label>
-    <textarea class="input-edit" name="notes" rows="3"></textarea>
-
-    <!-- Botón -->
-    <button type="submit" class="btn-primary submit-btn">Registrar Servicio</button>
-
-  </form>
-
+    <div class="progress-indicator">
+        <div class="step-circle active" data-step="1">1</div>
+        <div class="line" data-line="1"></div>
+        <div class="step-circle" data-step="2">2</div>
+        <div class="line" data-line="2"></div>
+        <div class="step-circle" data-step="3">3</div>
+        <div class="line" data-line="3"></div>
+        <div class="step-circle" data-step="4">4</div>
+    </div>
 </section>
 
 </body>

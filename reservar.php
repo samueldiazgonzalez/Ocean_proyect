@@ -10,30 +10,49 @@ if ($conn->connect_error) {
     die("Error DB: " . $conn->connect_error);
 }
 
-$user_id   = $_SESSION['user_id'];
-$destino_id = $_POST['destino_id'];
-$checkin   = $_POST['checkin'];
-$checkout  = $_POST['checkout'];
-$huespedes = $_POST['huespedes'];
+$usuario_id  = $_SESSION['user_id'];
+$servicio_id = isset($_POST['servicio_id']) ? (int)$_POST['servicio_id'] : 0;
+$cantidad    = isset($_POST['cantidad']) ? (int)$_POST['cantidad'] : 1;
 
-// Calcular noches
-$nights = (strtotime($checkout) - strtotime($checkin)) / (60*60*24);
+if ($servicio_id <= 0 || $cantidad <= 0) {
+    die("❌ Datos de reserva inválidos.");
+}
 
-// Obtener precio del destino
-$sql = "SELECT precio FROM destinos WHERE id=?";
+// Obtener tarifa y capacidad del servicio
+$sql = "SELECT tarifa, capacidad, estado FROM servicios WHERE id=?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $destino_id);
+$stmt->bind_param("i", $servicio_id);
 $stmt->execute();
 $result = $stmt->get_result();
-$destino = $result->fetch_assoc();
+$servicio = $result->fetch_assoc();
 
-$total = $nights * $destino['precio'] * $huespedes;
+if (!$servicio || $servicio['estado'] !== 'Activo') {
+    die("❌ Servicio no disponible.");
+}
 
-// Insertar reserva
-$stmt = $conn->prepare("INSERT INTO reservas (usuario_id, destino_id, fecha_checkin, fecha_checkout, huespedes, total) VALUES (?,?,?,?,?,?)");
-$stmt->bind_param("iissid", $user_id, $destino_id, $checkin, $checkout, $huespedes, $total);
-$stmt->execute();
+$tarifa = (float)$servicio['tarifa'];
+if ($tarifa <= 0) die("❌ Tarifa inválida.");
 
-header("Location: perfil.php"); // redirige al perfil para ver reservas
-exit();
+// Validar capacidad
+if (!empty($servicio['capacidad']) && $cantidad > (int)$servicio['capacidad']) {
+    die("❌ Cantidad excede la capacidad disponible.");
+}
+
+// Calcular total
+$total = $tarifa * $cantidad;
+
+// Insertar reserva (fecha_reserva y estado se ponen por defecto)
+$sql = "INSERT INTO reservas (usuario_id, servicio_id, cantidad, total) VALUES (?, ?, ?, ?)";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("iiid", $usuario_id, $servicio_id, $cantidad, $total);
+
+if ($stmt->execute()) {
+    header("Location: mis_reservas.php?ok=1");
+    exit();
+} else {
+    echo "❌ Error al reservar: " . $stmt->error;
+}
+
+$stmt->close();
+$conn->close();
 ?>

@@ -1,213 +1,342 @@
-/* servicios.css - adaptado para parecerse al panel principal */
+/* -----------------------------
+   OPA2 – Estilo igual a OPA
+   (Diseño: colores azul #004a8f / #0066d8, sombras suaves, tarjetas blancas)
+------------------------------ */
 
-/* Reset + variables */
-*{box-sizing:border-box}
-:root{
-  --bg:#f4f6fa;
-  --sidebar:#0E1E2F;
-  --card:#ffffff;
-  --muted:#6b7280;
-  --primary:#0b5394;
-  --accent:#1D3A58;
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-body{
-  font-family:Inter,Arial,Helvetica,sans-serif;
-  margin:0;
-  background:var(--bg);
-  color:#0b1220;
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: #f4f7fc;
+  color: #333;
 }
 
-/* Layout similar a proveedor.css */
-.wrapper{
-  display:grid;
-  grid-template-columns:240px 1fr;
-  min-height:100vh;
+/* VARIABLES DE COLOR BASADAS EN OPA */
+:root {
+  --primary: #0066d8;
+  --primary-dark: #004ea8;
+  --sidebar-bg: #004a8f;
+  --card-bg: #ffffff;
+  --text-muted: #777;
+  --soft-blue: #e8f0ff;
+  --soft-shadow: 0 6px 20px rgba(0,0,0,0.06);
 }
 
-/* Sidebar (fija) */
-.sidebar{
-  background:var(--sidebar);
-  color:#dbeef2;
-  padding:20px;
-  position:fixed;
-  height:100vh;
-  width:240px;
+/* ---------------- SIDEBAR ---------------- */
+.wrapper {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
 }
-.brand{display:flex;gap:10px;align-items:center;margin-bottom:18px}
-.logo{width:44px;height:44px;background:#083047;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;color:#cfeaf0;font-weight:700}
-.brand-text .subtitle{font-size:12px;color:#7fb6bb}
-.nav a{display:block;color:#cdd6e0;text-decoration:none;padding:10px;border-radius:6px;margin-bottom:6px}
-.nav a:hover{background:#15314a;color:#fff}
-.nav a.active{background:var(--accent);color:#fff}
-.foot{position:absolute;bottom:20px;font-size:13px;color:#93b6bf}
 
-/* Main (dejamos espacio por el sidebar) */
-.main {
-  margin-left: 240px; /* coincide con el ancho del sidebar */
-  padding: 22px;
-  width: calc(100% - 240px); /* asegura ancho real */
+.sidebar {
+  background: var(--sidebar-bg);
+  color: #fff;
+  padding: 30px 20px;
+  width: 240px;
+  height: 100vh;
+  position: fixed;
+  border-right: 2px solid rgba(255,255,255,0.1);
+  box-shadow: 2px 0 12px rgba(0,0,0,0.1);
 }
-/* FIX para que la columna derecha NO quede angosta */
-.content {
+
+.brand {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 30px;
   display: flex;
-  gap: 20px;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  width: 44px;
+  height: 44px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  color: #fff;
+}
+
+.brand-text .subtitle {
+  font-size: 12px;
+  opacity: 0.75;
+}
+
+.nav a {
+  display: block;
+  text-decoration: none;
+  color: #fff;
+  padding: 12px 14px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  transition: 0.25s ease;
+}
+
+.nav a:hover,
+.nav a.active {
+  background: rgba(255,255,255,0.25);
+  backdrop-filter: blur(4px);
+}
+
+/* ---------------- MAIN ---------------- */
+.main {
+  margin-left: 260px !important;
+  padding: 40px !important;
+}
+
+/* ---------------- TOPBAR (simil OPA) ---------------- */
+.topbar {
+  background: #fff;
+  padding: 25px !important;
+  border-radius: 14px;
+  box-shadow: var(--soft-shadow);
+  margin-bottom: 20px;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 20px !important;
+}
+
+.topbar h1 {
+  font-size: 22px;
+  color: #004a8f;
+  margin-right: 20px !important;
+  white-space: nowrap;
+}
+
+.topbar .actions {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+.topbar input,
+.topbar select {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #c9d6f2;
+  background: #fff;
+  width: 180px !important;
+}
+
+/* ---------------- LAYOUT ---------------- */
+.content {
+  display: flex !important;
+  gap: 28px !important;
   width: 100%;
   align-items: flex-start;
 }
 
 .left-col {
-  flex: 0 0 350px; /* columna izquierda fija */
+  flex: 0 0 380px !important;
+  min-width: 380px !important;
+  max-width: 380px !important;
+  flex-shrink: 0 !important;
 }
 
 .right-col {
-  flex: 1;        /* columna derecha EXPANDE */
-  max-width: 100%;
-}
-/* Topbar (mismo look) */
-.topbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:14px;
-  background:var(--card);
-  border-radius:10px;
-  box-shadow:0 2px 8px rgba(11,18,32,0.06);
-  margin-bottom:16px;
-}
-.topbar h1{font-size:18px;margin:0}
-.topbar .actions{display:flex;gap:8px;align-items:center}
-.topbar input{padding:8px;border-radius:8px;border:1px solid #e6eef0}
-.topbar select{padding:8px;border-radius:8px;border:1px solid #e6eef0}
-
-/* Buttons */
-.btn{padding:8px 12px;border-radius:8px;border:0;background:var(--primary);color:white;cursor:pointer}
-.btn.ghost{background:transparent;color:#0b1220;border:1px solid #dfe8ef}
-.btn.primary{background:var(--primary)}
-
-/* ----------------------------- */
-/*    FIX IMPORTANTE AQUÍ        */
-/* ----------------------------- */
-
-/* Cambio de grid a FLEX más estable */
-.content{
-  display: flex;
-  gap: 20px;
-  width: 100%;
-}
-
-/* Columna izquierda */
-.left-col{
-  width: 35%;
-  min-width: 280px;
-}
-
-/* Columna derecha */
-.right-col{
-  width: 65%;
-  position: relative;
-}
-
-/* Panel vacío (mensaje inicial) */
-#emptyRight{
-  width: 100%;
-  min-height: 260px;
-  background: #fff;
-  padding: 26px;
-  border-radius: 12px;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
-
+  flex: 1;
+  min-width: 520px !important;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  gap: 16px;
+  gap: 25px;
+  padding-right: 20px;
 }
 
-#emptyRight p{
-  font-size: 15px;
-  line-height: 1.45;
-  max-width: 250px;
+/* ---------------- LISTA SERVICIOS ---------------- */
+.services {
+  display: flex;
+  flex-direction: column;
+  gap: 18px !important;
 }
 
-/* Ajuste de imagen del avatar */
-#emptyRight img{
-  width: 90px;
-  height: 90px;
-}
-
-
-/* Services list */
-.services{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  position:relative;
-  z-index:3; /* para que nada se monte encima */
-}
-
-/* Cards */
-.card{
-  background:var(--card);
-  padding:16px;
-  border-radius:10px;
-  box-shadow:0 1px 6px rgba(0,0,0,0.06);
-}
-
-/* Item servicio */
-.service{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  padding:12px;
-  border-radius:8px;
-  background:#fff;
-  border:1px solid #e9eef3;
-}
-
-.service .left{display:flex;gap:12px;align-items:center}
-.icon{width:48px;height:48px;border-radius:8px;background:linear-gradient(180deg,#083047,#0b3947);color:#fff;display:grid;place-items:center;font-weight:700}
-.meta{font-size:13px;color:#555;margin-top:6px}
-.pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef6fb;font-size:12px;border:1px solid #def0fb}
-
-/* Right column detail */
-.hidden{display:none}
-.form-row{display:flex;flex-direction:column;margin-bottom:10px}
-.form-row label{font-size:13px;color:#333;margin-bottom:6px}
-.form-row input, .form-row textarea{padding:8px;border-radius:8px;border:1px solid #e6eef0}
-.form-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
-
-/* Modal */
-.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center}
-.modal{background:white;padding:14px;border-radius:10px;max-width:480px;width:100%}
-
-/* Avatar */
-.avatar img,
-.profile-photo img {
+.service {
+  background: #fff !important;
+  padding: 22px !important;
+  border-radius: 14px !important;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.06) !important;
+  border: none !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: flex-start !important;
+  gap: 20px !important;
   width: 100%;
-  height: 100%;
+  min-width: 360px !important;
+  transition: 0.25s ease;
+  overflow: hidden !important;
+}
+
+.service:hover {
+  transform: translateY(-4px);
+}
+
+.service .left {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  flex: 1;
+  min-width: 0;
+}
+
+.service .left .info {
+  flex: 1;
+  min-width: 0;
+}
+
+.service .left .info h3 {
+  margin-bottom: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.service .left .info p {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.5;
+}
+
+.service .right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.icon {
+  width: 46px !important;
+  height: 46px !important;
+  border-radius: 12px !important;
+  background: linear-gradient(180deg, #0066d8, #004ea8);
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 17px !important;
+  flex-shrink: 0;
+}
+
+.meta {
+  font-size: 13px;
+  color: var(--text-muted);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.4;
+}
+
+.pill {
+  background: #e6eeff;
+  padding: 6px 14px;
+  font-size: 12px;
+  border-radius: 20px;
+  color: #084298;
+  border: 1px solid #d7e2ff;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ---------------- RIGHT PANEL (detalle servicio) ---------------- */
+.card {
+  background: #fff;
+  padding: 25px;
+  border-radius: 14px !important;
+  box-shadow: var(--soft-shadow);
+}
+
+.hidden { display: none; }
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 14px;
+}
+
+.form-row label {
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #004a8f;
+}
+
+.form-row input,
+.form-row textarea {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #c9d6f2;
+  background: #fff;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* ---------------- EMPTY PANEL ---------------- */
+#emptyRight {
+  background: #fff;
+  padding: 40px !important;
+  border-radius: 14px !important;
+  box-shadow: var(--soft-shadow);
+  min-height: 350px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  gap: 20px !important;
+}
+
+#emptyRight img {
+  width: 120px !important;
+  height: 120px !important;
+  border-radius: 14px !important;
   object-fit: cover;
-  display: block;
-  border-radius: 8px;
 }
 
-.avatar, .profile-photo {
-  background-position:center;
-  background-size:cover;
-  background-repeat:no-repeat;
+/* ---------------- BUTTONS (como OPA) ---------------- */
+.btn {
+  padding: 10px 18px !important;
+  border-radius: 10px !important;
+  background: var(--primary);
+  color: white;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,85,170,0.2);
+  transition: 0.25s ease;
+  font-size: 15px !important;
 }
 
-/* Empty right placeholder image styling */
-#emptyRight img { width:120px; border-radius:8px; margin-top:10px }
+.btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px) !important;
+}
 
-/* Small helpers */
-.muted{color:var(--muted);font-size:13px}
+.btn.ghost {
+  background: #e8f0ff;
+  color: #084298;
+  border: none;
+}
 
-/* Responsive */
-@media (max-width:980px){
-  .wrapper{grid-template-columns:1fr}
-  .main{margin-left:0;padding:12px}
-  .content{flex-direction:column}
-  .left-col, .right-col{width:100%}
+.btn.ghost:hover {
+  background: #d7e6ff;
+}
+
+/* ---------------- RESPONSIVE ---------------- */
+@media (max-width: 980px) {
+  .wrapper { grid-template-columns: 1fr; }
+  .main { margin-left: 0; padding: 20px; }
+  .content { flex-direction: column; }
+  .left-col, .right-col { width: 100%; min-width: 100%; }
 }

@@ -20,7 +20,7 @@ if ($result->num_rows === 1) {
         $_SESSION['proveedor_id'] = $row['id'];
         $_SESSION['empresa'] = $row['empresa'];
 
-        header("Location: panel_proveedor.php"); // redirige al panel
+        header("Location: perfil_proveedor.php"); // redirige al panel
         exit();
     } else {
         echo "❌ Contraseña incorrecta.";
