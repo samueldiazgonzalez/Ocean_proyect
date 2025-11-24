@@ -28,8 +28,7 @@ if ($result->num_rows === 0) {
 }
 $stmt->close();
 
-// Insertar reseñ
-
+// Insertar reseña
 $sql = "INSERT INTO reseñas (usuario_id, servicio_id, comentario, rating) VALUES (?,?,?,?)";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("iisi", $user_id, $servicio_id, $comentario, $rating);

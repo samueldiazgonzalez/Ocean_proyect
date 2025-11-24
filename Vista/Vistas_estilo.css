@@ -1,0 +1,786 @@
+/* ==================================== */
+/* 1. VARIABLES GLOBALES (Estilo Anterior) */
+/* ==================================== */
+:root {
+  /* Colores adoptados del proyecto anterior */
+  --color-primary: #004080; /* Azul principal */
+  --color-secondary: #ffd700; /* Dorado/Amarillo de acento */
+  --color-text-main: #333; /* Texto oscuro */
+  --color-text-light: #fff; /* Texto claro */
+  --color-background-light: #f5faff; /* Fondo de la página (originalmente #f5faff) */
+  --color-surface: #fff; /* Fondo de tarjetas/contenedores */
+  --color-border: #ddd; /* Líneas de borde suaves */
+  --color-success: #28a745;
+  --color-danger: #dc3545;
+
+  /* Espaciado, Tipografía, y Layout */
+  --space-sm: 8px;
+  --space-md: 15px;
+  --space-lg: 20px;
+  --max-width-lg: 1200px; /* Reducimos el ancho máximo para coincidir */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 12px; /* Ajustamos para que coincida con el borde de las tarjetas */
+  --radius-pill: 20px;
+
+  /* Sombras simplificadas al estilo anterior */
+  --shadow-sm: 0 0 5px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 15px rgba(0, 0, 0, 0.15);
+
+  /* Transiciones simplificadas */
+  --transition-base: 0.3s;
+}
+
+/* ==================================== */
+/* 2. RESET & BASE (Adaptado)         */
+/* ==================================== */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  /* Usamos la fuente original y el fondo simple */
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--color-background-light); /* Fondo simple, sin gradiente */
+  color: var(--color-text-main);
+  line-height: 1.5; /* Línea de altura original */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ==================================== */
+/* 3. UTILIDADES GENERALES (DRY)     */
+/* ==================================== */
+
+/* Clase Contenedor Reutilizable */
+.container {
+  max-width: var(--max-width-lg);
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+}
+
+/* Clase Botón Base - Replicando el estilo anterior */
+.btn {
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-pill);
+  text-decoration: none !important;
+  font-weight: 500;
+  transition: background var(--transition-base), color var(--transition-base), transform var(--transition-base);
+  border: none;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-text-light) !important;
+}
+
+.btn-primary:hover {
+  background: #0056b3;
+}
+
+.btn-secondary {
+  background: var(--color-secondary);
+  color: var(--color-primary) !important;
+}
+
+.btn-secondary:hover {
+  background: #ffcc00;
+}
+
+
+/* ==================================== */
+/* 4. HEADER (Simplificado)         */
+/* ==================================== */
+
+/* Header Top */
+.header-top {
+  background: var(--color-primary); /* Sólido, no gradiente */
+  color: var(--color-text-light);
+  font-size: 14px; /* Tamaño de fuente original */
+  padding: 8px 0; /* Padding original */
+  box-shadow: none; /* Eliminamos la sombra */
+}
+
+.header-top .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.contact-info {
+  /* Simplificamos el espaciado al estilo anterior */
+  gap: var(--space-md);
+}
+
+.contact-info span {
+  opacity: 1; /* Eliminamos la animación de opacidad */
+}
+
+.social-links {
+  gap: var(--space-sm);
+}
+
+.social-links a {
+  /* Simplificamos el estilo al estilo anterior */
+  width: auto;
+  height: auto;
+  color: var(--color-text-light);
+  background: transparent;
+  border-radius: 0;
+  margin-left: 10px; /* Estilo de margen original */
+  backdrop-filter: none;
+}
+
+.social-links a:hover {
+  color: var(--color-secondary);
+  background: transparent;
+  transform: none; /* Eliminamos la transformación */
+  box-shadow: none;
+}
+
+/* Header Main */
+.header-main {
+  background: var(--color-surface); /* Sólido, sin blur/opacidad */
+  backdrop-filter: none;
+  border-bottom: 1px solid var(--color-border);
+  position: static; /* Desactivamos el 'sticky' para el estilo más simple */
+  top: 0;
+  z-index: 1;
+  box-shadow: none;
+}
+
+.header-main .container {
+  padding: 10px var(--space-lg);
+  gap: var(--space-lg);
+}
+
+.logo {
+  font-size: 22px; /* Tamaño de fuente original */
+  font-weight: bold;
+  color: var(--color-primary);
+  /* Eliminamos los efectos de gradiente y clip */
+  background: none;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: unset;
+  background-clip: unset;
+  letter-spacing: normal;
+  transition: none;
+}
+
+.logo:hover {
+  transform: none;
+}
+
+.search-container {
+  max-width: none;
+}
+
+.search-input {
+  padding: 10px 35px 10px 15px; /* Padding original */
+  border: 1px solid #ccc; /* Borde original */
+  border-radius: var(--radius-pill);
+  font-size: 14px;
+  background: var(--color-surface);
+}
+
+.search-input:focus {
+  border-color: #ccc;
+  box-shadow: none;
+}
+
+.search-icon {
+  right: 15px;
+  color: #777;
+}
+
+.search-input:focus ~ .search-icon {
+  color: #777;
+}
+
+.main-nav {
+  gap: 0;
+}
+
+.main-nav a {
+  color: var(--color-primary);
+  font-weight: 500;
+  font-size: 14px;
+  padding: 10px 15px;
+  border-radius: 0;
+  transition: color var(--transition-base);
+}
+
+.main-nav a::after {
+  display: none; /* Eliminamos el efecto de línea inferior */
+}
+
+.main-nav a:hover {
+  color: #0099cc; /* Color hover original */
+  background: transparent;
+}
+
+.btn-login {
+  background: var(--color-primary); /* Sólido, no gradiente */
+  color: var(--color-text-light) !important;
+  padding: 8px 12px; /* Padding original */
+  border-radius: var(--radius-pill);
+  box-shadow: none;
+}
+
+.btn-login:hover {
+  transform: none;
+  box-shadow: none;
+  background: #0056b3;
+}
+
+/* ==================================== */
+/* 5. HERO (Simplificado)           */
+/* ==================================== */
+.hero-banner {
+  color: var(--color-text-light);
+  text-align: center;
+  padding: 80px 20px; /* Padding original */
+  background: var(--color-primary); /* Fondo sólido de color primario */
+  overflow: hidden;
+}
+
+.hero-banner::before {
+  content: none; /* Eliminamos la animación de fondo */
+}
+
+@keyframes pulse {
+  /* Eliminamos la animación */
+}
+
+.hero-title {
+  font-size: 36px; /* Tamaño de fuente original */
+  font-weight: bold;
+  margin-bottom: 15px;
+  letter-spacing: normal;
+  text-shadow: none;
+  animation: none;
+}
+
+@keyframes fadeInUp {
+  /* Eliminamos la animación */
+}
+
+.hero-subtitle {
+  font-size: 18px; /* Tamaño de fuente original */
+  margin-bottom: 25px;
+  opacity: 1;
+  animation: none;
+}
+
+.hero-cta {
+  background: var(--color-secondary);
+  color: var(--color-primary);
+  padding: 12px 20px; /* Padding original */
+  border-radius: 25px;
+  font-weight: bold;
+  font-size: 14px;
+  box-shadow: none;
+  transition: background var(--transition-base);
+  animation: none;
+}
+
+.hero-cta:hover {
+  transform: none;
+  box-shadow: none;
+  background: #ffcc00; /* Color hover original */
+}
+
+/* ==================================== */
+/* 6. MAIN LAYOUT & SIDEBAR (Adaptado) */
+/* ==================================== */
+.main-container {
+  max-width: var(--max-width-lg);
+  margin: 40px auto; /* Margen original */
+  gap: var(--space-lg);
+  padding: 0 var(--space-lg);
+}
+
+.sidebar {
+  flex: 0 0 250px; /* Tamaño original */
+  background: var(--color-surface);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm); /* Sombra suave original */
+  height: fit-content;
+  position: static; /* Desactivamos el 'sticky' */
+  top: auto;
+  backdrop-filter: none;
+  border: none;
+}
+
+.filter-section {
+  margin-bottom: 25px; /* Margen original */
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.filter-title {
+  font-size: 16px;
+  font-weight: normal;
+  margin-bottom: 10px;
+  color: var(--color-primary);
+  gap: 0;
+}
+
+.filter-option {
+  margin: 8px 0; /* Margen original */
+}
+
+.filter-option input[type="checkbox"],
+.filter-option input[type="radio"] {
+  width: auto;
+  height: auto;
+  accent-color: var(--color-primary);
+}
+
+.filter-option label {
+  margin-left: 8px; /* Margen original */
+  font-size: 14px;
+  color: var(--color-text-main);
+  transition: none;
+}
+
+.filter-option:hover label {
+  color: var(--color-text-main);
+}
+
+.price-display {
+  margin-top: 8px; /* Margen original */
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--color-text-main);
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+}
+
+/* ==================================== */
+/* 7. PRODUCTOS (Adaptado)          */
+/* ==================================== */
+.section-header {
+  margin-bottom: var(--space-lg);
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--color-primary);
+  letter-spacing: normal;
+}
+
+.sort-select {
+  padding: 6px; /* Padding original */
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: normal;
+  background: var(--color-surface);
+}
+
+.sort-select:focus {
+  box-shadow: none;
+  border-color: var(--color-border);
+}
+
+.stats-bar {
+  margin: 15px 0; /* Margen original */
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.view-controls {
+  gap: 5px;
+}
+
+.view-btn {
+  background: #eee;
+  border: none;
+  padding: 6px 10px; /* Padding original */
+  border-radius: var(--radius-sm);
+}
+
+.view-btn:hover {
+  border-color: transparent;
+  background: #ccc;
+}
+
+.view-btn.active {
+  background: var(--color-primary);
+  color: var(--color-text-light);
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.products-grid {
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* Tamaño original */
+  gap: var(--space-lg);
+}
+
+.product-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-md); /* Borde redondeado original */
+  box-shadow: 0 0 6px rgba(0,0,0,0.1); /* Sombra original */
+  border: none;
+}
+
+.product-card::before {
+  content: none; /* Eliminamos el efecto pseudo */
+}
+
+.product-card:hover {
+  transform: none; /* Eliminamos el efecto hover de elevación */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Sombra hover sutil */
+  border-color: transparent;
+}
+
+.card-image img {
+  height: 180px; /* Altura original */
+}
+
+.product-card:hover .card-image img {
+  transform: none; /* Eliminamos el zoom */
+}
+
+.card-badge {
+  background: var(--color-secondary);
+  color: var(--color-primary);
+  padding: 4px 8px;
+  box-shadow: none;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.availability-badge {
+  padding: 4px 8px;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+
+.available {
+  background: var(--color-success);
+}
+
+.unavailable {
+  background: var(--color-danger);
+}
+
+.card-content {
+  padding: var(--space-md);
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: normal;
+  margin-bottom: 8px;
+}
+
+.card-rating {
+  margin-bottom: 8px;
+}
+
+.rating-stars {
+  color: var(--color-secondary);
+}
+
+.card-features {
+  margin-bottom: 8px;
+}
+
+.feature-tag {
+  background: #f0f0f0;
+  padding: 4px 8px;
+  border: none;
+  color: var(--color-text-main);
+  font-weight: normal;
+}
+
+.feature-tag:hover {
+  background: #ccc;
+  border-color: transparent;
+  color: var(--color-text-main);
+}
+
+.card-price {
+  font-weight: bold;
+  font-size: 1.2em;
+  color: var(--color-text-main);
+  margin-bottom: 12px;
+}
+
+.btn-reserve {
+  background: var(--color-primary);
+  color: var(--color-text-light);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-weight: normal;
+  font-size: 14px;
+  box-shadow: none;
+}
+
+.btn-reserve:hover {
+  transform: none;
+  box-shadow: none;
+  background: #0056b3;
+}
+
+.btn-favorite {
+  background: none;
+  border: 1px solid #ccc;
+  padding: 6px;
+}
+
+.btn-favorite:hover {
+  border-color: var(--color-primary);
+  background: #eee;
+  color: var(--color-primary);
+  transform: none;
+}
+
+/* ==================================== */
+/* 8. RESPONSIVE DESIGN (Adaptado)      */
+/* ==================================== */
+
+@media (max-width: 1024px) {
+  .main-container {
+    gap: var(--space-lg);
+  }
+  .sidebar {
+    flex: 0 0 250px;
+  }
+}
+
+@media (max-width: 900px) {
+  .main-container {
+    flex-direction: column;
+  }
+  .sidebar {
+    flex: 1;
+    order: 2;
+  }
+  .hero-title {
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-top {
+    display: none; /* Ocultamos la barra superior */
+  }
+  .header-main .container {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 15px;
+  }
+  .search-container {
+    order: 3;
+    flex: 1 1 100%;
+    margin: var(--space-sm) 0;
+  }
+  .main-nav {
+    flex-basis: 100%;
+    justify-content: center;
+  }
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .section-title {
+    margin-bottom: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-container {
+    padding: 0 15px;
+    margin: 32px auto;
+  }
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+  .hero-title {
+    font-size: 32px;
+  }
+  .gallery-reserve-wrapper {
+    grid-template-columns: 1fr;
+  }
+  .reserve-sidebar {
+    position: static;
+  }
+}
+
+/* ======================================================
+   FIX + ESTILOS PARA LA PÁGINA DE SERVICIO INDIVIDUAL
+   Adaptado al estilo Airbnb/Trivago (tu estilo actual)
+   ====================================================== */
+
+/* CONTENEDOR PRINCIPAL */
+.container.service-view {
+  max-width: 1100px !important;
+  margin: 40px auto !important;
+  padding: 20px !important;
+  background: var(--card-bg);
+  border-radius: 14px;
+  box-shadow: 0 8px 35px rgba(2, 6, 23, 0.06);
+}
+
+/* TÍTULO */
+.service-view h2 {
+  font-size: 26px;
+  font-weight: 800;
+  margin-bottom: 15px;
+  color: var(--text);
+}
+
+/* IMAGEN PRINCIPAL */
+.service-view img {
+  width: 100%;
+  height: 360px;
+  object-fit: cover;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+  margin: 20px 0;
+}
+
+/* TEXTO */
+.service-view p {
+  color: #334155;
+  font-size: 15px;
+  margin: 8px 0;
+}
+
+/* BLOQUES DE INFO */
+.service-view strong {
+  color: var(--accent);
+}
+
+/* FORMULARIO DE RESERVA */
+.service-view form {
+  margin-top: 25px;
+  background: var(--soft);
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 4px 15px rgba(15,23,42,0.06);
+}
+
+/* INPUTS */
+.service-view input[type="number"],
+.service-view select,
+.service-view textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background: #f9fafb;
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+.service-view textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* BOTÓN PRINCIPAL */
+.service-view .btn,
+.service-view .book-btn {
+  width: 100%;
+  background: var(--accent-2);
+  color: #fff;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 14px;
+  transition: 0.25s ease;
+}
+
+.service-view .btn:hover,
+.service-view .book-btn:hover {
+  background: #0ea5e9;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(14,165,233,0.25);
+}
+
+/* SECCIÓN DE RESEÑAS */
+.reviews-list.section {
+  margin-top: 40px;
+  padding: 20px;
+  background: var(--card-bg);
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(15,23,42,0.06);
+}
+
+.reviews-list h3 {
+  font-size: 22px;
+  margin-bottom: 15px;
+}
+
+.review {
+  padding: 16px;
+  background: var(--soft);
+  border-radius: 14px;
+  margin-bottom: 16px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.review-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.review-stars {
+  color: gold;
+  font-size: 18px;
+  margin-top: 4px;
+}
+
+/* LABELS EN EL FORM */
+.rating-box p,
+.service-view label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+
+/* RESPONSIVE */
+@media(max-width:780px) {
+  .container.service-view {
+    padding: 18px;
+  }
+  .service-view img {
+    height: 260px;
+  }
+}

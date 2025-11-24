@@ -12,4 +12,4 @@ $stmt->execute();
 
 header("Location: servicios.php");
 exit();
-?> 
+?>
