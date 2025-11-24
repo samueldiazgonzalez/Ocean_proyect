@@ -41,7 +41,7 @@ $result = $stmt->get_result();
         <a href="proveedor.html">Dashboard</a>
         <a class="active" href="servicios.php">Mis Servicios</a>
         <a href="perfil_proveedor.php">Perfil</a>
-        <a href="clientes.html">Clientes</a>
+        <a href="clientes.php">Clientes</a>
         <a href="configuracion.html">Ajustes</a>
       </nav>
     </aside>
