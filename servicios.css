@@ -1,23 +1,30 @@
 /* -----------------------------
-   servicios.css – versión corregida
+   OPA2 – Estilo igual a OPA
+   (Diseño: colores azul #004a8f / #0066d8, sombras suaves, tarjetas blancas)
 ------------------------------ */
 
-/* Reset */
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: Inter, Arial, Helvetica, sans-serif;
-  background: #f4f6fa;
-  color: #0b1220;
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* Variables */
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: #f4f7fc;
+  color: #333;
+}
+
+/* VARIABLES DE COLOR BASADAS EN OPA */
 :root {
-  --bg: #f4f6fa;
-  --sidebar: #0E1E2F;
-  --card: #ffffff;
-  --muted: #6b7280;
-  --primary: #0b5394;
-  --accent: #1D3A58;
+  --primary: #0066d8;
+  --primary-dark: #004ea8;
+  --sidebar-bg: #004a8f;
+  --card-bg: #ffffff;
+  --text-muted: #777;
+  --soft-blue: #e8f0ff;
+  --soft-shadow: 0 6px 20px rgba(0,0,0,0.06);
 }
 
 /* ---------------- SIDEBAR ---------------- */
@@ -28,146 +35,224 @@ body {
 }
 
 .sidebar {
-  background: var(--sidebar);
-  color: #dbeef2;
-  padding: 20px;
-  position: fixed;
+  background: var(--sidebar-bg);
+  color: #fff;
+  padding: 30px 20px;
   width: 240px;
   height: 100vh;
+  position: fixed;
+  border-right: 2px solid rgba(255,255,255,0.1);
+  box-shadow: 2px 0 12px rgba(0,0,0,0.1);
 }
 
 .brand {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 30px;
   display: flex;
-  gap: 10px;
   align-items: center;
-  margin-bottom: 18px;
+  gap: 10px;
 }
+
 .logo {
   width: 44px;
   height: 44px;
-  background: #083047;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #cfeaf0;
+  background: rgba(255,255,255,0.2);
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
   font-weight: 700;
+  color: #fff;
 }
-.brand-text .subtitle { font-size: 12px; color: #7fb6bb; }
+
+.brand-text .subtitle {
+  font-size: 12px;
+  opacity: 0.75;
+}
 
 .nav a {
   display: block;
   text-decoration: none;
-  color: #cdd6e0;
-  padding: 10px;
-  border-radius: 6px;
-  margin-bottom: 6px;
+  color: #fff;
+  padding: 12px 14px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  transition: 0.25s ease;
 }
-.nav a:hover { background: #15314a; color: white; }
-.nav a.active { background: var(--accent); color: white; }
 
-.foot {
-  position: absolute;
-  bottom: 20px;
-  font-size: 13px;
-  color: #93b6bf;
+.nav a:hover,
+.nav a.active {
+  background: rgba(255,255,255,0.25);
+  backdrop-filter: blur(4px);
 }
 
 /* ---------------- MAIN ---------------- */
 .main {
-  margin-left: 240px;
-  padding: 22px;
+  margin-left: 260px !important;
+  padding: 40px !important;
 }
 
-/* ---------------- TOP BAR ---------------- */
+/* ---------------- TOPBAR (simil OPA) ---------------- */
 .topbar {
-  background: var(--card);
-  padding: 14px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(11, 18, 32, 0.06);
-  margin-bottom: 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  background: #fff;
+  padding: 25px !important;
+  border-radius: 14px;
+  box-shadow: var(--soft-shadow);
+  margin-bottom: 20px;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 20px !important;
 }
-.topbar h1 { font-size: 18px; }
+
+.topbar h1 {
+  font-size: 22px;
+  color: #004a8f;
+  margin-right: 20px !important;
+  white-space: nowrap;
+}
+
 .topbar .actions {
-  display: flex;
-  gap: 8px;
-  align-items: center;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 12px !important;
 }
+
 .topbar input,
 .topbar select {
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid #e6eef0;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #c9d6f2;
+  background: #fff;
+  width: 180px !important;
 }
 
-/* ---------------- LAYOUT: LEFT + RIGHT ---------------- */
+/* ---------------- LAYOUT ---------------- */
 .content {
-  display: flex;
-  gap: 20px;
+  display: flex !important;
+  gap: 28px !important;
   width: 100%;
   align-items: flex-start;
 }
 
 .left-col {
-  flex: 0 0 320px;
+  flex: 0 0 380px !important;
+  min-width: 380px !important;
+  max-width: 380px !important;
+  flex-shrink: 0 !important;
 }
 
 .right-col {
   flex: 1;
-  min-width: 0; /* EVITA que se encoja */
+  min-width: 520px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  padding-right: 20px;
 }
 
-/* ---------------- LISTA DE SERVICIOS ---------------- */
+/* ---------------- LISTA SERVICIOS ---------------- */
 .services {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 18px !important;
 }
 
 .service {
-  display: flex;
-  justify-content: space-between;
-  padding: 12px;
-  background: white;
-  border-radius: 8px;
-  border: 1px solid #e9eef3;
-}
-.service .left {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-.icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
-  background: linear-gradient(180deg, #083047, #0b3947);
-  display: grid;
-  place-items: center;
-  color: white;
-  font-weight: 700;
-}
-.meta {
-  font-size: 13px;
-  color: #555;
-}
-.pill {
-  background: #eef6fb;
-  padding: 6px 10px;
-  font-size: 12px;
-  border-radius: 999px;
-  border: 1px solid #def0fb;
+  background: #fff !important;
+  padding: 22px !important;
+  border-radius: 14px !important;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.06) !important;
+  border: none !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: flex-start !important;
+  gap: 20px !important;
+  width: 100%;
+  min-width: 360px !important;
+  transition: 0.25s ease;
+  overflow: hidden !important;
 }
 
-/* ---------------- RIGHT DETAIL PANEL ---------------- */
+.service:hover {
+  transform: translateY(-4px);
+}
+
+.service .left {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  flex: 1;
+  min-width: 0;
+}
+
+.service .left .info {
+  flex: 1;
+  min-width: 0;
+}
+
+.service .left .info h3 {
+  margin-bottom: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.service .left .info p {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.5;
+}
+
+.service .right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.icon {
+  width: 46px !important;
+  height: 46px !important;
+  border-radius: 12px !important;
+  background: linear-gradient(180deg, #0066d8, #004ea8);
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 17px !important;
+  flex-shrink: 0;
+}
+
+.meta {
+  font-size: 13px;
+  color: var(--text-muted);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.4;
+}
+
+.pill {
+  background: #e6eeff;
+  padding: 6px 14px;
+  font-size: 12px;
+  border-radius: 20px;
+  color: #084298;
+  border: 1px solid #d7e2ff;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ---------------- RIGHT PANEL (detalle servicio) ---------------- */
 .card {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  background: #fff;
+  padding: 25px;
+  border-radius: 14px !important;
+  box-shadow: var(--soft-shadow);
 }
 
 .hidden { display: none; }
@@ -175,86 +260,83 @@ body {
 .form-row {
   display: flex;
   flex-direction: column;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
+
 .form-row label {
   margin-bottom: 6px;
-  font-size: 13px;
+  font-size: 14px;
+  color: #004a8f;
 }
+
 .form-row input,
 .form-row textarea {
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid #e6eef0;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #c9d6f2;
+  background: #fff;
 }
 
 .form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 12px;
 }
 
-/* ---------------- EMPTY RIGHT SPACE ---------------- */
+/* ---------------- EMPTY PANEL ---------------- */
 #emptyRight {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  text-align: center;
-  align-items: center;
-  padding: 30px;
+  background: #fff;
+  padding: 40px !important;
+  border-radius: 14px !important;
+  box-shadow: var(--soft-shadow);
+  min-height: 350px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  gap: 20px !important;
 }
+
 #emptyRight img {
-  width: 110px;
-  height: 110px;
-  border-radius: 10px;
+  width: 120px !important;
+  height: 120px !important;
+  border-radius: 14px !important;
   object-fit: cover;
 }
 
-/* ---------------- BUTTONS ---------------- */
+/* ---------------- BUTTONS (como OPA) ---------------- */
 .btn {
-  padding: 8px 12px;
-  border-radius: 8px;
+  padding: 10px 18px !important;
+  border-radius: 10px !important;
   background: var(--primary);
   color: white;
   border: none;
   cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,85,170,0.2);
+  transition: 0.25s ease;
+  font-size: 15px !important;
 }
+
+.btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px) !important;
+}
+
 .btn.ghost {
-  background: transparent;
-  border: 1px solid #dfe8ef;
-  color: black;
+  background: #e8f0ff;
+  color: #084298;
+  border: none;
 }
-.btn.primary { background: var(--primary); }
+
+.btn.ghost:hover {
+  background: #d7e6ff;
+}
 
 /* ---------------- RESPONSIVE ---------------- */
 @media (max-width: 980px) {
   .wrapper { grid-template-columns: 1fr; }
-  .main { margin-left: 0; padding: 12px; }
+  .main { margin-left: 0; padding: 20px; }
   .content { flex-direction: column; }
-  .left-col, .right-col { width: 100%; }
-}
-
-
-.right-col {
-  flex: 1;
-  min-width: 400px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-
-.empty-panel {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 260px;
-}
-
-
-.services .service {
-  width: 100%;
-  max-width: 100%;
-  overflow: hidden;
+  .left-col, .right-col { width: 100%; min-width: 100%; }
 }

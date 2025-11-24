@@ -97,14 +97,14 @@ function renderList() {
             <p>${s.desc}</p>
             <div class="meta">${s.rate} · <span class="pill">${s.status}</span></div>
           </div>
-        </div>
-        <div class="actions">
-          <button class="btn ghost" data-edit="${s.id}">Editar</button>
-          <button class="btn" data-toggle="${s.id}">
-            ${s.status === "Activo" ? "Pausar" : "Activar"}
-          </button>
-        </div>
-      `;
+        </div>  
+  <div class="actions">
+    <a href="editar_servicio.php?id=${s.id}" class="btn ghost">Editar</a>
+    <button class="btn" data-toggle="${s.id}">
+      ${s.status === "Activo" ? "Pausar" : "Activar"}
+    </button>
+  </div>
+`;
 
       listEl.appendChild(item);
     });
