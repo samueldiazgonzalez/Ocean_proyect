@@ -9,7 +9,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const maxPriceInput = document.getElementById("max-price"); 
     const priceRangeDisplay = document.getElementById("price-range"); 
     
-    // Lista unificada de todos los filtros de checkbox (IMPORTANTE: incluye name=duracion)
+    // Lista unificada de todos los filtros de checkbox
+    // IMPORTANTE: Incluye 'duracion' y 'categoria'
     const filters = document.querySelectorAll("input[type=checkbox][name=categoria], input[type=checkbox][name=duracion], input#valorados, input#disponibles");
     const searchInput = document.getElementById("search");
 
@@ -25,6 +26,8 @@ document.addEventListener("DOMContentLoaded", () => {
     function updatePriceDisplay() {
         let minVal = parseInt(minPriceInput.value);
         let maxVal = parseInt(maxPriceInput.value);
+        
+        // Ajusta el rango si el mínimo es mayor que el máximo
         if (minVal > maxVal) {
              [minVal, maxVal] = [maxVal, minVal]; 
              minPriceInput.value = minVal;
@@ -32,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         priceRangeDisplay.textContent = `${formatPrice(minVal)} - ${formatPrice(maxVal)}`;
-        applyAllChanges(); 
+        applyAllChanges(); // Aplica el filtrado inmediatamente
     }
 
     // 3. Lógica de Ordenamiento
@@ -48,18 +51,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 case "asc": return pa - pb;
                 case "desc": return pb - pa;
                 case "rating": return rb - ra;
-                case "newest": return 0; 
+                case "newest": return 0; // Se mantiene el orden existente (o se podría usar un data-timestamp)
                 default: return 0;
             }
         });
+        // Reinserta los elementos ordenados en el contenedor
         list.forEach(card => productsContainer.appendChild(card));
     }
 
     // 4. Lógica Principal: Filtrar y Reordenar
     function applyAllChanges() {
-        // Obtenemos los valores de todos los filtros
+        // Obtención de valores activos de los filtros
         const activeCategories = Array.from(document.querySelectorAll("input[name=categoria]:checked")).map(el => el.value);
-        const activeDurations = Array.from(document.querySelectorAll("input[name=duracion]:checked")).map(el => el.value); // NUEVO
+        const activeDurations = Array.from(document.querySelectorAll("input[name=duracion]:checked")).map(el => el.value);
         const valoradosChecked = document.getElementById("valorados").checked;
         const disponiblesChecked = document.getElementById("disponibles").checked;
         const minPrice = parseInt(minPriceInput.value);
@@ -75,21 +79,23 @@ document.addEventListener("DOMContentLoaded", () => {
             const rating = parseFloat(p.dataset.rating);
             const disponible = p.dataset.disponible === "true";
             const categoria = p.dataset.categoria;
-            const productoDuracion = p.dataset.duracion; // LEEMOS data-duracion
+            const productoDuracion = p.dataset.duracion; 
             
-            // Lectura de contenido
+            // Lectura de contenido para búsqueda de texto
             const titulo = p.querySelector(".card-title").textContent.toLowerCase();
             const contenido = p.querySelector(".card-content").textContent.toLowerCase();
 
             let visible = true;
             
+            // --- Criterios de Filtrado ---
+            
             // FILTRO 1: Categoría
             if (activeCategories.length > 0 && !activeCategories.includes(categoria)) visible = false;
             
-            // FILTRO 2: Duración (NUEVO)
+            // FILTRO 2: Duración
             if (activeDurations.length > 0 && !activeDurations.includes(productoDuracion)) visible = false;
             
-            // FILTRO 3: Mejor valorados
+            // FILTRO 3: Mejor valorados (>= 4.8)
             if (valoradosChecked && rating < 4.8) visible = false;
             
             // FILTRO 4: Disponibles
@@ -101,7 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // FILTRO 6: Búsqueda de Texto
             if (searchText && !(titulo.includes(searchText) || contenido.includes(searchText))) visible = false;
 
-            // ACTUALIZAR VISIBILIDAD y LISTA
+            // --- Actualizar Visibilidad ---
             if (visible) {
                 p.style.display = "flex";
                 visibleProducts.push(p);
@@ -118,7 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
         resultsCount.textContent = `Mostrando ${totalCount} de ${products.length} experiencias`;
     }
 
-    // 5. Lógica de Cambio de Vista
+    // 5. Lógica de Cambio de Vista (Grid/List)
     viewBtns.forEach(btn => {
         btn.addEventListener("click", () => {
             viewBtns.forEach(b => b.classList.remove("active"));
@@ -134,14 +140,18 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // 6. Event Listeners (Se escuchan todos los filtros)
+    // 6. Event Listeners
+    // Dispara applyAllChanges() al cambiar cualquier checkbox, select o input de búsqueda.
     filters.forEach(f => f.addEventListener("change", applyAllChanges));
     searchInput.addEventListener("input", applyAllChanges);
     sortSelect.addEventListener("change", applyAllChanges); 
+    
+    // Dispara updatePriceDisplay() (que a su vez llama a applyAllChanges) al mover los sliders.
     minPriceInput.addEventListener("input", updatePriceDisplay);
     maxPriceInput.addEventListener("input", updatePriceDisplay);
 
     // 7. Inicialización
+    // Asegura que el display de precios y el filtrado inicial se apliquen al cargar la página.
     updatePriceDisplay();
-    applyAllChanges();
+    // applyAllChanges(); se llama dentro de updatePriceDisplay()
 });

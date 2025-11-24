@@ -3,7 +3,6 @@ session_start();
 $logged_in = isset($_SESSION['user_id']);
 ?>
 
-
 <!doctype html>
 <html lang="es">
 <head>
@@ -77,7 +76,7 @@ $logged_in = isset($_SESSION['user_id']);
           <!-- GALERÍA -->
           <section class="gallery">
             <div class="hero">
-              <img src="../imagenes/images.jpeg" 
+              <img src="../imagenes/parque-nacional-tayrona-colombia-2024-1.jpg" 
                    alt="Playa tropical" class="hero-img" />
               <div class="hero-text">Explora tu próximo destino </div>
             </div>
@@ -108,7 +107,7 @@ $logged_in = isset($_SESSION['user_id']);
           <div class="card">
             <div class="price-section">
               <div>
-                <div class="price" id="pricePerNight">$480.000 COP</div>
+                <div class="price" id="pricePerNight" data-price="120000"> $120.000 COP</div>
                 <div class="per-night">por noche</div>
               </div>
               <div class="rating-info">⭐ 4.9 · 320 reseñas</div>
@@ -141,9 +140,9 @@ $logged_in = isset($_SESSION['user_id']);
   </div>
 
   <div class="fees">
-    <p>🧹 Tarifa de limpieza: $50.000 COP</p>
-    <p>💼 Servicio Airbnb: $30.000 COP</p>
-    <p>💰 Impuestos: 19%</p>
+    <p>Tarifa de limpieza: $50.000 COP</p>
+    <p>Servicio Airbnb: $30.000 COP</p>
+    <p>Impuestos: 19%</p>
   </div>
 
   <button type="submit" class="book-btn">

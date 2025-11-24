@@ -107,7 +107,7 @@ $logged_in = isset($_SESSION['user_id']);
           <div class="card">
             <div class="price-section">
               <div>
-                <div class="price" id="pricePerNight">$480.000 COP</div>
+                <div class="price" id="pricePerNight" data-price="120000"> $120.000 COP</div>
                 <div class="per-night">por noche</div>
               </div>
               <div class="rating-info">⭐ 4.9 · 320 reseñas</div>
@@ -140,9 +140,9 @@ $logged_in = isset($_SESSION['user_id']);
   </div>
 
   <div class="fees">
-    <p>🧹 Tarifa de limpieza: $50.000 COP</p>
-    <p>💼 Servicio Airbnb: $30.000 COP</p>
-    <p>💰 Impuestos: 19%</p>
+    <p>Tarifa de limpieza: $50.000 COP</p>
+    <p>Servicio Airbnb: $30.000 COP</p>
+    <p>Impuestos: 19%</p>
   </div>
 
   <button type="submit" class="book-btn">
