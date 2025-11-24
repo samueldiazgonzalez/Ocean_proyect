@@ -55,7 +55,7 @@ $logged_in = isset($_SESSION['user_id']);
         <nav class="main-nav">
           <a href="turismo.php"><i class="fas fa-home"></i> Inicio</a>
           <a href="mis_reservas.php"><i class="fas fa-bookmark"></i> Mis Reservas</a>
-          <a href="#"><i class="fas fa-tags"></i> Ofertas</a>
+         
           <a href="ayuda.html" class="active"><i class="fas fa-question-circle"></i> Ayuda</a>
 
           <?php if ($logged_in): ?>
