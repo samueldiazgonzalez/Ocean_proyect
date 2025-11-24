@@ -1,99 +1,150 @@
+/* Variables CSS */
+:root {
+    --color-primary: #007bff; 
+    --color-primary-dark: #0056b3; 
+    --color-text-dark: #212529; 
+    --color-text-medium: #6c757d; 
+    --color-border-default: #dee2e6; 
+    --color-bg-light: #f8f9fa; 
+    
+    --border-radius-base: 10px;
+    --transition-speed: 0.3s;
+    --shadow-elevation: 0 8px 25px rgba(0, 0, 0, 0.12); 
+}
+
+/* Base Global */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; 
+}
+
 /* Contenedor del formulario */
 .provider-form {
-  max-width: 520px;
-  margin: 40px auto;
-  padding: 30px;
-  background: #ffffff;
-  border-radius: 18px;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.1);
-  font-family: "Segoe UI", sans-serif;
+    /* CAMBIO CLAVE: Ancho reducido a 420px */
+    max-width: 420px; 
+    margin: 40px auto;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: var(--border-radius-base); 
+    box-shadow: var(--shadow-elevation); 
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; 
+    border: 1px solid var(--color-border-default);
 }
 
 .form-title {
-  font-size: 24px;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 5px;
-  color: #222;
+    font-size: 26px; 
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 5px;
+    color: var(--color-text-dark);
 }
 
 .form-subtitle {
-  text-align: center;
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 20px;
+    text-align: center;
+    font-size: 15px; 
+    color: var(--color-text-medium);
+    margin-bottom: 30px; 
 }
 
-/* Grupos del formulario */
+/* Grupos y Etiquetas */
 .form-group {
-  margin-bottom: 18px;
+    margin-bottom: 22px; 
 }
 
-/* Etiquetas */
 .form-group label {
-  font-size: 14px;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 6px;
-  display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-dark);
+    margin-bottom: 8px; 
+    display: block;
 }
 
-/* Inputs y selects */
+/* Inputs, selects y textareas */
 .provider-form input,
 .provider-form select,
 .provider-form textarea {
-  width: 100%;
-  padding: 12px 14px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  background: #fafafa;
-  font-size: 14px;
-  transition: 0.25s ease;
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--border-radius-base);
+    background: var(--color-bg-light);
+    font-size: 16px; 
+    color: var(--color-text-dark); 
+    transition: all var(--transition-speed) ease; 
+    box-sizing: border-box; 
+    line-height: 1.2;
 }
 
-/* Hover & focus */
+/* Hover & focus mejorado */
 .provider-form input:focus,
 .provider-form select:focus,
 .provider-form textarea:focus {
-  border-color: #007bff;
-  background: #fff;
-  outline: none;
-  box-shadow: 0 0 6px rgba(0,123,255,0.25);
+    border-color: var(--color-primary);
+    background: #fff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
 }
 
 /* Input file */
 .file-group input[type="file"] {
-  padding: 10px;
-  border: 1px dashed #999;
-  background: #f7f7f7;
-  cursor: pointer;
+    padding: 12px;
+    border: 2px dashed var(--color-border-default); 
+    background: var(--color-bg-light); 
+    cursor: pointer;
+    line-height: normal;
 }
 
 .file-group input[type="file"]:hover {
-  background: #efefef;
+    background: #e9ecef; 
 }
 
-/* Botón */
+/* Botón Primario */
 .btn-primary {
-  width: 100%;
-  padding: 14px;
-  font-size: 16px;
-  font-weight: 600;
-  background: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: 0.3s ease;
+    width: 100%;
+    padding: 16px; 
+    font-size: 17px;
+    font-weight: 700;
+    background: var(--color-primary);
+    color: #fff;
+    border: none;
+    border-radius: 8px; 
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2); 
+    margin-top: 15px;
 }
 
 .btn-primary:hover {
-  background: #005dc2;
+    background: var(--color-primary-dark);
+    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3);
+    transform: translateY(-1px); 
+}
+
+/* Botón Secundario (para links de Registro/Login) */
+.btn-secondary {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+    margin-top: 15px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-text-medium);
+    text-decoration: none;
+    transition: color var(--transition-speed) ease;
+}
+
+.btn-secondary:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
 }
 
 /* Responsive */
-@media (max-width: 480px) {
-  .provider-form {
-    padding: 22px;
-  }
+@media (max-width: 560px) { 
+    .provider-form {
+        margin: 20px;
+        padding: 22px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
 }
