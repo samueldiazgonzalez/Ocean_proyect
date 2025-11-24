@@ -179,7 +179,12 @@ $logged_in = isset($_SESSION['user_id']);
       </div>
 
      <?php
+<<<<<<< HEAD
 // adaptafcion vista de servicios en turismo.php siu
+=======
+     
+// adaptafcion vista de servicios en turismo.php siud
+>>>>>>> 09ede1af1fdcb90605dfa6ef96b2bd396ab637bc
 $sql = "SELECT id, titulo, descripcion, tarifa, duracion, imagenes, categoria, estado 
         FROM servicios 
         WHERE estado='Activo' 
@@ -214,8 +219,19 @@ $result = $conn->query($sql);
             <a href="ver_servicio.php?id=<?php echo $row['id']; ?>" class="btn-reserve">
               <i class="fas fa-calendar-check"></i> Reservar ahora
             </a>
+<<<<<<< HEAD
             <button class="btn-favorite" aria-label="Agregar a favoritos">
               <i class="far fa-heart"></i>
+=======
+           <form action="favorito.php" method="POST" style="display:inline-block;">
+  <input type="hidden" name="destino_id" value="<?php echo $row['id']; ?>">
+  <button type="submit" class="btn-favorite" aria-label="Agregar a favoritos">
+    <i class="far fa-heart"></i>
+  </button>
+</form> 
+    <!--<button class="btn-favorite" aria-label="Agregar a favoritos">
+ <i class="far fa-heart"></i>-->
+>>>>>>> 09ede1af1fdcb90605dfa6ef96b2bd396ab637bc
             </button>
           </div>
         </div>
