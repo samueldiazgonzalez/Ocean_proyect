@@ -55,11 +55,19 @@ $result = $stmt->get_result();
           <p><strong>Total:</strong> $<?php echo number_format($row['total'], 0); ?> COP</p>
           <p><strong>Estado:</strong> <?php echo ucfirst($row['estado']); ?></p>
 
+          
+
           <?php if ($row['estado'] === 'pendiente'): ?>
             <form action="pago.php" method="POST">
               <input type="hidden" name="reserva_id" value="<?php echo $row['id']; ?>">
               <button type="submit" class="book-btn">💳 Proceder al pago</button>
             </form>
+
+  <form action="eliminar_reserva.php" method="POST" style="display:inline-block;">
+  <input type="hidden" name="reserva_id" value="<?php echo $row['id']; ?>">
+  <button type="submit" class="book-btn" style="background-color:#dc3545;">🗑 Eliminar</button>
+</form>
+
           <?php endif; ?>
         </div>
       <?php endwhile; ?>
