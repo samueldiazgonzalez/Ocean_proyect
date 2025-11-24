@@ -38,10 +38,9 @@ $result = $stmt->get_result();
       </div>
 
       <nav class="nav">
-        <a href="proveedor.html">Dashboard</a>
+           <a href="clientes.php">Clientes</a>
         <a class="active" href="servicios.php">Mis Servicios</a>
         <a href="perfil_proveedor.php">Perfil</a>
-        <a href="clientes.html">Clientes</a>
         <a href="configuracion.html">Ajustes</a>
       </nav>
     </aside>

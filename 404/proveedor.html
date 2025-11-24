@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Panel Proveedor</title>
+  <link rel="stylesheet" href="proveedor.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" aria-label="Barra lateral">
+      <div class="brand">
+        <div class="logo">PT</div>
+        <div class="brand-text">
+          <div>Portal</div>
+          <div class="subtitle">Proveedores</div>
+        </div>
+      </div>
+
+      <nav class="nav" role="navigation" aria-label="Navegación">
+        <a class="nav-link active" href="proveedor.html" data-page="dashboard">Dashboard</a>
+        <a class="nav-link" href="servicios.php" data-page="services">Mis Servicios</a>
+        <a class="nav-link" href="perfil_proveedor.php" data-page="profile">Perfil</a>
+        <a href="clientes.html">Clientes</a>
+        <a class="nav-link" href="configuracion.html" data-page="settings">Ajustes</a>
+      </nav>
+
+      <div class="foot">Soporte · Términos · Centro de ayuda</div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="title-block">
+          <h1>Panel de Proveedor</h1>
+          <p class="muted">Perfil público · Gestiona tus servicios</p>
+        </div>
+
+        <div class="top-actions">
+          <div class="search">
+            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M21 21l-4.35-4.35M10.5 18A7.5 7.5 0 1010.5 3a7.5 7.5 0 000 15z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <input id="search" placeholder="Buscar servicio, cliente, ruta..." />
+          </div>
+
+          <button id="btnEditProfile" class="small-btn">Editar perfil</button>
+
+          <div class="avatar" title="Avatar">
+            <!-- Avatar: ruta local subida (ajusta si mueves la imagen) -->
+            <img src="imagenes\imagen_proveedor.jpg" alt="">
+          </div>
+        </div>
+      </header>
+
+      <section class="grid">
+        <aside class="card profile-card">
+          <div class="profile-header">
+            <div class="profile-photo">
+              <img src="imagenes\imagen_proveedor.jpg" alt="">
+            </div>
+            <div class="profile-meta">
+              <h2 id="provName">Javier Pérez</h2>
+              <p id="provRole">Proveedor Turistico-Hotelero</p>
+              <div class="rating">⭐ <span id="provRating">4.4</span> · <span class="muted">40 reseñas</span></div>
+              <div id="provLocation" class="muted">Cartagena, Colombia</div>
+            </div>
+          </div>
+
+          <div class="bio">
+            <strong>Biografía</strong>
+            <p id="provBio" class="muted">Proveedor turistico con 5 años de experiencia.</p>
+          </div>
+
+          <div class="profile-actions">
+            <button class="btn ghost" id="btnViewPublic">Ver perfil público</button>
+            <button class="btn primary" id="btnContact">Contactar</button>
+          </div>
+
+          <div class="note">Información del proveedor. Actualiza tu perfil para mejorar la visibilidad en la plataforma.</div>
+        </aside>
+
+        <section class="content-column">
+          <div class="section-header">
+            <h3>Gestionar servicios</h3>
+            <div class="pill" id="serviceCount">0 servicios</div>
+          </div>
+
+          <div id="servicesList" class="services">
+            <!-- Servicios generados por JS -->
+          </div>
+
+          <div class="add-service">
+            <button class="btn primary" id="btnAddService">+ Añadir servicio</button>
+          </div>
+
+          <div class="card note">
+            <strong>Consejo:</strong> Completa el perfil y añade fotos o descripciones detalladas de cada servicio para atraer más clientes.
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+  <script src="proveedor.js" defer></script>
+</body>
+</html>

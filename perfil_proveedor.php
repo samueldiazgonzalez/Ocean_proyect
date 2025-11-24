@@ -32,9 +32,9 @@ $proveedor = $result->fetch_assoc();
   <aside class="sidebar">
    
    <nav class="sidebar-menu">
-  <a href="proveedor.html"><i class="ri-home-4-line"></i> Dashboard</a>
+
+    <a href="clientes.php"><i class="ri-team-line"></i> Clientes</a>
   <a href="servicios.php"><i class="ri-briefcase-line"></i> Mis Servicios</a>
-  <a href="clientes.html"><i class="ri-team-line"></i> Clientes</a>
   <a class="active" href="perfil_proveedor.php"><i class="ri-user-3-line"></i> Mi Perfil</a>
   <a href="logout.php"><i class="ri-logout-box-r-line"></i> Cerrar Sesión</a>
 </nav>
