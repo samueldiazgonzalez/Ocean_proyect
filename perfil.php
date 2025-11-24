@@ -77,10 +77,13 @@ $conn->close();
 $conn = new mysqli("db", "root", "rootpass", "OceanDB");
 if ($conn->connect_error) die("Error DB: " . $conn->connect_error);
 
-$sql = "SELECT d.titulo, r.fecha_checkin, r.fecha_checkout, r.huespedes, r.total 
-        FROM reservas r 
-        JOIN destinos d ON r.destino_id = d.id 
-        WHERE r.usuario_id=?";
+$sql = "SELECT s.titulo, s.descripcion, s.tarifa,
+               r.fecha_reserva, r.cantidad, r.total, r.estado
+        FROM reservas r
+        JOIN servicios s ON r.servicio_id = s.id
+        WHERE r.usuario_id = ?
+        ORDER BY r.fecha_reserva DESC
+        LIMIT 1";   // 👈 solo las últimas 2 reservas
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -92,13 +95,17 @@ $reservas = $stmt->get_result();
 <div class="card">
   <h3><i class="ri-bookmark-line"></i> Mis Reservas</h3>
   <?php if ($reservas->num_rows > 0): ?>
-    <?php while($res = $reservas->fetch_assoc()): ?>
-      <p><strong><?php echo $res['titulo']; ?></strong></p>
-      <p>Del <?php echo $res['fecha_checkin']; ?> al <?php echo $res['fecha_checkout']; ?></p>
-      <p><?php echo $res['huespedes']; ?> huéspedes</p>
-      <p>Total: $<?php echo number_format($res['total']); ?> COP</p>
-      <hr>
+    <?php while($row = $reservas->fetch_assoc()): ?>
+      <div class="reserva section">
+        <strong><?php echo htmlspecialchars($row['titulo']); ?></strong><br>
+        <p><?php echo htmlspecialchars($row['descripcion']); ?></p>
+        <p><strong>Fecha de reserva:</strong> <?php echo $row['fecha_reserva']; ?></p>
+        <p><strong>Cantidad:</strong> <?php echo (int)$row['cantidad']; ?> personas</p>
+        <p><strong>Total:</strong> $<?php echo number_format($row['total'], 0); ?> COP</p>
+        <p><strong>Estado:</strong> <?php echo ucfirst($row['estado']); ?></p>
+      </div>
     <?php endwhile; ?>
+    <a href="mis_reservas.php" class="btn-secondary">Ver más reservas</a>
   <?php else: ?>
     <p>No tienes reservas registradas.</p>
   <?php endif; ?>
@@ -107,12 +114,12 @@ $reservas = $stmt->get_result();
 
 
 <?php
-$sql = "SELECT r.comentario, r.rating, r.created_at, d.titulo 
+$sql = "SELECT r.comentario, r.rating, r.created_at, s.titulo 
         FROM reseñas r
-        JOIN destinos d ON r.destino_id = d.id
+        JOIN servicios s ON r.servicio_id = s.id
         WHERE r.usuario_id = ?
         ORDER BY r.created_at DESC
-        LIMIT 3"; // solo las últimas 3
+        LIMIT 3";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
