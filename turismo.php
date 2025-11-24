@@ -178,10 +178,14 @@ $logged_in = isset($_SESSION['user_id']);
         </div>
       </div>
 
+      <!-- ========================= -->
+      <!--     TODOS DISPONIBLES     -->
+      <!-- ========================= -->
       <div class="products-grid" id="products">
+
         <div class="product-card" data-precio="95000" data-rating="4.9" data-disponible="true" data-categoria="Tours de aventura">
           <div class="card-image">
-            <img src="imagenes/Cartagena_Colombia.webp" alt="Tour histórico en Cartagena de Indias, Colombia">
+            <img src="imagenes/Cartagena_Colombia.webp">
             <div class="availability-badge available">Disponible</div>
             <div class="card-badge">Destacado</div>
           </div>
@@ -189,11 +193,7 @@ $logged_in = isset($_SESSION['user_id']);
             <h4 class="card-title">Tour por Cartagena histórica</h4>
             <div class="card-rating">
               <div class="rating-stars">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
               </div>
               <span class="rating-number">4.9 (127 reseñas)</span>
             </div>
@@ -204,30 +204,22 @@ $logged_in = isset($_SESSION['user_id']);
             </div>
             <div class="card-price">Desde $95,000 COP</div>
             <div class="card-actions">
-              <a href="vista/Cartagena.php" class="btn-reserve">
-                <i class="fas fa-calendar-check"></i> Reservar ahora
-              </a>
-              <button class="btn-favorite" aria-label="Agregar a favoritos">
-                <i class="far fa-heart"></i>
-              </button>
+              <a href="vista/Cartagena.php" class="btn-reserve"><i class="fas fa-calendar-check"></i> Reservar ahora</a>
+              <button class="btn-favorite"><i class="far fa-heart"></i></button>
             </div>
           </div>
         </div>
 
-        <div class="product-card" data-precio="180000" data-rating="4.7" data-disponible="false" data-categoria="Playas">
+        <div class="product-card" data-precio="180000" data-rating="4.7" data-disponible="true" data-categoria="Playas">
           <div class="card-image">
-            <img src="imagenes/decameron-aquarium.jpg" alt="Escapada a San Andrés, Colombia">
-            <div class="availability-badge unavailable">Disponible</div>
+            <img src="imagenes/decameron-aquarium.jpg">
+            <div class="availability-badge available">Disponible</div>
           </div>
           <div class="card-content">
             <h4 class="card-title">Escapada a San Andrés</h4>
             <div class="card-rating">
               <div class="rating-stars">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="far fa-star"></i>
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
               </div>
               <span class="rating-number">4.7 (89 reseñas)</span>
             </div>
@@ -238,30 +230,22 @@ $logged_in = isset($_SESSION['user_id']);
             </div>
             <div class="card-price">Desde $180,000 COP</div>
             <div class="card-actions">
-              <a href="vista/San andres.php" class="btn-reserve">
-                <i class="fas fa-calendar-check"></i> Reservar ahora
-              </a>
-              <button class="btn-favorite" aria-label="Agregar a favoritos">
-                <i class="far fa-heart"></i>
-              </button>
+              <a href="vista/San andres.php" class="btn-reserve"><i class="fas fa-calendar-check"></i> Reservar ahora</a>
+              <button class="btn-favorite"><i class="far fa-heart"></i></button>
             </div>
           </div>
         </div>
 
         <div class="product-card" data-precio="70000" data-rating="4.8" data-disponible="true" data-categoria="Guías locales">
           <div class="card-image">
-            <img src="imagenes/parque-nacional-tayrona-colombia-2024-1.jpg" alt="Guía local en Parque Tayrona, Colombia">
+            <img src="imagenes/parque-nacional-tayrona-colombia-2024-1.jpg">
             <div class="availability-badge available">Disponible</div>
           </div>
           <div class="card-content">
             <h4 class="card-title">Guía local en Parque Tayrona</h4>
             <div class="card-rating">
               <div class="rating-stars">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
               </div>
               <span class="rating-number">4.8 (95 reseñas)</span>
             </div>
@@ -272,30 +256,22 @@ $logged_in = isset($_SESSION['user_id']);
             </div>
             <div class="card-price">Desde $70,000 COP</div>
             <div class="card-actions">
-              <a href="vista/Tayrona.php" class="btn-reserve">
-                <i class="fas fa-calendar-check"></i> Reservar ahora
-              </a>
-              <button class="btn-favorite" aria-label="Agregar a favoritos">
-                <i class="far fa-heart"></i>
-              </button>
+              <a href="vista/Tayrona.php" class="btn-reserve"><i class="fas fa-calendar-check"></i> Reservar ahora</a>
+              <button class="btn-favorite"><i class="far fa-heart"></i></button>
             </div>
           </div>
         </div>
 
         <div class="product-card" data-precio="120000" data-rating="4.6" data-disponible="true" data-categoria="Tours de aventura">
           <div class="card-image">
-            <img src="imagenes/29SANTAMARTA_1.jpg" alt="Aventura en Santa Marta, Colombia">
+            <img src="imagenes/29SANTAMARTA_1.jpg">
             <div class="availability-badge available">Disponible</div>
           </div>
           <div class="card-content">
             <h4 class="card-title">Aventura en Santa Marta</h4>
             <div class="card-rating">
               <div class="rating-stars">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
               </div>
               <span class="rating-number">4.6 (73 reseñas)</span>
             </div>
@@ -306,30 +282,22 @@ $logged_in = isset($_SESSION['user_id']);
             </div>
             <div class="card-price">Desde $120,000 COP</div>
             <div class="card-actions">
-              <a href="vista/Santa marta.php" class="btn-reserve">
-                <i class="fas fa-calendar-check"></i> Reservar ahora
-              </a>
-              <button class="btn-favorite" aria-label="Agregar a favoritos">
-                <i class="far fa-heart"></i>
-              </button>
+              <a href="vista/Santa marta.php" class="btn-reserve"><i class="fas fa-calendar-check"></i> Reservar ahora</a>
+              <button class="btn-favorite"><i class="far fa-heart"></i></button>
             </div>
           </div>
         </div>
 
-        <div class="product-card" data-precio="150000" data-rating="4.5" data-disponible="false" data-categoria="Paquetes completos">
+        <div class="product-card" data-precio="150000" data-rating="4.5" data-disponible="true" data-categoria="Paquetes completos">
           <div class="card-image">
-            <img src="imagenes/istockphoto-1311459420-612x612.jpg" alt="Tour desierto La Guajira, Colombia">
-            <div class="availability-badge unavailable">Disponible</div>
+            <img src="imagenes/istockphoto-1311459420-612x612.jpg">
+            <div class="availability-badge available">Disponible</div>
           </div>
           <div class="card-content">
             <h4 class="card-title">Tour desierto La Guajira</h4>
             <div class="card-rating">
               <div class="rating-stars">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
               </div>
               <span class="rating-number">4.5 (112 reseñas)</span>
             </div>
@@ -340,19 +308,15 @@ $logged_in = isset($_SESSION['user_id']);
             </div>
             <div class="card-price">Desde $150,000 COP</div>
             <div class="card-actions">
-              <a href="vista/Guajira.php" class="btn-reserve">
-                <i class="fas fa-calendar-check"></i> Reservar ahora
-              </a>
-              <button class="btn-favorite" aria-label="Agregar a favoritos">
-                <i class="far fa-heart"></i>
-              </button>
+              <a href="vista/Guajira.php" class="btn-reserve"><i class="fas fa-calendar-check"></i> Reservar ahora</a>
+              <button class="btn-favorite"><i class="far fa-heart"></i></button>
             </div>
           </div>
         </div>
 
         <div class="product-card" data-precio="250000" data-rating="5.0" data-disponible="true" data-categoria="Tours de aventura">
           <div class="card-image">
-            <img src="imagenes/viajescomfama-amazonas-01.jpg" alt="Expedición en el Amazonas, Colombia">
+            <img src="imagenes/viajescomfama-amazonas-01.jpg">
             <div class="availability-badge available">Disponible</div>
             <div class="card-badge">Premium</div>
           </div>
@@ -360,11 +324,7 @@ $logged_in = isset($_SESSION['user_id']);
             <h4 class="card-title">Expedición al Amazonas</h4>
             <div class="card-rating">
               <div class="rating-stars">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
               </div>
               <span class="rating-number">5.0 (45 reseñas)</span>
             </div>
@@ -375,22 +335,18 @@ $logged_in = isset($_SESSION['user_id']);
             </div>
             <div class="card-price">Desde $250,000 COP</div>
             <div class="card-actions">
-              <a href="vista/Amazonas.php" class="btn-reserve">
-                <i class="fas fa-calendar-check"></i> Reservar ahora
-              </a>
-              <button class="btn-favorite" aria-label="Agregar a favoritos">
-                <i class="far fa-heart"></i>
-              </button>
+              <a href="vista/Amazonas.php" class="btn-reserve"><i class="fas fa-calendar-check"></i> Reservar ahora</a>
+              <button class="btn-favorite"><i class="far fa-heart"></i></button>
             </div>
           </div>
         </div>
+
       </div>
     </main>
   </div>
 
-  <!-- Script movido al final del body para asegurar que el DOM esté cargado -->
- <script src="./script.js"></script>
- <script>
+  <script src="./script.js"></script>
+  <script>
 document.addEventListener("DOMContentLoaded", function() {
   const searchInput = document.getElementById("search");
   const products = document.querySelectorAll(".product-card");
