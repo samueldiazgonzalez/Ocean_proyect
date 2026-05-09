@@ -1,0 +1,7 @@
+{
+  "name": "ocean-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
