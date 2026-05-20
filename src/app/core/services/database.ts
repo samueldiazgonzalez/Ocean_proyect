@@ -1,5 +1,3 @@
-// src/app/core/services/database.ts
-
 import { Injectable, inject } from '@angular/core';
 import { 
   Firestore, 
@@ -190,6 +188,9 @@ export class DatabaseService {
     return null;
   }
 
+  /**
+   * 10. ACTUALIZAR USUARIO
+   */
   async actualizarUsuario(uid: string, datosNuevos: any) {
     try {
       const usuarioRef = doc(this.firestore, `usuarios/${uid}`);
@@ -199,6 +200,37 @@ export class DatabaseService {
       console.error('Error al actualizar el usuario:', error);
       throw error;
     }
+  }
+
+  /**
+   * ==========================================
+   * 11. SISTEMA DE CALIFICACIONES Y RESEÑAS (⭐)
+   * ==========================================
+   */
+
+  async agregarResena(tourId: string, usuarioId: string, nombreUsuario: string, calificacion: number, comentario: string) {
+    try {
+      const resenasRef = collection(this.firestore, 'resenas');
+      const nuevaResena = {
+        tourId: tourId,
+        usuarioId: usuarioId,
+        nombreUsuario: nombreUsuario,
+        calificacion: calificacion,
+        comentario: comentario,
+        fecha: new Date().toISOString()
+      };
+      await addDoc(resenasRef, nuevaResena);
+      console.log('Reseña guardada con éxito');
+    } catch (error) {
+      console.error('Error al guardar la reseña:', error);
+      throw error;
+    }
+  }
+
+  obtenerResenasPorTour(tourId: string): Observable<any[]> {
+    const resenasRef = collection(this.firestore, 'resenas');
+    const q = query(resenasRef, where('tourId', '==', tourId));
+    return collectionData(q, { idField: 'id' });
   }
 
 }

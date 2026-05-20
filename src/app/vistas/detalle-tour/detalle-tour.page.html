@@ -29,15 +29,81 @@
       </ion-badge>
     </div>
 
-    <div class="ion-padding">
+    <div class="ion-padding" style="background: white;">
+      
+      <div *ngIf="resenas.length > 0" style="display: flex; align-items: center; gap: 5px; margin-bottom: 5px;">
+        <ion-icon name="star" color="warning" style="font-size: 20px;"></ion-icon>
+        <span style="font-size: 18px; font-weight: bold;">{{ promedioEstrellas }}</span>
+        <span style="color: gray;">({{ resenas.length }} reseñas)</span>
+      </div>
+
       <h1 style="margin-top: 0;">{{ tour.titulo }}</h1>
       <ion-text color="medium">
         <p style="font-size: 16px; line-height: 1.5;">{{ tour.descripcion }}</p>
       </ion-text>
     </div>
     
-  </div>
+    <div class="ion-padding" style="margin-bottom: 20px;">
+      <h2 style="font-weight: bold; margin-bottom: 15px;">Experiencias ⭐</h2>
 
+      <div *ngIf="usuarioActual && puedeCalificar" style="background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px;">
+        <h3 style="margin-top: 0; font-size: 16px; font-weight: bold;">¿Qué tal te pareció?</h3>
+        
+        <div style="font-size: 35px; color: #ffc409; margin-bottom: 15px; display: flex; gap: 5px;">
+          <ion-icon [name]="nuevaEstrellas >= 1 ? 'star' : 'star-outline'" (click)="setEstrellas(1)"></ion-icon>
+          <ion-icon [name]="nuevaEstrellas >= 2 ? 'star' : 'star-outline'" (click)="setEstrellas(2)"></ion-icon>
+          <ion-icon [name]="nuevaEstrellas >= 3 ? 'star' : 'star-outline'" (click)="setEstrellas(3)"></ion-icon>
+          <ion-icon [name]="nuevaEstrellas >= 4 ? 'star' : 'star-outline'" (click)="setEstrellas(4)"></ion-icon>
+          <ion-icon [name]="nuevaEstrellas >= 5 ? 'star' : 'star-outline'" (click)="setEstrellas(5)"></ion-icon>
+        </div>
+
+        <ion-textarea 
+          [(ngModel)]="nuevoComentario" 
+          placeholder="Escribe tu opinión sobre el tour..." 
+          rows="3" 
+          style="background: #f4f5f8; border-radius: 10px; padding: 10px; margin-bottom: 15px; --padding-start: 10px;">
+        </ion-textarea>
+        
+        <ion-button expand="block" shape="round" color="primary" (click)="enviarResena()" [disabled]="nuevaEstrellas === 0 || nuevoComentario.trim() === '' || enviandoResena">
+          <ion-spinner *ngIf="enviandoResena" name="dots"></ion-spinner>
+          <span *ngIf="!enviandoResena">Publicar reseña</span>
+        </ion-button>
+      </div>
+
+      <div *ngIf="usuarioActual && !puedeCalificar" style="text-align: center; margin-bottom: 20px; padding: 20px; background: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+        <ion-icon name="lock-closed-outline" style="font-size: 50px; color: #ccc;"></ion-icon>
+        <p style="color: gray; margin-bottom: 0;">Solo los viajeros que han reservado y pagado este tour pueden dejar una reseña.</p>
+      </div>
+      
+      <div *ngIf="!usuarioActual" style="text-align: center; margin-bottom: 20px; padding: 20px; background: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+        <ion-icon name="person-circle-outline" style="font-size: 50px; color: #ccc;"></ion-icon>
+        <p style="color: gray; margin-bottom: 15px;">Inicia sesión para dejar tu calificación.</p>
+        <ion-button fill="outline" shape="round" routerLink="/vistas/login">Ir a Iniciar Sesión</ion-button>
+      </div>
+
+      <ion-list style="background: transparent; padding: 0;">
+        <ion-item *ngFor="let resena of resenas" lines="none" style="--background: white; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.03);">
+          <ion-icon name="person-circle-outline" slot="start" style="font-size: 45px; color: #92949c; align-self: flex-start; margin-top: 15px;"></ion-icon>
+          <ion-label class="ion-text-wrap" style="margin-top: 15px; margin-bottom: 15px;">
+            <h3 style="font-weight: bold; font-size: 16px;">{{ resena.nombreUsuario }}</h3>
+            
+            <div style="color: #ffc409; font-size: 14px; margin-bottom: 8px;">
+              <ion-icon *ngFor="let i of [1,2,3,4,5]" [name]="i <= resena.calificacion ? 'star' : 'star-outline'"></ion-icon>
+            </div>
+            
+            <p style="color: #444; font-size: 15px; line-height: 1.4;">{{ resena.comentario }}</p>
+            <p style="font-size: 12px; color: #a6a8b2; margin-top: 8px;">{{ resena.fecha | date:'dd/MM/yyyy' }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+      
+      <div *ngIf="resenas.length === 0" style="text-align: center; color: gray; margin-top: 30px; margin-bottom: 40px;">
+        <ion-icon name="chatbubbles-outline" style="font-size: 50px; opacity: 0.5;"></ion-icon>
+        <p>Aún no hay reseñas. ¡Sé el primero en calificar este tour!</p>
+      </div>
+    </div>
+
+  </div>
 </ion-content>
 
 <ion-footer class="ion-no-border ion-padding-bottom" *ngIf="!cargando && tour">
