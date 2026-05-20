@@ -1,0 +1,48 @@
+<ion-content class="ion-padding" color="light">
+  <div class="login-container">
+    
+    <div class="header-section">
+      <h1 class="titulo">OCEAN 🌊</h1>
+      <p class="subtitulo">Tu próxima aventura comienza aquí</p>
+    </div>
+
+    <ion-card>
+      <ion-card-content>
+        <ion-item lines="full">
+          <ion-icon name="mail-outline" slot="start"></ion-icon>
+          <ion-input [(ngModel)]="correo" label="Correo electrónico" labelPlacement="floating" type="email" placeholder="ejemplo@ocean.com"></ion-input>
+        </ion-item>
+
+        <ion-item lines="full">
+          <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+          <ion-input [(ngModel)]="contrasena" label="Contraseña" labelPlacement="floating" type="password" placeholder="***"></ion-input>
+        </ion-item>
+
+        <ion-text color="danger" *ngIf="mensajeError" class="ion-text-center">
+          <p>{{ mensajeError }}</p>
+        </ion-text>
+
+        <ion-button (click)="iniciarSesion()" [disabled]="cargando" expand="block" shape="round" class="ion-margin-top" color="primary">
+          <ion-spinner *ngIf="cargando" name="crescent"></ion-spinner>
+          <span *ngIf="!cargando">Iniciar Sesión</span>
+        </ion-button>
+        
+        <ion-button (click)="iniciarSesionGoogle()" [disabled]="cargando" expand="block" shape="round" class="ion-margin-top" color="light">
+          <ion-icon slot="start" name="logo-google" color="danger"></ion-icon>
+          Continuar con Google
+        </ion-button>
+
+        <ion-button (click)="irARegistro()" expand="block" fill="clear" shape="round" color="medium" class="ion-margin-top">
+          Crear una cuenta nueva
+        </ion-button>
+
+        <ion-button expand="block" fill="clear" color="medium" class="ion-margin-top" routerLink="/tabs/catalogo">
+          Explorar catálogo sin cuenta
+          <ion-icon slot="end" name="compass-outline"></ion-icon>
+        </ion-button>
+
+      </ion-card-content>
+    </ion-card>
+
+  </div>
+</ion-content>

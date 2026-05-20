@@ -1,0 +1,52 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-title>Explorar Ocean 🌊</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content color="light" class="ion-padding">
+  
+  <div class="ion-text-center ion-margin-bottom">
+    <h2>Descubre tu próxima aventura</h2>
+    <p>Los mejores paquetes turísticos</p>
+  </div>
+
+  <div class="ion-text-center ion-margin-top" *ngIf="cargando">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando experiencias...</p>
+  </div>
+
+  <div class="ion-text-center ion-padding" *ngIf="!cargando && tours.length === 0">
+    <p color="medium">Aún no hay tours disponibles. ¡Pronto agregaremos nuevas aventuras!</p>
+  </div>
+
+  <ion-grid *ngIf="!cargando && tours.length > 0">
+    <ion-row>
+      <ion-col size="12" size-md="6" *ngFor="let tour of tours">
+        
+        <ion-card class="tour-card">
+          <img [src]="tour.imagenUrl || 'https://via.placeholder.com/400x200?text=Ocean+Tour'" alt="Imagen del Tour" class="imagen-tour"/>
+          
+          <ion-card-header>
+            <ion-card-title>{{ tour.titulo }}</ion-card-title>
+            <ion-card-subtitle color="success">
+              <ion-icon name="cash-outline"></ion-icon> 
+              ${{ tour.precio }} COP
+            </ion-card-subtitle>
+          </ion-card-header>
+
+          <ion-card-content>
+            <p class="descripcion-corta">{{ tour.descripcion }}</p>
+            
+            <ion-button expand="block" shape="round" class="ion-margin-top" [routerLink]="['/detalle-tour', tour.id]">
+              Ver Detalles
+              <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

@@ -1,0 +1,59 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-title>Mis Reservas 🎟️</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content color="light" class="ion-padding">
+
+  <div class="ion-text-center ion-margin-bottom">
+    <h2>Tu Historial de Viajes</h2>
+    <p>Trazabilidad de tus pagos seguros</p>
+  </div>
+
+  <div class="ion-text-center ion-padding" *ngIf="cargando">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Consultando transacciones...</p>
+  </div>
+
+  <div class="ion-text-center ion-padding" *ngIf="!cargando && reservasCompletas.length === 0">
+    <h2>Aún no tienes reservas</h2>
+    <p color="medium">Explora nuestro catálogo y agenda tu próxima experiencia.</p>
+  </div>
+
+  <ion-list inset="true" lines="full" *ngIf="!cargando && reservasCompletas.length > 0">
+    <ion-item *ngFor="let reserva of reservasCompletas">
+      <ion-label>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <h2 style="font-weight: bold; font-size: 1.1rem; color: var(--ion-color-dark);">
+            {{ reserva.tituloTour }}
+          </h2>
+          <ion-badge [color]="reserva.estado === 'PENDIENTE' ? 'warning' : 'success'">
+            {{ reserva.estado }}
+          </ion-badge>
+        </div>
+
+        <p style="margin: 4px 0; display: flex; align-items: center; gap: 5px;">
+          <ion-icon name="calendar-outline"></ion-icon>
+          {{ reserva.fechaReserva | date:'dd/MM/yyyy - hh:mm a' }}
+        </p>
+
+        <p style="margin: 4px 0; display: flex; align-items: center; gap: 5px;" *ngIf="reserva.estado === 'CONFIRMADA'">
+          <ion-icon name="wallet-outline"></ion-icon>
+          Pago: {{ reserva.franquiciaTarjeta | uppercase }} (**** {{ reserva.ultimosDigitos }})
+        </p>
+
+        <h3 style="color: var(--ion-color-success); font-weight: bold; margin-top: 6px; font-size: 1rem;">
+          ${{ reserva.precioTour }} COP
+        </h3>
+
+        <ion-button *ngIf="reserva.estado === 'PENDIENTE'" expand="block" color="primary" fill="outline" shape="round" class="ion-margin-top" [routerLink]="['/checkout', reserva.id]">
+          <ion-icon slot="start" name="card-outline"></ion-icon>
+          Pagar para Confirmar
+        </ion-button>
+
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+</ion-content>

@@ -1,0 +1,66 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Crear Cuenta</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" color="light">
+  
+  <div class="ion-text-center ion-margin-bottom ion-padding-top">
+    <h2>Únete a Ocean 🌊</h2>
+    <p>Crea tu cuenta para empezar la aventura</p>
+  </div>
+
+  <ion-list inset="true" lines="full">
+    <ion-item>
+      <ion-icon name="person-outline" slot="start"></ion-icon>
+      <ion-input [(ngModel)]="nombre" label="Nombre completo" labelPlacement="floating" type="text"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-icon name="call-outline" slot="start"></ion-icon>
+      <ion-input [(ngModel)]="telefono" label="Teléfono / WhatsApp" labelPlacement="floating" type="tel"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Registrarme como:</ion-label>
+      <ion-select [(ngModel)]="rol">
+        <ion-select-option value="viajero">Viajero (Turista)</ion-select-option>
+        <ion-select-option value="proveedor">Proveedor (Agencia)</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <div *ngIf="rol === 'proveedor'" class="ion-padding-top">
+      <ion-item color="light">
+        <ion-icon name="business-outline" slot="start"></ion-icon>
+        <ion-input [(ngModel)]="nombreAgencia" label="Nombre de tu Agencia/Empresa" labelPlacement="floating"></ion-input>
+      </ion-item>
+      <p class="ion-padding-start ion-padding-end" style="font-size: 0.8em; color: gray;">
+        * Como proveedor, podrás publicar y gestionar tus propios tours.
+      </p>
+    </div>
+
+    <ion-item>
+      <ion-icon name="mail-outline" slot="start"></ion-icon>
+      <ion-input [(ngModel)]="correo" label="Correo electrónico" labelPlacement="floating" type="email"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+      <ion-input [(ngModel)]="contrasena" label="Contraseña" labelPlacement="floating" type="password"></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <ion-text color="danger" class="ion-text-center" *ngIf="mensajeError">
+    <p><strong>{{ mensajeError }}</strong></p>
+  </ion-text>
+
+  <ion-button expand="block" shape="round" color="primary" class="ion-margin-top" (click)="registrar()" [disabled]="cargando">
+    <ion-spinner name="crescent" *ngIf="cargando"></ion-spinner>
+    <span *ngIf="!cargando">Completar Registro</span>
+  </ion-button>
+
+</ion-content>

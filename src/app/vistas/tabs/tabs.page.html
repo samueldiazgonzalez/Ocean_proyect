@@ -1,0 +1,34 @@
+<ion-tabs>
+
+  <ion-tab-bar slot="bottom">
+
+    <ion-tab-button tab="catalogo" *ngIf="rol === 'viajero'">
+      <ion-icon name="map-outline"></ion-icon>
+      <ion-label>Explorar</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="favoritos" *ngIf="rol === 'viajero'">
+      <ion-icon name="heart-outline"></ion-icon>
+      <ion-label>Favoritos</ion-label>
+    </ion-tab-button>
+
+
+    <ion-tab-button tab="mis-tours" *ngIf="rol === 'proveedor'">
+      <ion-icon name="grid-outline"></ion-icon>
+      <ion-label>Mi Panel</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="crear-tour" *ngIf="rol === 'proveedor'">
+      <ion-icon name="briefcase-outline"></ion-icon>
+      <ion-label>Publicar</ion-label>
+    </ion-tab-button>
+
+
+    <ion-tab-button tab="perfil">
+      <ion-icon name="person-outline"></ion-icon>
+      <ion-label>Perfil</ion-label>
+    </ion-tab-button>
+
+  </ion-tab-bar>
+
+</ion-tabs>
