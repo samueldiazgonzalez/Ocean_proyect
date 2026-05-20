@@ -9,10 +9,9 @@ import {
 } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
-import { cashOutline, arrowForwardOutline } from 'ionicons/icons';
+import { cashOutline, arrowForwardOutline, star } from 'ionicons/icons';
 
 import { DatabaseService } from '../../core/services/database';
-import { Tour } from '../../core/models/tour.model';
 
 @Component({
   selector: 'app-catalogo',
@@ -29,11 +28,12 @@ import { Tour } from '../../core/models/tour.model';
 export class CatalogoPage implements OnInit {
   private databaseService = inject(DatabaseService);
 
-  tours: Tour[] = [];
+  // Lo dejamos como any[] para poder agregarle las estrellas dinámicamente sin que TypeScript pelee
+  tours: any[] = []; 
   cargando: boolean = true;
 
   constructor() {
-    addIcons({ cashOutline, arrowForwardOutline });
+    addIcons({ cashOutline, arrowForwardOutline, star });
   }
 
   ngOnInit() {
@@ -41,6 +41,23 @@ export class CatalogoPage implements OnInit {
     this.databaseService.obtenerTours().subscribe({
       next: (data) => {
         this.tours = data;
+        
+        // 👇 Por cada tour, buscamos sus reseñas en tiempo real para calcular el promedio
+        this.tours.forEach(tour => {
+          if (tour.id) {
+            this.databaseService.obtenerResenasPorTour(tour.id).subscribe(resenas => {
+              if (resenas.length > 0) {
+                const suma = resenas.reduce((acc, r) => acc + r.calificacion, 0);
+                tour.promedioEstrellas = (suma / resenas.length).toFixed(1);
+                tour.totalResenas = resenas.length;
+              } else {
+                tour.promedioEstrellas = 0;
+                tour.totalResenas = 0;
+              }
+            });
+          }
+        });
+
         this.cargando = false;
       },
       error: (err) => {
