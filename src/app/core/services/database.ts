@@ -233,4 +233,37 @@ export class DatabaseService {
     return collectionData(q, { idField: 'id' });
   }
 
+
+
+  /**
+   * ==========================================
+   * 12. SISTEMA DE FAVORITOS (❤️)
+   * ==========================================
+   */
+
+  async alternarFavorito(turistaId: string, tourId: string, yaEsFavorito: boolean) {
+    // Usamos un ID compuesto para encontrarlo rapidísimo
+    const docRef = doc(this.firestore, `favoritos/${turistaId}_${tourId}`);
+    try {
+      if (yaEsFavorito) {
+        await deleteDoc(docRef); // Si ya era favorito, se lo quitamos (Dislike)
+      } else {
+        // Si no era, lo guardamos (Like)
+        await setDoc(docRef, { 
+          turistaId: turistaId, 
+          tourId: tourId, 
+          fecha: new Date().toISOString() 
+        });
+      }
+    } catch (error) {
+      console.error('Error al modificar favorito:', error);
+      throw error;
+    }
+  }
+
+  obtenerFavoritosPorTurista(turistaId: string): Observable<any[]> {
+    const favRef = collection(this.firestore, 'favoritos');
+    const q = query(favRef, where('turistaId', '==', turistaId));
+    return collectionData(q, { idField: 'id' });
+  }
 }

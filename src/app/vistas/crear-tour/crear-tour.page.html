@@ -12,6 +12,10 @@
   </div>
 
   <ion-list inset="true" lines="full">
+    <ion-list-header>
+      <ion-label>Información General</ion-label>
+    </ion-list-header>
+
     <ion-item>
       <ion-icon name="text-outline" slot="start"></ion-icon>
       <ion-input [(ngModel)]="titulo" label="Título del tour" labelPlacement="floating" type="text" placeholder="Ej. Tour Islas del Rosario"></ion-input>
@@ -23,19 +27,62 @@
     </ion-item>
 
     <ion-item>
-      <ion-icon name="image-outline" slot="start"></ion-icon>
-      <ion-input [(ngModel)]="imagenUrl" label="URL de la foto" labelPlacement="floating" type="url" placeholder="https://ejemplo.com/foto.jpg"></ion-input>
+      <ion-icon name="pricetag-outline" slot="start"></ion-icon>
+      <ion-select [(ngModel)]="categoria" label="Categoría" labelPlacement="floating">
+        <ion-select-option value="Relajante">Relajante 🧘</ion-select-option>
+        <ion-select-option value="Extremo">Extremo 🧗</ion-select-option>
+        <ion-select-option value="Cultural">Cultural 🏛️</ion-select-option>
+        <ion-select-option value="Familiar">Familiar 👨‍👩‍👧‍👦</ion-select-option>
+        <ion-select-option value="Ecológico">Ecológico 🍃</ion-select-option>
+        <ion-select-option value="Fiesta">Fiesta 🎉</ion-select-option>
+      </ion-select>
     </ion-item>
 
     <ion-item>
-      <ion-icon name="document-text-outline" slot="start"></ion-icon>
-      <ion-textarea [(ngModel)]="descripcion" label="Descripción" labelPlacement="floating" [autoGrow]="true" placeholder="Describe la experiencia..."></ion-textarea>
+      <ion-icon name="time-outline" slot="start"></ion-icon>
+      <ion-input [(ngModel)]="duracion" label="Duración estimada" labelPlacement="floating" type="text" placeholder="Ej. 8 horas, 2 días..."></ion-input>
     </ion-item>
   </ion-list>
 
-  <ion-button expand="block" shape="round" color="primary" class="ion-margin-top" (click)="guardarTour()" [disabled]="cargando">
+  <ion-list inset="true" lines="full">
+    <ion-list-header>
+      <ion-label>Detalles de la Experiencia</ion-label>
+    </ion-list-header>
+
+    <ion-item>
+      <ion-icon name="document-text-outline" slot="start"></ion-icon>
+      <ion-textarea [(ngModel)]="descripcion" label="Descripción" labelPlacement="floating" [autoGrow]="true" placeholder="Describe la experiencia en detalle..."></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
+      <ion-textarea [(ngModel)]="incluye" label="¿Qué incluye?" labelPlacement="floating" [autoGrow]="true" placeholder="Almuerzo, transporte, guía bilingüe..."></ion-textarea>
+    </ion-item>
+  </ion-list>
+
+  <ion-list inset="true" lines="full">
+    <ion-list-header>
+      <ion-label>Galería de Fotos 📸</ion-label>
+    </ion-list-header>
+
+    <ion-item *ngFor="let imagen of galeria; let i = index">
+      <ion-icon name="image-outline" slot="start"></ion-icon>
+      <ion-input [(ngModel)]="imagen.url" [label]="'URL de Foto ' + (i + 1)" labelPlacement="floating" type="url" placeholder="https://ejemplo.com/foto.jpg"></ion-input>
+      
+      <ion-button *ngIf="galeria.length > 1" fill="clear" color="danger" slot="end" (click)="eliminarImagen(i)">
+        <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
+
+    <ion-button fill="clear" expand="block" (click)="agregarImagen()" style="margin: 10px;">
+      <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+      Añadir otra foto
+    </ion-button>
+  </ion-list>
+
+  <ion-button expand="block" shape="round" color="primary" class="ion-margin-top ion-margin-bottom" (click)="guardarTour()" [disabled]="cargando">
     <ion-spinner name="crescent" *ngIf="cargando"></ion-spinner>
-    <span *ngIf="!cargando">Publicar Paquete</span>
+    <span *ngIf="!cargando">Publicar Paquete Turístico</span>
   </ion-button>
 
 </ion-content>

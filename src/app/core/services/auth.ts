@@ -42,7 +42,7 @@ export class AuthService {
         nombre: datosExtra.nombre,
         rol: datosExtra.rol,
         telefono: datosExtra.telefono,
-        // 👇 Corregido: comillas vacías en lugar de undefined
+        // Corregido: comillas vacías en lugar de undefined
         nombreAgencia: datosExtra.nombreAgencia || '',
         fechaRegistro: new Date()
       };
@@ -77,7 +77,7 @@ export class AuthService {
           nombre: user.displayName || 'Sin nombre',
           rol: 'viajero', // Por defecto, puedes cambiarlo si quieres
           telefono: '',
-          // 👇 Corregido: comillas vacías en lugar de undefined
+          // Corregido: comillas vacías en lugar de undefined
           nombreAgencia: '',
           fechaRegistro: new Date()
         };
@@ -91,13 +91,12 @@ export class AuthService {
     }
   }
 
-  /**
+ /**
    * CERRAR SESIÓN
    */
   async logout() {
-    return await signOut(this.auth);
+    await signOut(this.auth);
   }
-
   /**
    * OBTENER DATOS DEL USUARIO ACTUAL DESDE FIRESTORE
    */

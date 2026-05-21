@@ -2,11 +2,27 @@
   <ion-toolbar color="primary">
     <ion-title>Explorar Ocean 🌊</ion-title>
   </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-searchbar 
+      placeholder="Buscar destinos, aventuras..." 
+      animated="true" 
+      (ionInput)="buscar($event)"
+      [debounce]="250">
+    </ion-searchbar>
+  </ion-toolbar>
 </ion-header>
 
-<ion-content color="light" class="ion-padding">
+<ion-content color="light">
   
-  <div class="ion-text-center ion-margin-bottom">
+  <div style="background: white; padding: 10px 0; border-bottom: 1px solid #eee; margin-bottom: 10px;">
+    <ion-segment scrollable="true" [value]="categoriaSeleccionada" (ionChange)="cambiarCategoria($event)" style="border: none; --background: transparent;">
+      <ion-segment-button *ngFor="let cat of categorias" [value]="cat" style="min-width: auto; padding: 0 15px; border-radius: 20px; margin: 0 5px;" [style.background]="categoriaSeleccionada === cat ? '#e1f5fe' : 'transparent'">
+        <ion-label style="text-transform: capitalize; font-weight: 500; color: #3880ff;">{{ cat }}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <div class="ion-text-center ion-margin-bottom ion-padding-top">
     <h2>Descubre tu próxima aventura</h2>
     <p>Los mejores paquetes turísticos</p>
   </div>
@@ -16,13 +32,13 @@
     <p>Cargando experiencias...</p>
   </div>
 
-  <div class="ion-text-center ion-padding" *ngIf="!cargando && tours.length === 0">
-    <p color="medium">Aún no hay tours disponibles. ¡Pronto agregaremos nuevas aventuras!</p>
+  <div class="ion-text-center ion-padding" *ngIf="!cargando && toursFiltrados.length === 0">
+    <p color="medium">No encontramos planes que coincidan con tu búsqueda. 🏖️</p>
   </div>
 
-  <ion-grid *ngIf="!cargando && tours.length > 0">
+  <ion-grid *ngIf="!cargando && toursFiltrados.length > 0">
     <ion-row>
-      <ion-col size="12" size-md="6" *ngFor="let tour of tours">
+      <ion-col size="12" size-md="6" *ngFor="let tour of toursFiltrados">
         
         <ion-card class="tour-card" style="position: relative;">
           
@@ -33,19 +49,21 @@
             <span *ngIf="!tour.promedioEstrellas || tour.promedioEstrellas == 0" style="font-size: 13px;">Nuevo</span>
           </div>
 
-          <img [src]="tour.imagenUrl || 'https://via.placeholder.com/400x200?text=Ocean+Tour'" alt="Imagen del Tour" class="imagen-tour"/>
+          <img [src]="tour.imagenUrl || 'https://via.placeholder.com/400x200?text=Ocean+Tour'" alt="Imagen del Tour" class="imagen-tour" style="height: 200px; width: 100%; object-fit: cover;"/>
           
           <ion-card-header>
             <ion-card-title>{{ tour.titulo }}</ion-card-title>
-            <ion-card-subtitle color="success">
-              <ion-icon name="cash-outline"></ion-icon> 
-              ${{ tour.precio }} COP
+            <ion-card-subtitle color="success" style="display: flex; align-items: center; justify-content: space-between;">
+              <span>
+                <ion-icon name="cash-outline"></ion-icon> 
+                ${{ tour.precio }} COP
+              </span>
+              <ion-badge color="secondary" *ngIf="tour.categoria">{{ tour.categoria }}</ion-badge>
             </ion-card-subtitle>
           </ion-card-header>
 
           <ion-card-content>
-            <p class="descripcion-corta">{{ tour.descripcion }}</p>
-            
+<p class="descripcion-corta" style="display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ tour.descripcion }}</p>            
             <ion-button expand="block" shape="round" class="ion-margin-top" [routerLink]="['/detalle-tour', tour.id]">
               Ver Detalles
               <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>

@@ -61,5 +61,11 @@ export const routes: Routes = [
   {
     path: 'panel-admin',
     loadComponent: () => import('./vistas/panel-admin/panel-admin.page').then( m => m.PanelAdminPage)
-  }
+  },
+  {
+   
+  path: 'mis-favoritos', // ¡Fíjate bien qué dice aquí!
+  loadComponent: () => import('./vistas/mis-favoritos/mis-favoritos.page').then( m => m.MisFavoritosPage)
+}
+
 ];

@@ -5,7 +5,8 @@ import { RouterModule } from '@angular/router';
 import { 
   IonContent, IonHeader, IonTitle, IonToolbar,
   IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent,
-  IonButton, IonIcon, IonGrid, IonRow, IonCol, IonSpinner
+  IonButton, IonIcon, IonGrid, IonRow, IonCol, IonSpinner,
+  IonSearchbar, IonSegment, IonSegmentButton, IonLabel, IonBadge
 } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
@@ -22,27 +23,41 @@ import { DatabaseService } from '../../core/services/database';
     IonContent, IonHeader, IonTitle, IonToolbar,
     IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent,
     IonButton, IonIcon, IonGrid, IonRow, IonCol, IonSpinner,
+    IonSearchbar, IonSegment, IonSegmentButton, IonLabel, IonBadge,
     CommonModule, FormsModule, RouterModule
   ]
 })
 export class CatalogoPage implements OnInit {
   private databaseService = inject(DatabaseService);
 
-  // Lo dejamos como any[] para poder agregarle las estrellas dinámicamente sin que TypeScript pelee
   tours: any[] = []; 
+  toursFiltrados: any[] = []; // 👇 Lista clonada que mostraremos en pantalla
   cargando: boolean = true;
+
+  // 👇 Variables de los filtros
+  textoBusqueda: string = '';
+  categoriaSeleccionada: string = 'Todas';
+  categorias: string[] = ['Todas', 'Relajante', 'Extremo', 'Cultural', 'Familiar', 'Ecológico', 'Fiesta'];
 
   constructor() {
     addIcons({ cashOutline, arrowForwardOutline, star });
   }
 
+  // Usamos ionViewWillEnter para recargar todo si cambiamos de usuario
+  async ionViewWillEnter() {
+    this.cargarCatalogo();
+  }
+
   ngOnInit() {
-    // Nos suscribimos a Firebase para escuchar los paquetes turísticos en tiempo real
+    // OnInit queda vacío, delegamos la carga a ionViewWillEnter
+  }
+
+  cargarCatalogo() {
+    this.cargando = true;
     this.databaseService.obtenerTours().subscribe({
       next: (data) => {
         this.tours = data;
         
-        // 👇 Por cada tour, buscamos sus reseñas en tiempo real para calcular el promedio
         this.tours.forEach(tour => {
           if (tour.id) {
             this.databaseService.obtenerResenasPorTour(tour.id).subscribe(resenas => {
@@ -58,6 +73,8 @@ export class CatalogoPage implements OnInit {
           }
         });
 
+        // Inicialmente mostramos todos los tours
+        this.toursFiltrados = [...this.tours];
         this.cargando = false;
       },
       error: (err) => {
@@ -65,5 +82,37 @@ export class CatalogoPage implements OnInit {
         this.cargando = false;
       }
     });
+  }
+
+  // 👇 LA MAGIA DEL FILTRADO 👇
+  filtrarTours() {
+    let temp = [...this.tours];
+
+    // 1. Aplicamos el filtro de categoría
+    if (this.categoriaSeleccionada !== 'Todas') {
+      temp = temp.filter(tour => tour.categoria === this.categoriaSeleccionada);
+    }
+
+    // 2. Aplicamos el filtro de texto (buscando en título y descripción)
+    if (this.textoBusqueda && this.textoBusqueda.trim() !== '') {
+      const termino = this.textoBusqueda.toLowerCase();
+      temp = temp.filter(tour => 
+        tour.titulo.toLowerCase().includes(termino) || 
+        tour.descripcion.toLowerCase().includes(termino)
+      );
+    }
+
+    // Actualizamos la vista
+    this.toursFiltrados = temp;
+  }
+
+  cambiarCategoria(event: any) {
+    this.categoriaSeleccionada = event.detail.value;
+    this.filtrarTours();
+  }
+
+  buscar(event: any) {
+    this.textoBusqueda = event.detail.value;
+    this.filtrarTours();
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router'; 
@@ -30,7 +30,7 @@ import { DatabaseService } from '../../core/services/database';
     CommonModule, FormsModule, RouterModule 
   ]
 })
-export class PerfilPage implements OnInit {
+export class PerfilPage { 
   private authService = inject(AuthService);
   private databaseService = inject(DatabaseService);
   private router = inject(Router);
@@ -53,7 +53,8 @@ export class PerfilPage implements OnInit {
     });
   }
 
-  async ngOnInit() {
+  async ionViewWillEnter() {
+    this.cargandoDatos = true; 
     await this.cargarPerfil();
   }
 
@@ -63,7 +64,6 @@ export class PerfilPage implements OnInit {
     if (usuarioActual) {
       this.uid = usuarioActual.uid || '';
       this.nombre = usuarioActual.nombre || '';
-      // 👇 Aquí aplicamos la corrección para que TypeScript no se queje 👇
       this.apodo = (usuarioActual as any).apodo || '';
       this.fotoUrl = (usuarioActual as any).fotoUrl || '';
       this.rol = usuarioActual.rol || '';
@@ -107,7 +107,11 @@ export class PerfilPage implements OnInit {
   }
 
   async cerrarSesion() {
+    // 1. Cerramos la sesión en Firebase
     await this.authService.logout();
-    this.router.navigate(['/vistas/login']);
+    
+    // 2. LA SOLUCIÓN: Usamos window.location.replace en lugar del router de Angular.
+    // Esto borra el caché de la memoria al recargar la app y te lanza al login limpiecito.
+    window.location.replace('/vistas/login');
   }
 }

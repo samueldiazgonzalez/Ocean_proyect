@@ -11,12 +11,13 @@ import {
 import { addIcons } from 'ionicons';
 import { 
   logoWhatsapp, cashOutline, mapOutline, cardOutline, 
-  star, starOutline, personCircleOutline, chatbubblesOutline, lockClosedOutline
+  star, starOutline, personCircleOutline, chatbubblesOutline, lockClosedOutline,
+  pricetagOutline, timeOutline, checkmarkCircleOutline, imagesOutline,
+  heart, heartOutline // 👈 Importamos los corazones
 } from 'ionicons/icons';
 
 import { DatabaseService } from '../../core/services/database'; 
 import { AuthService } from '../../core/services/auth'; 
-import { Tour } from '../../core/models/tour.model';
 
 @Component({
   selector: 'app-detalle-tour',
@@ -37,7 +38,7 @@ export class DetalleTourPage implements OnInit {
   private databaseService = inject(DatabaseService);
   private authService = inject(AuthService); 
 
-  tour: Tour | null = null;
+  tour: any = null; 
   cargando: boolean = true;
   procesandoReserva: boolean = false; 
 
@@ -47,14 +48,19 @@ export class DetalleTourPage implements OnInit {
   nuevaEstrellas: number = 0;
   nuevoComentario: string = '';
   enviandoResena: boolean = false;
-  
-  // 👇 Nueva variable que actúa como candado de seguridad
   puedeCalificar: boolean = false;
+
+  fotoSeleccionada: string = '';
+  
+  // 👇 Nueva variable para saber si el tour le gusta al usuario
+  esFavorito: boolean = false;
 
   constructor() { 
     addIcons({
       logoWhatsapp, cardOutline, cashOutline, mapOutline, 
-      star, starOutline, personCircleOutline, chatbubblesOutline, lockClosedOutline
+      star, starOutline, personCircleOutline, chatbubblesOutline, lockClosedOutline,
+      pricetagOutline, timeOutline, checkmarkCircleOutline, imagesOutline,
+      heart, heartOutline
     });
   }
 
@@ -64,23 +70,60 @@ export class DetalleTourPage implements OnInit {
 
     if (tourId) {
       this.tour = await this.databaseService.obtenerTourPorId(tourId);
-      this.cargarResenas(tourId);
       
-      // 👇 Si el usuario inició sesión, verificamos sus compras
-      if (this.usuarioActual) {
-        this.verificarSiPuedeCalificar();
+      if (this.tour) {
+        this.fotoSeleccionada = this.tour.imagenUrl;
+        this.cargarResenas(tourId);
+        
+        if (this.usuarioActual) {
+          this.verificarSiPuedeCalificar();
+          this.verificarSiEsFavorito(); // 👈 Verificamos si ya le había dado like
+        }
       }
     }
     this.cargando = false;
+  }
+
+  // 👇 LÓGICA DE FAVORITOS 👇
+  verificarSiEsFavorito() {
+    if (!this.usuarioActual || !this.tour) return;
+    
+    this.databaseService.obtenerFavoritosPorTurista(this.usuarioActual.uid).subscribe(favoritos => {
+      // Si el ID de este tour está en su lista de favoritos, prendemos el corazón
+      this.esFavorito = favoritos.some(fav => fav.tourId === this.tour.id);
+    });
+  }
+
+  async toggleFavorito() {
+    if (!this.usuarioActual) {
+      // Si es invitado, lo mandamos a loguearse
+      this.router.navigate(['/vistas/login']);
+      return;
+    }
+
+    try {
+      // Cambiamos visualmente rápido para que no se sienta lag
+      this.esFavorito = !this.esFavorito;
+      await this.databaseService.alternarFavorito(this.usuarioActual.uid, this.tour.id, !this.esFavorito);
+    } catch (error) {
+      console.error('Error al guardar favorito', error);
+      // Revertimos si falla
+      this.esFavorito = !this.esFavorito;
+    }
+  }
+  // 👆 FIN LÓGICA FAVORITOS 👆
+
+  cambiarFoto(url: string) {
+    this.fotoSeleccionada = url;
   }
 
   verificarSiPuedeCalificar() {
     if (!this.usuarioActual || !this.tour) return;
 
     this.databaseService.obtenerReservasPorTurista(this.usuarioActual.uid).subscribe(reservas => {
-      // Buscamos si el usuario tiene una reserva de ESTE tour y que además esté 'PAGADO'
-      const reservaValida = reservas.find(r => r.tourId === this.tour!.id && r.estado === 'PAGADO');
-      this.puedeCalificar = !!reservaValida; // Si existe, desbloquea la caja de reseñas
+      // Cambiamos a 'CONFIRMADA' para que coincida con el checkout biométrico
+      const reservaValida = reservas.find(r => r.tourId === this.tour!.id && r.estado === 'CONFIRMADA');
+      this.puedeCalificar = !!reservaValida; 
     });
   }
 
@@ -105,13 +148,8 @@ export class DetalleTourPage implements OnInit {
   }
 
   async enviarResena() {
-    if (!this.usuarioActual || !this.puedeCalificar) {
-      return;
-    }
-    
-    if (this.nuevaEstrellas === 0 || this.nuevoComentario.trim() === '' || !this.tour?.id) {
-      return; 
-    }
+    if (!this.usuarioActual || !this.puedeCalificar) return;
+    if (this.nuevaEstrellas === 0 || this.nuevoComentario.trim() === '' || !this.tour?.id) return;
 
     this.enviandoResena = true;
     try {
