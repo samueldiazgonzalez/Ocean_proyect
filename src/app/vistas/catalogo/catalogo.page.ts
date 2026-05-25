@@ -1,16 +1,17 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ViewChild} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { 
   IonContent, IonHeader, IonTitle, IonToolbar,
   IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent,
-  IonButton, IonIcon, IonGrid, IonRow, IonCol, IonSpinner,
-  IonSearchbar, IonSegment, IonSegmentButton, IonLabel, IonBadge
+  IonButton, IonButtons, IonIcon, IonGrid, IonRow, IonCol, IonSpinner,
+  IonSearchbar, IonSegment, IonSegmentButton, IonLabel, IonBadge, 
+  IonPopover, IonList, IonItem,
 } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
-import { cashOutline, arrowForwardOutline, star } from 'ionicons/icons';
+import { cashOutline, arrowForwardOutline, star, water, search, notificationsOutline, personCircleOutline, heartOutline, searchOutline, compassOutline, personOutline, optionsOutline, waterOutline, gridOutline, checkmark, leafOutline, peopleOutline, flameOutline, bookOutline, flowerOutline, ribbonOutline, businessOutline } from 'ionicons/icons';
 
 import { DatabaseService } from '../../core/services/database';
 
@@ -22,25 +23,34 @@ import { DatabaseService } from '../../core/services/database';
   imports: [
     IonContent, IonHeader, IonTitle, IonToolbar,
     IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent,
-    IonButton, IonIcon, IonGrid, IonRow, IonCol, IonSpinner,
+    IonButton,IonButtons, IonIcon, IonGrid, IonRow, IonCol, IonSpinner,
     IonSearchbar, IonSegment, IonSegmentButton, IonLabel, IonBadge,
-    CommonModule, FormsModule, RouterModule
+    CommonModule, FormsModule, RouterModule, IonPopover, IonList, IonItem, IonLabel,
   ]
 })
 export class CatalogoPage implements OnInit {
   private databaseService = inject(DatabaseService);
 
+  //variables para el filtrado
+
+  
+
+
+async abrirFiltros(event: Event) {
+  this.popover.event = event;
+  await this.popover.present();
+}
+
+@ViewChild('popoverFiltros') popover!: IonPopover;
+
   tours: any[] = []; 
   toursFiltrados: any[] = []; // 👇 Lista clonada que mostraremos en pantalla
   cargando: boolean = true;
-
-  // 👇 Variables de los filtros
-  textoBusqueda: string = '';
   categoriaSeleccionada: string = 'Todas';
-  categorias: string[] = ['Todas', 'Relajante', 'Extremo', 'Cultural', 'Familiar', 'Ecológico', 'Fiesta'];
+  textoBusqueda: string = '';
 
   constructor() {
-    addIcons({ cashOutline, arrowForwardOutline, star });
+    addIcons({waterOutline,heartOutline,notificationsOutline,personOutline,searchOutline,optionsOutline,gridOutline,checkmark,leafOutline,peopleOutline,flameOutline,bookOutline,flowerOutline,ribbonOutline,businessOutline,compassOutline,star,cashOutline,arrowForwardOutline,water,personCircleOutline,search});
   }
 
   // Usamos ionViewWillEnter para recargar todo si cambiamos de usuario
@@ -50,7 +60,10 @@ export class CatalogoPage implements OnInit {
 
   ngOnInit() {
     // OnInit queda vacío, delegamos la carga a ionViewWillEnter
-  }
+  } 
+
+  
+
 
   cargarCatalogo() {
     this.cargando = true;
@@ -83,6 +96,7 @@ export class CatalogoPage implements OnInit {
       }
     });
   }
+  
 
   // 👇 LA MAGIA DEL FILTRADO 👇
   filtrarTours() {
@@ -91,6 +105,7 @@ export class CatalogoPage implements OnInit {
     // 1. Aplicamos el filtro de categoría
     if (this.categoriaSeleccionada !== 'Todas') {
       temp = temp.filter(tour => tour.categoria === this.categoriaSeleccionada);
+      
     }
 
     // 2. Aplicamos el filtro de texto (buscando en título y descripción)
@@ -113,6 +128,17 @@ export class CatalogoPage implements OnInit {
 
   buscar(event: any) {
     this.textoBusqueda = event.detail.value;
+    if (!this.textoBusqueda || this.textoBusqueda.trim() === '') {
+    this.toursFiltrados = [...this.tours];
+    return;
+  }
     this.filtrarTours();
   }
+
+  limpiarBusqueda() {
+  this.textoBusqueda = '';
+  this.categoriaSeleccionada = 'Todas';
+  this.toursFiltrados = [...this.tours];
+  }
+
 }
