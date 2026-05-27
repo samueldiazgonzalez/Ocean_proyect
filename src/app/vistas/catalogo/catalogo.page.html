@@ -24,73 +24,91 @@
     </div>
   </ion-toolbar>
 
-  <ion-toolbar class="toolbar-search">
-    <div class="search-wrapper">
-      <ion-icon name="search-outline" class="search-icon"></ion-icon>
-      <ion-searchbar
-        placeholder="Buscar destinos..."
-        animated="false"
-        [debounce]="250"
-        (ionInput)="buscar($event)"
-        (ionClear)="limpiarBusqueda()"  
-        class="search-input">
-      </ion-searchbar>
-      <button class="search-filtro" (click)="abrirFiltros($event)">
-        <ion-icon name="options-outline"></ion-icon>
-      </button>
+  <div class="collapsible-header" [class.header-hidden]="isHeaderHidden">
+    
+    <ion-toolbar class="toolbar-search">
+      <div class="search-wrapper">
+        <ion-icon name="search-outline" class="search-icon"></ion-icon>
+        <ion-searchbar
+          placeholder="Buscar destinos..."
+          animated="false"
+          [debounce]="250"
+          (ionInput)="buscar($event)"
+          (ionClear)="limpiarBusqueda()"  
+          class="search-input">
+        </ion-searchbar>
+        <button class="search-filtro" (click)="abrirFiltros($event)">
+          <ion-icon name="options-outline"></ion-icon>
+        </button>
 
-      <ion-popover #popoverFiltros [dismissOnSelect]="true" side="bottom" alignment="end">
-        <ng-template>
-          <ion-content class="popover-content">
-            <div class="filtro-header">
-              <ion-icon name="options-outline"></ion-icon>
-              <span class="filtro-categoria">Filtrar por categoría</span>
-            </div>
-            <ion-list lines="none">
-              <ion-item button (click)="cambiarCategoria('todos')">
-                <ion-icon name="grid-outline" slot="start"></ion-icon>
-                <ion-label>Todos</ion-label>
-                <ion-icon name="checkmark" slot="end" *ngIf="categoriaSeleccionada === 'todos'" color="primary"></ion-icon>
-              </ion-item>
-              <ion-item button (click)="cambiarCategoria('relajante')">
-                <ion-icon name="leaf-outline" slot="start"></ion-icon>
-                <ion-label>Relajante</ion-label>
-                <ion-icon name="checkmark" slot="end" *ngIf="categoriaSeleccionada === 'relajante'" color="primary"></ion-icon>
-              </ion-item>
-              <ion-item button (click)="cambiarCategoria('familiar')">
-                <ion-icon name="people-outline" slot="start"></ion-icon>
-                <ion-label>Familiar</ion-label>
-                <ion-icon name="checkmark" slot="end" *ngIf="categoriaSeleccionada === 'familiar'" color="primary"></ion-icon>
-              </ion-item>
-              <ion-item button (click)="cambiarCategoria('extremo')">
-                <ion-icon name="flame-outline" slot="start"></ion-icon>
-                <ion-label>Extremo</ion-label>
-                <ion-icon name="checkmark" slot="end" *ngIf="categoriaSeleccionada === 'extremo'" color="primary"></ion-icon>
-              </ion-item>
-              <ion-item button (click)="cambiarCategoria('cultural')">
-                <ion-icon name="book-outline" slot="start"></ion-icon>
-                <ion-label>Cultural</ion-label>
-                <ion-icon name="checkmark" slot="end" *ngIf="categoriaSeleccionada === 'cultural'" color="primary"></ion-icon>
-              </ion-item>
-              <ion-item button (click)="cambiarCategoria('Ecológico')">
-                <ion-icon name="flower-outline" slot="start"></ion-icon>
-                <ion-label>Ecológico</ion-label>
-                <ion-icon name="checkmark" slot="end" *ngIf="categoriaSeleccionada === 'Ecológico'" color="primary"></ion-icon>
-              </ion-item>
-              <ion-item button (click)="cambiarCategoria('Fiesta')">
-                <ion-icon name="ribbon-outline" slot="start"></ion-icon>
-                <ion-label>Fiesta</ion-label>
-                <ion-icon name="checkmark" slot="end" *ngIf="categoriaSeleccionada === 'Fiesta'" color="primary"></ion-icon>
-              </ion-item>
+        <ion-popover #popoverFiltros [dismissOnSelect]="true" side="bottom" alignment="end">
+          <ng-template>
+            <ion-content class="popover-content">
+              <div class="filtro-header">
+                <ion-icon name="options-outline"></ion-icon>
+                <span class="filtro-categoria">Filtrar por categoría</span>
+              </div>
+              <ion-list lines="none">
+                <ion-item button (click)="cambiarCategoria('todos')">
+                  <ion-icon name="grid-outline" slot="start"></ion-icon>
+                  <ion-label>Todos</ion-label>
+                  <ion-icon name="checkmark" slot="end" *ngIf="categoriaSeleccionada === 'todos'" color="primary"></ion-icon>
+                </ion-item>
+                <ion-item button (click)="cambiarCategoria('relajante')">
+                  <ion-icon name="leaf-outline" slot="start"></ion-icon>
+                  <ion-label>Relajante</ion-label>
+                  <ion-icon name="checkmark" slot="end" *ngIf="categoriaSeleccionada === 'relajante'" color="primary"></ion-icon>
+                </ion-item>
+                <ion-item button (click)="cambiarCategoria('familiar')">
+                  <ion-icon name="people-outline" slot="start"></ion-icon>
+                  <ion-label>Familiar</ion-label>
+                  <ion-icon name="checkmark" slot="end" *ngIf="categoriaSeleccionada === 'familiar'" color="primary"></ion-icon>
+                </ion-item>
+                <ion-item button (click)="cambiarCategoria('extremo')">
+                  <ion-icon name="flame-outline" slot="start"></ion-icon>
+                  <ion-label>Extremo</ion-label>
+                  <ion-icon name="checkmark" slot="end" *ngIf="categoriaSeleccionada === 'extremo'" color="primary"></ion-icon>
+                </ion-item>
+                <ion-item button (click)="cambiarCategoria('cultural')">
+                  <ion-icon name="book-outline" slot="start"></ion-icon>
+                  <ion-label>Cultural</ion-label>
+                  <ion-icon name="checkmark" slot="end" *ngIf="categoriaSeleccionada === 'cultural'" color="primary"></ion-icon>
+                </ion-item>
+                <ion-item button (click)="cambiarCategoria('Ecológico')">
+                  <ion-icon name="flower-outline" slot="start"></ion-icon>
+                  <ion-label>Ecológico</ion-label>
+                  <ion-icon name="checkmark" slot="end" *ngIf="categoriaSeleccionada === 'Ecológico'" color="primary"></ion-icon>
+                </ion-item>
+                <ion-item button (click)="cambiarCategoria('Fiesta')">
+                  <ion-icon name="ribbon-outline" slot="start"></ion-icon>
+                  <ion-label>Fiesta</ion-label>
+                  <ion-icon name="checkmark" slot="end" *ngIf="categoriaSeleccionada === 'Fiesta'" color="primary"></ion-icon>
+                </ion-item>
               </ion-list>
-          </ion-content>
-        </ng-template>
-      </ion-popover>
-    </div>
-  </ion-toolbar>
+            </ion-content>
+          </ng-template>
+        </ion-popover>
+      </div>
+    </ion-toolbar>
+
+    <ion-toolbar class="toolbar-tabs">
+      <ion-segment [(ngModel)]="tipoInventario" (ionChange)="cambiarTipoInventario($event)" color="primary">
+        <ion-segment-button value="aventuras">
+          <ion-icon name="compass-outline"></ion-icon>
+          <ion-label>Aventuras</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="hoteles">
+          <ion-icon name="business-outline"></ion-icon>
+          <ion-label>Alojamientos</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </ion-toolbar>
+    
+  </div>
 </ion-header>
 
-<ion-content class="pagina-fondo">
+<ion-content class="pagina-fondo" scrollEvents="true" (ionScroll)="handleScroll($event)">
+
   <div class="hero-section">
     <div class="hero-content">
       <div class="hero-badge">
@@ -118,72 +136,69 @@
     </div>
   </div>
 
-  <ion-segment [(ngModel)]="tipoInventario" (ionChange)="cambiarTipoInventario($event)" class="ion-margin" color="primary">
-    <ion-segment-button value="aventuras">
-      <ion-icon name="compass-outline"></ion-icon>
-      <ion-label>Aventuras</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="hoteles">
-      <ion-icon name="business-outline"></ion-icon>
-      <ion-label>Alojamientos</ion-label>
-    </ion-segment-button>
-  </ion-segment>
+  <div class="catalog-container ion-padding-horizontal ion-padding-top">
+    <div class="estado-cargando" *ngIf="cargando">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+      <p>Cargando experiencias...</p>
+    </div>
 
-  <div class="estado-cargando" *ngIf="cargando">
-    <ion-spinner name="crescent" color="primary"></ion-spinner>
-    <p>Cargando experiencias...</p>
+    <div class="estado-vacio" *ngIf="!cargando && toursFiltrados.length === 0">
+      <ion-icon name="search-outline"></ion-icon>
+      <p>No encontramos planes que coincidan con tu búsqueda.</p>
+      <span>Intenta con otro destino 🏖️</span>
+    </div>
+
+    <ion-grid *ngIf="!cargando && toursFiltrados.length > 0" class="ion-no-padding">
+      <ion-row>
+        <ion-col size="12" size-md="4" size-lg="4" *ngFor="let tour of toursFiltrados">
+          <ion-card class="tour-card ion-no-margin ion-margin-bottom">
+            <div class="card-img-wrapper">
+              <img [src]="tour.imagenUrl || 'https://via.placeholder.com/400x200?text=Ocean+Tour'" alt="Imagen del Tour" class="imagen-tour"/>
+              <div class="img-overlay"></div>
+              
+              <div class="badge-rating">
+                <ng-container *ngIf="tour.promedioEstrellas > 0">
+                  <ion-icon name="star"></ion-icon>
+                  <span>{{ tour.promedioEstrellas }}</span>
+                  <span class="total-resenas">({{ tour.totalResenas }})</span>
+                </ng-container>
+                <span *ngIf="!tour.promedioEstrellas || tour.promedioEstrellas == 0" class="texto-nuevo">
+                  Nuevo
+                </span>
+              </div>
+              
+              <div class="badge-categoria" *ngIf="tour.categoria">
+                {{ tour.categoria }}
+              </div>
+            </div>
+
+            <ion-card-content class="card-body">
+              <div class="card-title-row">
+                <h2 class="tour-titulo">{{ tour.titulo }}</h2>
+                <button class="btn-favorito" (click)="toggleFavorito(tour)">
+                  <ion-icon 
+                    [name]="tour.esFavorito ? 'heart' : 'heart-outline'" 
+                    [color]="tour.esFavorito ? 'danger' : ''">
+                  </ion-icon>
+                </button>
+              </div>
+              
+              <div class="precio-row">
+                <ion-icon name="cash-outline"></ion-icon>
+                <span class="precio-valor">${{ tour.precio }} COP</span>
+              </div>
+              
+              <p class="descripcion-corta">{{ tour.descripcion }}</p>
+              
+              <ion-button expand="block" class="btn-detalles" [routerLink]="['/detalle-tour', tour.id]">
+                Ver Detalles
+                <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
+              </ion-button>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </div>
 
-  <div class="estado-vacio" *ngIf="!cargando && toursFiltrados.length === 0">
-    <ion-icon name="search-outline"></ion-icon>
-    <p>No encontramos planes que coincidan con tu búsqueda.</p>
-    <span>Intenta con otro destino 🏖️</span>
-  </div>
-
-  <ion-grid *ngIf="!cargando && toursFiltrados.length > 0">
-    <ion-row>
-      <ion-col size="12" size-md="4" size-lg="4" *ngFor="let tour of toursFiltrados">
-        <ion-card class="tour-card">
-          <div class="card-img-wrapper">
-            <img [src]="tour.imagenUrl || 'https://via.placeholder.com/400x200?text=Ocean+Tour'" alt="Imagen del Tour" class="imagen-tour"/>
-            <div class="img-overlay"></div>
-            <div class="badge-rating">
-              <ng-container *ngIf="tour.promedioEstrellas > 0">
-                <ion-icon name="star"></ion-icon>
-                <span>{{ tour.promedioEstrellas }}</span>
-                <span class="total-resenas">({{ tour.totalResenas }})</span>
-              </ng-container>
-              <span *ngIf="!tour.promedioEstrellas || tour.promedioEstrellas == 0" class="texto-nuevo">
-                Nuevo
-              </span>
-            </div>
-            <div class="badge-categoria" *ngIf="tour.categoria">
-              {{ tour.categoria }}
-            </div>
-          </div>
-
-          <ion-card-content class="card-body">
-            <div class="card-title-row">
-              <h2 class="tour-titulo">{{ tour.titulo }}</h2>
-              <button class="btn-favorito" (click)="toggleFavorito(tour)">
-               <ion-icon 
-                [name]="tour.esFavorito ? 'heart' : 'heart-outline'" 
-                 [color]="tour.esFavorito ? 'danger' : ''">
-                </ion-icon>
-              </button>
-            </div>
-            <div class="precio-row">
-              <ion-icon name="cash-outline"></ion-icon>
-              <span class="precio-valor">${{ tour.precio }} COP</span>
-            </div>
-            <p class="descripcion-corta">{{ tour.descripcion }}</p>
-            <ion-button expand="block" class="btn-detalles" [routerLink]="['/detalle-tour', tour.id]">
-              Ver Detalles
-              <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
-            </ion-button>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
 </ion-content>

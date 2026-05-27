@@ -42,6 +42,10 @@ export class CatalogoPage implements OnInit {
   textoBusqueda: string = '';
   tipoInventario: string = 'aventuras'; 
 
+  // VARIABLES PARA EL SCROLL MÁGICO
+  isHeaderHidden: boolean = false;
+  private lastScrollPosition = 0;
+
   constructor() {
     addIcons({waterOutline,heartOutline,notificationsOutline,personOutline,searchOutline,optionsOutline,gridOutline,checkmark,leafOutline,peopleOutline,flameOutline,bookOutline,flowerOutline,ribbonOutline,businessOutline,compassOutline,star,cashOutline,arrowForwardOutline,water,personCircleOutline,search});
   }
@@ -102,7 +106,7 @@ export class CatalogoPage implements OnInit {
   filtrarTours() {
     let temp = [...this.tours];
 
-    // 1. Filtro de Pestañas (Aventuras vs Hoteles)
+    // 1. Filtro de Pestañas (Aventuras vs Hoteles) - ¡RESTAURADO!
     if (this.tipoInventario === 'hoteles') {
       temp = temp.filter(tour => tour.categoria && tour.categoria.toLowerCase().trim() === 'hoteles');
     } else {
@@ -154,11 +158,7 @@ export class CatalogoPage implements OnInit {
     this.filtrarTours(); 
   }
 
-  // 👇 ESTA ES LA ÚNICA FUNCIÓN QUE CAMBIÓ 👇
-  // FUNCION REAL DE FAVORITOS (Conectada a Firebase)
-// FUNCION REAL DE FAVORITOS (Conectada al DatabaseService)
   async toggleFavorito(tour: any) {
-    // 1. Obtenemos el turista que tiene la sesión iniciada
     const usuarioActual = await this.authService.obtenerDatosUsuarioActual();
 
     if (!usuarioActual || !usuarioActual.uid) {
@@ -166,24 +166,35 @@ export class CatalogoPage implements OnInit {
       return;
     }
 
-    // 2. Guardamos el estado anterior por si falla la base de datos
     const estadoAnterior = !!tour.esFavorito;
-
-    // 3. Hacemos el cambio visual de inmediato (Optimistic UI)
     tour.esFavorito = !estadoAnterior;
 
-    // 4. Conectamos con tu función única alternarFavorito de Firebase
     try {
       await this.databaseService.alternarFavorito(
-        usuarioActual.uid, // turistaId
-        tour.id,           // tourId
-        estadoAnterior     // ¿yaEsFavorito? Le pasamos el estado que tenía antes del click
+        usuarioActual.uid, 
+        tour.id,           
+        estadoAnterior     
       );
       console.log(`Favorito modificado con éxito: ${tour.titulo}`);
     } catch (error) {
       console.error('Error al sincronizar el favorito con la base de datos', error);
-      // Si el internet falla, revertimos el color del corazón al estado original
       tour.esFavorito = estadoAnterior; 
     }
+  }
+
+  // 👇 FUNCIÓN PARA EL SCROLL MÁGICO 👇
+  handleScroll(event: any) {
+    const currentScrollPosition = event.detail.scrollTop;
+
+    // Si pasamos de los 100px y scrolleamos hacia abajo, ocultamos el header
+    if (currentScrollPosition > 100 && currentScrollPosition > this.lastScrollPosition) {
+      this.isHeaderHidden = true;
+    } 
+    // Si scrolleamos hacia arriba, lo mostramos
+    else if (currentScrollPosition < this.lastScrollPosition) {
+      this.isHeaderHidden = false;
+    }
+
+    this.lastScrollPosition = currentScrollPosition;
   }
 }
