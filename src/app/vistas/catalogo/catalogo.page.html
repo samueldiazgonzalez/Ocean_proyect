@@ -1,19 +1,14 @@
 <ion-header class="ion-no-border">
-
   <ion-toolbar class="toolbar-principal">
-    <ion-button class="header-logo"
-            slot="start"
-            fill="clear"
-            routerLink="/inicio"
-            routerDirection="root">
-  <div class="logo-icono">
-    <ion-icon name="water-outline"></ion-icon>
-  </div>
-  <div class="logo-texto">
-    <span class="logo-nombre">Ocean</span>
-    <span class="logo-slogan">Explora el mundo</span>
-  </div>
-</ion-button>
+    <ion-button class="header-logo" slot="start" fill="clear" routerLink="/inicio" routerDirection="root">
+      <div class="logo-icono">
+        <ion-icon name="water-outline"></ion-icon>
+      </div>
+      <div class="logo-texto">
+        <span class="logo-nombre">Ocean</span>
+        <span class="logo-slogan">Explora el mundo</span>
+      </div>
+    </ion-button>
 
     <div class="header-acciones" slot="end">
       <button class="accion-btn">
@@ -44,216 +39,151 @@
         <ion-icon name="options-outline"></ion-icon>
       </button>
 
-<!-- Popover de categorías -->
-
-<ion-popover 
-  #popoverFiltros
-  [dismissOnSelect]="true"
-  side="bottom"
-  alignment="end">
-  
-  <ng-template>
-    <ion-content class="popover-content">
-      
-      <div class="filtro-header">
-        <ion-icon name="options-outline"></ion-icon>
-        <span class="filtro-categoria">Filtrar por categoría</span>
-      </div>
-
-      <ion-list lines="none">
-        <ion-item button (click)="cambiarCategoria('todos')">
-          <ion-icon name="grid-outline" slot="start"></ion-icon>
-          <ion-label>Todos</ion-label>
-          <ion-icon name="checkmark" slot="end" 
-                    *ngIf="categoriaSeleccionada === 'todos'" 
-                    color="primary"></ion-icon>
-        </ion-item>
-
-        <ion-item button (click)="cambiarCategoria('relajante')">
-          <ion-icon name="leaf-outline" slot="start"></ion-icon>
-          <ion-label>Relajante</ion-label>
-          <ion-icon name="checkmark" slot="end"
-                    *ngIf="categoriaSeleccionada === 'relajante'"
-                    color="primary"></ion-icon>
-        </ion-item>
-
-        <ion-item button (click)="cambiarCategoria('familiar')">
-          <ion-icon name="people-outline" slot="start"></ion-icon>
-          <ion-label>Familiar</ion-label>
-          <ion-icon name="checkmark" slot="end"
-                    *ngIf="categoriaSeleccionada === 'familiar'"
-                    color="primary"></ion-icon>
-        </ion-item>
-
-        <ion-item button (click)="cambiarCategoria('extremo')">
-          <ion-icon name="flame-outline" slot="start"></ion-icon>
-          <ion-label>Extremo</ion-label>
-          <ion-icon name="checkmark" slot="end"
-                    *ngIf="categoriaSeleccionada === 'extremo'"
-                    color="primary"></ion-icon>
-        </ion-item>
-
-        <ion-item button (click)="cambiarCategoria('cultural')">
-          <ion-icon name="book-outline" slot="start"></ion-icon>
-          <ion-label>Cultural</ion-label>
-          <ion-icon name="checkmark" slot="end"
-                    *ngIf="categoriaSeleccionada === 'cultural'"
-                    color="primary"></ion-icon>
-        </ion-item>
-
-        <ion-item button (click)="cambiarCategoria('Ecológico')">
-          <ion-icon name="flower-outline" slot="start"></ion-icon>
-          <ion-label>Ecológico</ion-label>
-          <ion-icon name="checkmark" slot="end"
-                    *ngIf="categoriaSeleccionada === 'Ecológico'"
-                    color="primary"></ion-icon>
-        </ion-item>
-
-        <ion-item button (click)="cambiarCategoria('Fiesta')">
-          <ion-icon name="ribbon-outline" slot="start"></ion-icon>
-          <ion-label>Fiesta</ion-label>
-          <ion-icon name="checkmark" slot="end"
-                    *ngIf="categoriaSeleccionada === 'Fiesta'"
-                    color="primary"></ion-icon>
-        </ion-item>
-
-        <ion-item button (click)="cambiarCategoria('Hoteles')">
-          <ion-icon name="business-outline" slot="start"></ion-icon>
-          <ion-label>Hoteles</ion-label>
-          <ion-icon name="checkmark" slot="end"
-                    *ngIf="categoriaSeleccionada === 'Hoteles'"
-                    color="primary"></ion-icon>
-        </ion-item>
-
-      </ion-list>
-
-    </ion-content>
-  </ng-template>
-</ion-popover>
-
-</div>
-</ion-toolbar>
+      <ion-popover #popoverFiltros [dismissOnSelect]="true" side="bottom" alignment="end">
+        <ng-template>
+          <ion-content class="popover-content">
+            <div class="filtro-header">
+              <ion-icon name="options-outline"></ion-icon>
+              <span class="filtro-categoria">Filtrar por categoría</span>
+            </div>
+            <ion-list lines="none">
+              <ion-item button (click)="cambiarCategoria('todos')">
+                <ion-icon name="grid-outline" slot="start"></ion-icon>
+                <ion-label>Todos</ion-label>
+                <ion-icon name="checkmark" slot="end" *ngIf="categoriaSeleccionada === 'todos'" color="primary"></ion-icon>
+              </ion-item>
+              <ion-item button (click)="cambiarCategoria('relajante')">
+                <ion-icon name="leaf-outline" slot="start"></ion-icon>
+                <ion-label>Relajante</ion-label>
+                <ion-icon name="checkmark" slot="end" *ngIf="categoriaSeleccionada === 'relajante'" color="primary"></ion-icon>
+              </ion-item>
+              <ion-item button (click)="cambiarCategoria('familiar')">
+                <ion-icon name="people-outline" slot="start"></ion-icon>
+                <ion-label>Familiar</ion-label>
+                <ion-icon name="checkmark" slot="end" *ngIf="categoriaSeleccionada === 'familiar'" color="primary"></ion-icon>
+              </ion-item>
+              <ion-item button (click)="cambiarCategoria('extremo')">
+                <ion-icon name="flame-outline" slot="start"></ion-icon>
+                <ion-label>Extremo</ion-label>
+                <ion-icon name="checkmark" slot="end" *ngIf="categoriaSeleccionada === 'extremo'" color="primary"></ion-icon>
+              </ion-item>
+              <ion-item button (click)="cambiarCategoria('cultural')">
+                <ion-icon name="book-outline" slot="start"></ion-icon>
+                <ion-label>Cultural</ion-label>
+                <ion-icon name="checkmark" slot="end" *ngIf="categoriaSeleccionada === 'cultural'" color="primary"></ion-icon>
+              </ion-item>
+              <ion-item button (click)="cambiarCategoria('Ecológico')">
+                <ion-icon name="flower-outline" slot="start"></ion-icon>
+                <ion-label>Ecológico</ion-label>
+                <ion-icon name="checkmark" slot="end" *ngIf="categoriaSeleccionada === 'Ecológico'" color="primary"></ion-icon>
+              </ion-item>
+              <ion-item button (click)="cambiarCategoria('Fiesta')">
+                <ion-icon name="ribbon-outline" slot="start"></ion-icon>
+                <ion-label>Fiesta</ion-label>
+                <ion-icon name="checkmark" slot="end" *ngIf="categoriaSeleccionada === 'Fiesta'" color="primary"></ion-icon>
+              </ion-item>
+              </ion-list>
+          </ion-content>
+        </ng-template>
+      </ion-popover>
+    </div>
+  </ion-toolbar>
 </ion-header>
 
-
 <ion-content class="pagina-fondo">
-
-  <!-- Hero Section -->
   <div class="hero-section">
-
-  <!-- Contenido -->
-  <div class="hero-content">
-    <div class="hero-badge">
-      <ion-icon name="compass-outline"></ion-icon>
-      <span>Explora el mundo</span>
-    </div>
-
-    <h1 class="hero-titulo">
-      Descubre tu <br>
-      <span class="hero-titulo-highlight">próxima aventura</span>
-    </h1>
-
-    <p class="hero-subtitulo">
-      <b>Los mejores paquetes para tu destino</b>
-    </p>
-
-    <div class="hero-stats">
-      <div class="stat-item">
-        <span class="stat-numero">50+</span>
-        <span class="stat-label">Destinos</span>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <ion-icon name="compass-outline"></ion-icon>
+        <span>Explora el mundo</span>
       </div>
-      <div class="stat-divider"></div>
-      <div class="stat-item">
-        <span class="stat-numero">1K+</span>
-        <span class="stat-label">Viajeros</span>
+      <h1 class="hero-titulo">
+        Descubre tu <br>
+        <span class="hero-titulo-highlight">próxima aventura</span>
+      </h1>
+      <p class="hero-subtitulo">
+        <b>Los mejores paquetes para tu destino</b>
+      </p>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <span class="stat-numero">50+</span>
+          <span class="stat-label">Destinos</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-numero">1K+</span>
+          <span class="stat-label">Viajeros</span>
+        </div>
       </div>
     </div>
-
   </div>
-</div>
 
-  <!-- Estado: cargando -->
+  <ion-segment [(ngModel)]="tipoInventario" (ionChange)="cambiarTipoInventario($event)" class="ion-margin" color="primary">
+    <ion-segment-button value="aventuras">
+      <ion-icon name="compass-outline"></ion-icon>
+      <ion-label>Aventuras</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="hoteles">
+      <ion-icon name="business-outline"></ion-icon>
+      <ion-label>Alojamientos</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
   <div class="estado-cargando" *ngIf="cargando">
     <ion-spinner name="crescent" color="primary"></ion-spinner>
     <p>Cargando experiencias...</p>
   </div>
 
-  <!-- Estado: sin resultados -->
   <div class="estado-vacio" *ngIf="!cargando && toursFiltrados.length === 0">
     <ion-icon name="search-outline"></ion-icon>
     <p>No encontramos planes que coincidan con tu búsqueda.</p>
     <span>Intenta con otro destino 🏖️</span>
   </div>
 
-  <!-- Grid de tarjetas -->
   <ion-grid *ngIf="!cargando && toursFiltrados.length > 0">
     <ion-row>
       <ion-col size="12" size-md="4" size-lg="4" *ngFor="let tour of toursFiltrados">
-
         <ion-card class="tour-card">
-
-          <!-- Imagen + overlays -->
           <div class="card-img-wrapper">
-            <img
-              [src]="tour.imagenUrl || 'https://via.placeholder.com/400x200?text=Ocean+Tour'"
-              alt="Imagen del Tour"
-              class="imagen-tour"/>
+            <img [src]="tour.imagenUrl || 'https://via.placeholder.com/400x200?text=Ocean+Tour'" alt="Imagen del Tour" class="imagen-tour"/>
             <div class="img-overlay"></div>
-
-            <!-- Badge rating / nuevo -->
             <div class="badge-rating">
               <ng-container *ngIf="tour.promedioEstrellas > 0">
                 <ion-icon name="star"></ion-icon>
                 <span>{{ tour.promedioEstrellas }}</span>
                 <span class="total-resenas">({{ tour.totalResenas }})</span>
               </ng-container>
-              <span
-                *ngIf="!tour.promedioEstrellas || tour.promedioEstrellas == 0"
-                class="texto-nuevo">
+              <span *ngIf="!tour.promedioEstrellas || tour.promedioEstrellas == 0" class="texto-nuevo">
                 Nuevo
               </span>
             </div>
-
-            <!-- Badge categoría -->
             <div class="badge-categoria" *ngIf="tour.categoria">
               {{ tour.categoria }}
             </div>
           </div>
 
-          <!-- Cuerpo -->
           <ion-card-content class="card-body">
-
-            <!-- Título + favorito -->
             <div class="card-title-row">
               <h2 class="tour-titulo">{{ tour.titulo }}</h2>
-              <button class="btn-favorito">
-                <ion-icon name="heart-outline"></ion-icon>
+              <button class="btn-favorito" (click)="toggleFavorito(tour)">
+               <ion-icon 
+                [name]="tour.esFavorito ? 'heart' : 'heart-outline'" 
+                 [color]="tour.esFavorito ? 'danger' : ''">
+                </ion-icon>
               </button>
             </div>
-
-            <!-- Precio -->
             <div class="precio-row">
               <ion-icon name="cash-outline"></ion-icon>
               <span class="precio-valor">${{ tour.precio }} COP</span>
             </div>
-
-            <!-- Descripción -->
             <p class="descripcion-corta">{{ tour.descripcion }}</p>
-
-            <!-- Botón -->
-            <ion-button
-              expand="block"
-              class="btn-detalles"
-              [routerLink]="['/detalle-tour', tour.id]">
+            <ion-button expand="block" class="btn-detalles" [routerLink]="['/detalle-tour', tour.id]">
               Ver Detalles
               <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
             </ion-button>
-
           </ion-card-content>
         </ion-card>
-
       </ion-col>
     </ion-row>
   </ion-grid>
-
 </ion-content>

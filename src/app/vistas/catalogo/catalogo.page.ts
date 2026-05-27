@@ -9,10 +9,10 @@ import {
   IonSearchbar, IonSegment, IonSegmentButton, IonLabel, IonBadge, 
   IonPopover, IonList, IonItem,
 } from '@ionic/angular/standalone';
+import { AuthService } from '../../core/services/auth'; 
 
 import { addIcons } from 'ionicons';
-import { cashOutline, arrowForwardOutline, star, water, search, notificationsOutline, personCircleOutline, heartOutline, searchOutline, compassOutline, personOutline, optionsOutline, waterOutline, gridOutline, checkmark, leafOutline, peopleOutline, flameOutline, bookOutline, flowerOutline, ribbonOutline, businessOutline } from 'ionicons/icons';
-
+import { cashOutline, arrowForwardOutline, star, water, search, notificationsOutline, personCircleOutline, heartOutline, heart, searchOutline, compassOutline, personOutline, optionsOutline, waterOutline, gridOutline, checkmark, leafOutline, peopleOutline, flameOutline, bookOutline, flowerOutline, ribbonOutline, businessOutline } from 'ionicons/icons';
 import { DatabaseService } from '../../core/services/database';
 
 @Component({
@@ -25,45 +25,37 @@ import { DatabaseService } from '../../core/services/database';
     IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent,
     IonButton,IonButtons, IonIcon, IonGrid, IonRow, IonCol, IonSpinner,
     IonSearchbar, IonSegment, IonSegmentButton, IonLabel, IonBadge,
-    CommonModule, FormsModule, RouterModule, IonPopover, IonList, IonItem, IonLabel,
+    CommonModule, FormsModule, RouterModule, IonPopover, IonList, IonItem
   ]
 })
 export class CatalogoPage implements OnInit {
   private databaseService = inject(DatabaseService);
-
-  //variables para el filtrado
-
-  
-
-
-async abrirFiltros(event: Event) {
-  this.popover.event = event;
-  await this.popover.present();
-}
-
-@ViewChild('popoverFiltros') popover!: IonPopover;
+  private authService = inject(AuthService);
+  @ViewChild('popoverFiltros') popover!: IonPopover;
 
   tours: any[] = []; 
-  toursFiltrados: any[] = []; // 👇 Lista clonada que mostraremos en pantalla
+  toursFiltrados: any[] = []; 
   cargando: boolean = true;
-  categoriaSeleccionada: string = 'Todas';
+  
+  // VARIABLES DE ESTADO Y FILTROS
+  categoriaSeleccionada: string = 'todos';
   textoBusqueda: string = '';
+  tipoInventario: string = 'aventuras'; 
 
   constructor() {
     addIcons({waterOutline,heartOutline,notificationsOutline,personOutline,searchOutline,optionsOutline,gridOutline,checkmark,leafOutline,peopleOutline,flameOutline,bookOutline,flowerOutline,ribbonOutline,businessOutline,compassOutline,star,cashOutline,arrowForwardOutline,water,personCircleOutline,search});
   }
 
-  // Usamos ionViewWillEnter para recargar todo si cambiamos de usuario
   async ionViewWillEnter() {
     this.cargarCatalogo();
   }
 
-  ngOnInit() {
-    // OnInit queda vacío, delegamos la carga a ionViewWillEnter
-  } 
+  ngOnInit() {} 
 
-  
-
+  async abrirFiltros(event: Event) {
+    this.popover.event = event;
+    await this.popover.present();
+  }
 
   cargarCatalogo() {
     this.cargando = true;
@@ -75,7 +67,7 @@ async abrirFiltros(event: Event) {
           if (tour.id) {
             this.databaseService.obtenerResenasPorTour(tour.id).subscribe(resenas => {
               if (resenas.length > 0) {
-                const suma = resenas.reduce((acc, r) => acc + r.calificacion, 0);
+                const suma = resenas.reduce((acc: any, r: any) => acc + r.calificacion, 0);
                 tour.promedioEstrellas = (suma / resenas.length).toFixed(1);
                 tour.totalResenas = resenas.length;
               } else {
@@ -86,8 +78,8 @@ async abrirFiltros(event: Event) {
           }
         });
 
-        // Inicialmente mostramos todos los tours
         this.toursFiltrados = [...this.tours];
+        this.filtrarTours(); 
         this.cargando = false;
       },
       error: (err) => {
@@ -97,48 +89,101 @@ async abrirFiltros(event: Event) {
     });
   }
   
+  cambiarTipoInventario(event: any) {
+    this.tipoInventario = event.detail.value;
+    
+    // Reseteamos los otros filtros para evitar conflictos visuales
+    this.categoriaSeleccionada = 'todos';
+    this.textoBusqueda = '';
+    
+    this.filtrarTours();
+  }
 
-  // 👇 LA MAGIA DEL FILTRADO 👇
   filtrarTours() {
     let temp = [...this.tours];
 
-    // 1. Aplicamos el filtro de categoría
-    if (this.categoriaSeleccionada !== 'Todas') {
-      temp = temp.filter(tour => tour.categoria === this.categoriaSeleccionada);
-      
+    // 1. Filtro de Pestañas (Aventuras vs Hoteles)
+    if (this.tipoInventario === 'hoteles') {
+      temp = temp.filter(tour => tour.categoria && tour.categoria.toLowerCase().trim() === 'hoteles');
+    } else {
+      temp = temp.filter(tour => !tour.categoria || tour.categoria.toLowerCase().trim() !== 'hoteles');
     }
 
-    // 2. Aplicamos el filtro de texto (buscando en título y descripción)
-    if (this.textoBusqueda && this.textoBusqueda.trim() !== '') {
-      const termino = this.textoBusqueda.toLowerCase();
+    // 2. Filtro de Categoría del Popover (Relajante, Extremo, etc.)
+    if (this.categoriaSeleccionada !== 'todos') {
       temp = temp.filter(tour => 
-        tour.titulo.toLowerCase().includes(termino) || 
-        tour.descripcion.toLowerCase().includes(termino)
+        tour.categoria && 
+        tour.categoria.toLowerCase().trim() === this.categoriaSeleccionada.toLowerCase().trim()
       );
     }
 
-    // Actualizamos la vista
+    // 3. Filtro de Búsqueda por Texto
+    if (this.textoBusqueda && this.textoBusqueda.trim() !== '') {
+      const termino = this.textoBusqueda.toLowerCase().trim();
+      temp = temp.filter(tour => 
+        (tour.titulo && tour.titulo.toLowerCase().includes(termino)) || 
+        (tour.descripcion && tour.descripcion.toLowerCase().includes(termino))
+      );
+    }
+
     this.toursFiltrados = temp;
   }
 
-  cambiarCategoria(event: any) {
-    this.categoriaSeleccionada = event.detail.value;
+  cambiarCategoria(categoria: string) {
+    this.categoriaSeleccionada = categoria;
     this.filtrarTours();
+    
+    if (this.popover) {
+      this.popover.dismiss();
+    }
   }
 
   buscar(event: any) {
     this.textoBusqueda = event.detail.value;
     if (!this.textoBusqueda || this.textoBusqueda.trim() === '') {
-    this.toursFiltrados = [...this.tours];
-    return;
-  }
+      this.filtrarTours();
+      return;
+    }
     this.filtrarTours();
   }
 
   limpiarBusqueda() {
-  this.textoBusqueda = '';
-  this.categoriaSeleccionada = 'Todas';
-  this.toursFiltrados = [...this.tours];
+    this.textoBusqueda = '';
+    this.categoriaSeleccionada = 'todos';
+    this.toursFiltrados = [...this.tours];
+    this.filtrarTours(); 
   }
 
+  // 👇 ESTA ES LA ÚNICA FUNCIÓN QUE CAMBIÓ 👇
+  // FUNCION REAL DE FAVORITOS (Conectada a Firebase)
+// FUNCION REAL DE FAVORITOS (Conectada al DatabaseService)
+  async toggleFavorito(tour: any) {
+    // 1. Obtenemos el turista que tiene la sesión iniciada
+    const usuarioActual = await this.authService.obtenerDatosUsuarioActual();
+
+    if (!usuarioActual || !usuarioActual.uid) {
+      console.log('El usuario debe iniciar sesión para dar me gusta');
+      return;
+    }
+
+    // 2. Guardamos el estado anterior por si falla la base de datos
+    const estadoAnterior = !!tour.esFavorito;
+
+    // 3. Hacemos el cambio visual de inmediato (Optimistic UI)
+    tour.esFavorito = !estadoAnterior;
+
+    // 4. Conectamos con tu función única alternarFavorito de Firebase
+    try {
+      await this.databaseService.alternarFavorito(
+        usuarioActual.uid, // turistaId
+        tour.id,           // tourId
+        estadoAnterior     // ¿yaEsFavorito? Le pasamos el estado que tenía antes del click
+      );
+      console.log(`Favorito modificado con éxito: ${tour.titulo}`);
+    } catch (error) {
+      console.error('Error al sincronizar el favorito con la base de datos', error);
+      // Si el internet falla, revertimos el color del corazón al estado original
+      tour.esFavorito = estadoAnterior; 
+    }
+  }
 }
