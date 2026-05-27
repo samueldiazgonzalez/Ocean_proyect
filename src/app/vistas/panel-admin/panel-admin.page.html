@@ -56,10 +56,15 @@
           <p>${{ tour.precio }} COP</p>
         </ion-label>
         
+        <ion-button slot="end" fill="clear" color="primary" [routerLink]="['/detalle-tour', tour.id]">
+          <ion-icon slot="icon-only" name="eye-outline"></ion-icon>
+        </ion-button>
+        
         <ion-button slot="end" color="success" shape="round" (click)="confirmarAprobacion(tour.id)">
           <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>
-          Revisar
+          Aprobar
         </ion-button>
+        
       </ion-item>
     </ion-list>
 

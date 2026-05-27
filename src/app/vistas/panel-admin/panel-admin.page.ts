@@ -12,7 +12,7 @@ import {
 import { DatabaseService } from '../../core/services/database';
 import { Tour } from '../../core/models/tour.model';
 import { addIcons } from 'ionicons';
-import { checkmarkCircleOutline, earthOutline, ticketOutline, pauseCircle, trash } from 'ionicons/icons';
+import { checkmarkCircleOutline, earthOutline, ticketOutline, pauseCircle, trash, eyeOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-panel-admin',
@@ -38,7 +38,7 @@ export class PanelAdminPage implements OnInit {
   segmentoActual: string = 'pendientes';
 
   constructor() {
-    addIcons({ checkmarkCircleOutline, earthOutline, ticketOutline, pauseCircle, trash });
+    addIcons({earthOutline,ticketOutline,eyeOutline,checkmarkCircleOutline,pauseCircle,trash});
   }
 
   ngOnInit() {

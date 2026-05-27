@@ -11,8 +11,7 @@ import {
 import { addIcons } from 'ionicons';
 import { 
   textOutline, cashOutline, imageOutline, documentTextOutline, 
-  pricetagOutline, timeOutline, checkmarkCircleOutline, trashOutline, addCircleOutline
-} from 'ionicons/icons';
+  pricetagOutline, timeOutline, checkmarkCircleOutline, trashOutline, addCircleOutline, callOutline } from 'ionicons/icons';
 
 import { DatabaseService } from '../../core/services/database';
 import { AuthService } from '../../core/services/auth';
@@ -42,19 +41,14 @@ export class CrearTourPage {
   duracion: string = '';
   incluye: string = '';
   
-  // En vez de una sola imagen, usamos un arreglo de objetos para la galería
   galeria: { url: string }[] = [{ url: '' }];
   
   cargando: boolean = false;
 
   constructor() {
-    addIcons({ 
-      textOutline, cashOutline, imageOutline, documentTextOutline, 
-      pricetagOutline, timeOutline, checkmarkCircleOutline, trashOutline, addCircleOutline 
-    });
+    addIcons({pricetagOutline,textOutline,cashOutline,timeOutline,callOutline,documentTextOutline,checkmarkCircleOutline,imageOutline,trashOutline,addCircleOutline});
   }
 
-  // Funciones para manejar la galería dinámica
   agregarImagen() {
     this.galeria.push({ url: '' });
   }
@@ -64,10 +58,8 @@ export class CrearTourPage {
   }
 
   async guardarTour() {
-    // 1. Limpiamos las URLs vacías de la galería
     const imagenesLimpias = this.galeria.map(img => img.url).filter(url => url.trim() !== '');
 
-    // 2. Validamos que no falte lo básico
     if (!this.titulo || !this.descripcion || !this.precio || !this.categoria || imagenesLimpias.length === 0) {
       alert('Por favor, completa los campos obligatorios y añade al menos una foto.');
       return;
@@ -84,17 +76,15 @@ export class CrearTourPage {
         return;
       }
 
-      // 3. Armamos el paquete de datos super completo
+      // El objeto que viaja a Firebase es el mismo, manteniendo tus diagramas intactos.
       const nuevoTour = {
         titulo: this.titulo,
         descripcion: this.descripcion,
         precio: this.precio,
-        categoria: this.categoria,
+        categoria: this.categoria, // Si seleccionaron "hoteles", aquí viaja la palabra exacta que tu filtro del catálogo ya reconoce.
         duracion: this.duracion,
         incluye: this.incluye,
-        // Guardamos la primera foto como principal para las portadas
         imagenUrl: imagenesLimpias[0], 
-        // Y guardamos el arreglo completo para la vista de detalles
         galeria: imagenesLimpias,
         proveedorId: usuarioActual.uid, 
         estado: 'pendiente' 
@@ -102,7 +92,7 @@ export class CrearTourPage {
 
       await this.databaseService.agregarTour(nuevoTour as any);      
       
-      // 4. Limpiamos y redirigimos
+      // Limpiamos
       this.titulo = '';
       this.descripcion = '';
       this.precio = null;
@@ -115,7 +105,7 @@ export class CrearTourPage {
       
     } catch (error) {
       console.error(error);
-      alert('Hubo un error al publicar el tour.');
+      alert('Hubo un error al publicar el servicio.');
     } finally {
       this.cargando = false;
     }
