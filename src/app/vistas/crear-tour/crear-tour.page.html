@@ -72,6 +72,28 @@
         placeholder="Ej. 573001234567">
       </ion-input>
     </ion-item>
+
+    <ion-item>
+      <ion-icon name="location-outline" slot="start"></ion-icon>
+      <ion-input 
+        [(ngModel)]="direccion" 
+        [label]="categoria === 'hoteles' ? 'Dirección del Alojamiento' : 'Punto de Encuentro'" 
+        labelPlacement="floating" 
+        type="text" 
+        [placeholder]="categoria === 'hoteles' ? 'Ej. Calle del Arsenal, Centro Histórico' : 'Ej. Muelle de la Bodeguita'">
+      </ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+      <ion-textarea 
+        [(ngModel)]="opcionesAdicionales" 
+        [label]="categoria === 'hoteles' ? 'Tipos de habitación o extras' : 'Opciones para grupos o extras'" 
+        labelPlacement="floating" 
+        [autoGrow]="true" 
+        [placeholder]="categoria === 'hoteles' ? 'Ej. Habitación VIP disponible por $50.000 extra en recepción...' : 'Ej. Descuento del 10% para grupos de 5+ personas...'">
+      </ion-textarea>
+    </ion-item>
   </ion-list>
 
   <ion-list inset="true" lines="full">

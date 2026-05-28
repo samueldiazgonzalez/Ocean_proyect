@@ -1,66 +1,161 @@
 <ion-header class="ion-no-border">
-  <ion-toolbar color="primary">
+  <ion-toolbar class="toolbar-registro">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/login"></ion-back-button>
+      <ion-back-button defaultHref="/login" class="back-btn-custom"></ion-back-button>
     </ion-buttons>
-    <ion-title>Crear Cuenta</ion-title>
+    <ion-title class="toolbar-titulo">Crear cuenta</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding" color="light">
-  
-  <div class="ion-text-center ion-margin-bottom ion-padding-top">
-    <h2>Únete a Ocean 🌊</h2>
-    <p>Crea tu cuenta para empezar la aventura</p>
-  </div>
+<ion-content class="registro-content">
 
-  <ion-list inset="true" lines="full">
-    <ion-item>
-      <ion-icon name="person-outline" slot="start"></ion-icon>
-      <ion-input [(ngModel)]="nombre" label="Nombre completo" labelPlacement="floating" type="text"></ion-input>
-    </ion-item>
+  <div class="registro-bg-glow"></div>
 
-    <ion-item>
-      <ion-icon name="call-outline" slot="start"></ion-icon>
-      <ion-input [(ngModel)]="telefono" label="Teléfono / WhatsApp" labelPlacement="floating" type="tel"></ion-input>
-    </ion-item>
+  <div class="registro-container">
 
-    <ion-item>
-      <ion-label>Registrarme como:</ion-label>
-      <ion-select [(ngModel)]="rol">
-        <ion-select-option value="viajero">Viajero (Turista)</ion-select-option>
-        <ion-select-option value="proveedor">Proveedor (Agencia)</ion-select-option>
-      </ion-select>
-    </ion-item>
-
-    <div *ngIf="rol === 'proveedor'" class="ion-padding-top">
-      <ion-item color="light">
-        <ion-icon name="business-outline" slot="start"></ion-icon>
-        <ion-input [(ngModel)]="nombreAgencia" label="Nombre de tu Agencia/Empresa" labelPlacement="floating"></ion-input>
-      </ion-item>
-      <p class="ion-padding-start ion-padding-end" style="font-size: 0.8em; color: gray;">
-        * Como proveedor, podrás publicar y gestionar tus propios tours.
-      </p>
+    <!-- Hero -->
+    <div class="registro-hero">
+      <div class="hero-badge">
+        <ion-icon name="sparkles-outline"></ion-icon>
+        <span>Únete a Ocean</span>
+      </div>
+      <h1 class="registro-titulo">
+        Empieza tu <span class="titulo-highlight">aventura</span>
+      </h1>
+      <p class="registro-subtitulo">Crea tu cuenta y descubre el Caribe</p>
     </div>
 
-    <ion-item>
-      <ion-icon name="mail-outline" slot="start"></ion-icon>
-      <ion-input [(ngModel)]="correo" label="Correo electrónico" labelPlacement="floating" type="email"></ion-input>
-    </ion-item>
+    <!-- Card principal -->
+    <div class="registro-card">
 
-    <ion-item>
-      <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
-      <ion-input [(ngModel)]="contrasena" label="Contraseña" labelPlacement="floating" type="password"></ion-input>
-    </ion-item>
-  </ion-list>
+      <!-- ── Sección 1: Datos personales ── -->
+      <p class="seccion-label">Datos personales</p>
 
-  <ion-text color="danger" class="ion-text-center" *ngIf="mensajeError">
-    <p><strong>{{ mensajeError }}</strong></p>
-  </ion-text>
+      <div class="campo-grupo">
+        <span class="campo-label">Nombre completo</span>
+        <div class="campo-inner">
+          <ion-icon name="person-outline" class="campo-icon"></ion-icon>
+          <ion-input
+            [(ngModel)]="nombre"
+            type="text"
+            placeholder="Tu nombre"
+            class="campo-input">
+          </ion-input>
+        </div>
+      </div>
 
-  <ion-button expand="block" shape="round" color="primary" class="ion-margin-top" (click)="registrar()" [disabled]="cargando">
-    <ion-spinner name="crescent" *ngIf="cargando"></ion-spinner>
-    <span *ngIf="!cargando">Completar Registro</span>
-  </ion-button>
+      <div class="campo-grupo">
+        <span class="campo-label">Teléfono / WhatsApp</span>
+        <div class="campo-inner">
+          <ion-icon name="call-outline" class="campo-icon"></ion-icon>
+          <ion-input
+            [(ngModel)]="telefono"
+            type="tel"
+            placeholder="+57 300 000 0000"
+            class="campo-input">
+          </ion-input>
+        </div>
+      </div>
+
+      <div class="divider-seccion"></div>
+
+      <!-- ── Sección 2: Tipo de cuenta ── -->
+      <p class="seccion-label">Tipo de cuenta</p>
+
+      <div class="rol-grid">
+        <button
+          class="rol-card"
+          [class.rol-activo]="rol === 'viajero'"
+          (click)="rol = 'viajero'">
+          <div class="rol-icono-wrap" [class.rol-icono-activo]="rol === 'viajero'">
+            <ion-icon name="compass-outline"></ion-icon>
+          </div>
+          <span class="rol-nombre">Viajero</span>
+          <span class="rol-desc">Turista</span>
+          <div class="rol-check" *ngIf="rol === 'viajero'">
+            <ion-icon name="checkmark"></ion-icon>
+          </div>
+        </button>
+
+        <button
+          class="rol-card"
+          [class.rol-activo]="rol === 'proveedor'"
+          (click)="rol = 'proveedor'">
+          <div class="rol-icono-wrap" [class.rol-icono-activo]="rol === 'proveedor'">
+            <ion-icon name="business-outline"></ion-icon>
+          </div>
+          <span class="rol-nombre">Proveedor</span>
+          <span class="rol-desc">Agencia</span>
+          <div class="rol-check" *ngIf="rol === 'proveedor'">
+            <ion-icon name="checkmark"></ion-icon>
+          </div>
+        </button>
+      </div>
+
+      <!-- Campo agencia (solo proveedor) -->
+      <div class="agencia-wrapper" *ngIf="rol === 'proveedor'">
+        <div class="agencia-info">
+          <ion-icon name="information-circle-outline"></ion-icon>
+          <p>Como proveedor podrás publicar y gestionar tus propios tours.</p>
+        </div>
+        <div class="campo-grupo">
+          <span class="campo-label">Nombre de tu agencia / empresa</span>
+          <div class="campo-inner">
+            <ion-icon name="business-outline" class="campo-icon"></ion-icon>
+            <ion-input
+              [(ngModel)]="nombreAgencia"
+              placeholder="Ej: Cartagena Adventures"
+              class="campo-input">
+            </ion-input>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider-seccion"></div>
+
+      <!-- ── Sección 3: Acceso ── -->
+      <p class="seccion-label">Acceso</p>
+
+      <div class="campo-grupo">
+        <span class="campo-label">Correo electrónico</span>
+        <div class="campo-inner">
+          <ion-icon name="mail-outline" class="campo-icon"></ion-icon>
+          <ion-input
+            [(ngModel)]="correo"
+            type="email"
+            placeholder="ejemplo@ocean.com"
+            class="campo-input">
+          </ion-input>
+        </div>
+      </div>
+
+      <div class="campo-grupo">
+        <span class="campo-label">Contraseña</span>
+        <div class="campo-inner">
+          <ion-icon name="lock-closed-outline" class="campo-icon"></ion-icon>
+          <ion-input
+            [(ngModel)]="contrasena"
+            type="password"
+            placeholder="Mínimo 6 caracteres"
+            class="campo-input">
+          </ion-input>
+        </div>
+      </div>
+
+      <!-- Error -->
+      <div class="error-msg" *ngIf="mensajeError">
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        <span>{{ mensajeError }}</span>
+      </div>
+
+      <!-- Botón -->
+      <button class="btn-principal" (click)="registrar()" [disabled]="cargando">
+        <ion-spinner *ngIf="cargando" name="crescent" class="btn-spinner"></ion-spinner>
+        <span *ngIf="!cargando">Completar Registro</span>
+        <ion-icon *ngIf="!cargando" name="arrow-forward-outline"></ion-icon>
+      </button>
+
+    </div>
+  </div>
 
 </ion-content>

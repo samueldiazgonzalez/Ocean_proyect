@@ -45,6 +45,17 @@
         </ion-col>
       </ion-row>
     </ion-grid>
+
+    <ion-card class="ion-no-margin ion-margin-top" style="border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+      <ion-card-header>
+        <ion-card-title style="font-size: 1.2rem; font-weight: bold;">Distribución del Catálogo 🥧</ion-card-title>
+        <p style="color: gray; margin: 0; font-size: 14px;">Servicios publicados por categoría</p>
+      </ion-card-header>
+      <ion-card-content style="position: relative; height: 250px; display: flex; justify-content: center;">
+        <canvas id="categoriasChart"></canvas>
+      </ion-card-content>
+    </ion-card>
+
   </div>
 
   <div *ngIf="segmentoActual === 'pendientes'">

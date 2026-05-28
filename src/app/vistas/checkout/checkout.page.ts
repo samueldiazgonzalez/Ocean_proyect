@@ -4,16 +4,15 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { 
   IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton,
-  IonItem, IonInput, IonButton, IonIcon, IonCard, IonCardContent, IonList, IonSpinner
+  IonItem, IonInput, IonButton, IonIcon, IonCard, IonCardContent, IonList, IonSpinner, IonModal
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { checkmarkCircleOutline, closeCircleOutline } from 'ionicons/icons';
+import { checkmarkCircleOutline, closeCircleOutline, checkmarkCircle } from 'ionicons/icons';
 
 import { CardService } from '../../core/services/card';
 import { ToastService } from '../../core/services/toast';
 import { DatabaseService } from '../../core/services/database'; 
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
-// 👇 1. IMPORTAMOS EL PLUGIN DE BIOMETRÍA 👇
 import { NativeBiometric } from '@capgo/capacitor-native-biometric'; 
 
 @Component({
@@ -23,7 +22,7 @@ import { NativeBiometric } from '@capgo/capacitor-native-biometric';
   standalone: true,
   imports: [
     IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton,
-    IonItem, IonInput, IonButton, IonIcon, IonCard, IonCardContent, IonList, IonSpinner,
+    IonItem, IonInput, IonButton, IonIcon, IonCard, IonCardContent, IonList, IonSpinner, IonModal,
     CommonModule, FormsModule
   ]
 })
@@ -44,9 +43,12 @@ export class CheckoutPage implements OnInit {
   franquicia: string = 'desconocida';
   esValida: boolean = false;
   cargando: boolean = false;
+  
+  mostrarTicket: boolean = false;
+  qrUrlGenerado: string = '';
 
   constructor() {
-    addIcons({ checkmarkCircleOutline, closeCircleOutline });
+    addIcons({ checkmarkCircleOutline, closeCircleOutline, checkmarkCircle });
   }
 
   async ngOnInit() {
@@ -81,10 +83,8 @@ export class CheckoutPage implements OnInit {
     this.cargando = true;
 
     try {
-      // 1. Vibración nativa
       await Haptics.impact({ style: ImpactStyle.Medium });
 
-      // 👇 2. VERIFICACIÓN BIOMÉTRICA 👇
       const biometria = await NativeBiometric.isAvailable();
       
       if (biometria.isAvailable) {
@@ -95,9 +95,7 @@ export class CheckoutPage implements OnInit {
           description: "Usa tu huella dactilar o Face ID para procesar la tarjeta."
         });
       }
-      // 👆 FIN DE VERIFICACIÓN 👆
 
-      // 3. Armamos los datos para actualizar el recibo
       const datosActualizados = {
         estado: 'CONFIRMADA',
         metodoPago: 'TARJETA_CREDITO',
@@ -105,25 +103,26 @@ export class CheckoutPage implements OnInit {
         ultimosDigitos: this.numeroTarjeta.slice(-4)
       };
 
-      // 4. Actualizamos en Firebase
       await this.databaseService.actualizarReserva(this.reservaId, datosActualizados);
-
-      // 5. Éxito y redirección
-      this.toastService.mostrarMensaje('¡Pago aprobado! Reserva confirmada.', 'success');
       
-      setTimeout(() => {
-        this.cargando = false;
-        this.router.navigate(['/mis-reservas']);
-      }, 1500);
+      const textoQr = `OCEAN-${this.reservaId}-${this.nombreTitular.replace(' ', '')}`;
+      this.qrUrlGenerado = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(textoQr)}&color=3880ff`;
+
+      this.cargando = false;
+      this.mostrarTicket = true;
 
     } catch (error: any) {
       this.cargando = false;
-      // 👇 Si el usuario cancela la huella, mostramos un mensaje distinto 👇
       if (error.message && (error.message.toLowerCase().includes('cancel') || error.message.toLowerCase().includes('user'))) {
         this.toastService.mostrarMensaje('Pago cancelado por el usuario', 'warning');
       } else {
         this.toastService.mostrarMensaje('Error procesando el pago', 'danger');
       }
     }
+  }
+
+  finalizarYSalir() {
+    this.mostrarTicket = false;
+    this.router.navigate(['/tabs/mis-reservas']);
   }
 }

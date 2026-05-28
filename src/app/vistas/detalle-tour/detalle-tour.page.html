@@ -6,6 +6,10 @@
     <ion-title>Detalles del Tour</ion-title>
     
     <ion-buttons slot="end">
+      <ion-button (click)="compartirTour()">
+        <ion-icon slot="icon-only" name="share-social-outline" color="light"></ion-icon>
+      </ion-button>
+      
       <ion-button (click)="toggleFavorito()">
         <ion-icon slot="icon-only" [name]="esFavorito ? 'heart' : 'heart-outline'" [color]="esFavorito ? 'danger' : 'light'"></ion-icon>
       </ion-button>
@@ -62,6 +66,21 @@
       <div *ngIf="tour.duracion" style="display: flex; align-items: center; gap: 6px; color: #666; font-size: 14px; margin-top: 10px; background: #f4f5f8; padding: 8px 12px; border-radius: 8px; width: fit-content;">
         <ion-icon name="time-outline" style="font-size: 18px; color: #3880ff;"></ion-icon>
         <span>Duración: <strong>{{ tour.duracion }}</strong></span>
+      </div>
+
+      <div *ngIf="tour.direccion" style="display: flex; align-items: center; gap: 6px; color: #666; font-size: 14px; margin-top: 10px; background: #f4f5f8; padding: 8px 12px; border-radius: 8px; width: fit-content;">
+        <ion-icon name="location-outline" style="font-size: 18px; color: #eb445a;"></ion-icon>
+        <span>Ubicación: <strong>{{ tour.direccion }}</strong></span>
+      </div>
+
+      <div *ngIf="tour.opcionesAdicionales" style="margin-top: 15px; padding: 12px; border-left: 4px solid #ffc409; background: #fffdf5; border-radius: 4px;">
+        <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 5px; color: #b8860b; font-weight: bold; font-size: 14px;">
+          <ion-icon name="information-circle-outline" style="font-size: 18px;"></ion-icon>
+          <span>Información Adicional</span>
+        </div>
+        <p style="margin: 0; font-size: 14px; color: #555; line-height: 1.5; white-space: pre-line;">
+          {{ tour.opcionesAdicionales }}
+        </p>
       </div>
 
       <h3 style="font-weight: bold; margin-top: 20px; margin-bottom: 8px; font-size: 16px; color: #333;">Descripción del Plan</h3>

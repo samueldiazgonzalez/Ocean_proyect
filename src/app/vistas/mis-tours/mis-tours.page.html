@@ -15,6 +15,7 @@
     <h2>¡Aún no tienes tours!</h2>
     <p color="medium">Publica tu primer paquete turístico para que los viajeros lo descubran.</p>
     <ion-button routerLink="/tabs/crear-tour" shape="round" color="primary" class="ion-margin-top">
+      <ion-icon slot="start" name="add-circle-outline"></ion-icon>
       Crear mi primer tour
     </ion-button>
   </div>
@@ -22,20 +23,49 @@
   <ion-grid *ngIf="!cargando && misTours.length > 0">
     <ion-row>
       <ion-col size="12" size-md="6" *ngFor="let tour of misTours">
-        <ion-card class="tour-card" style="border-radius: 12px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-          <img [src]="tour.imagenUrl || 'https://via.placeholder.com/400x200?text=Ocean+Tour'" alt="Tour" style="width: 100%; height: 150px; object-fit: cover;"/>
+        <ion-card class="tour-card" style="border-radius: 12px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden;">
+          
+          <div style="position: relative;">
+            <img [src]="tour.imagenUrl || 'https://via.placeholder.com/400x200?text=Ocean+Tour'" alt="Tour" style="width: 100%; height: 150px; object-fit: cover; display: block;"/>
+            <ion-badge [color]="tour.estado === 'aprobado' ? 'success' : 'warning'" style="position: absolute; top: 10px; right: 10px; padding: 6px 10px; border-radius: 8px;">
+              {{ tour.estado === 'aprobado' ? 'Público' : 'En Auditoría' }}
+            </ion-badge>
+          </div>
           
           <ion-card-header>
-            <ion-card-title>{{ tour.titulo }}</ion-card-title>
+            <ion-card-title style="font-size: 1.1rem; font-weight: bold;">{{ tour.titulo }}</ion-card-title>
             <ion-card-subtitle color="success">
               <ion-icon name="cash-outline"></ion-icon> ${{ tour.precio }} COP
             </ion-card-subtitle>
           </ion-card-header>
 
           <ion-card-content>
-            <p style="display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; color: #666;">
+            <p style="display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; color: #666; margin-bottom: 15px;">
               {{ tour.descripcion }}
             </p>
+            
+            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+              <ion-button fill="outline" size="small" [routerLink]="['/detalle-tour', tour.id]" style="flex: 1 1 calc(50% - 4px); margin: 0;">
+                <ion-icon name="eye-outline" slot="start"></ion-icon>
+                Ver
+              </ion-button>
+              
+              <ion-button fill="outline" color="tertiary" size="small" (click)="editarTour(tour)" style="flex: 1 1 calc(50% - 4px); margin: 0;">
+                <ion-icon name="create-outline" slot="start"></ion-icon>
+                Editar
+              </ion-button>
+              
+              <ion-button fill="outline" color="warning" size="small" (click)="suspender(tour.id)" *ngIf="tour.estado === 'aprobado'" style="flex: 1 1 calc(50% - 4px); margin: 0;">
+                <ion-icon name="pause-circle-outline" slot="start"></ion-icon>
+                Pausar
+              </ion-button>
+
+              <ion-button fill="outline" color="danger" size="small" (click)="eliminar(tour.id)" style="flex: 1 1 calc(50% - 4px); margin: 0;">
+                <ion-icon name="trash-outline" slot="start"></ion-icon>
+                Borrar
+              </ion-button>
+            </div>
+
           </ion-card-content>
         </ion-card>
       </ion-col>

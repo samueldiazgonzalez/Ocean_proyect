@@ -1,0 +1,316 @@
+// ── Toolbar ────────────────────────────────────
+.toolbar-registro {
+  --background: linear-gradient(135deg, #0d47a1, #0077b6);
+  --color: white;
+}
+
+.toolbar-titulo {
+  font-size: 17px;
+  font-weight: 700;
+  color: white;
+}
+
+.back-btn-custom {
+  --color: rgba(255, 255, 255, 0.85);
+}
+
+// ── Fondo ──────────────────────────────────────
+ion-content.registro-content {
+  --background: url('https://images.pexels.com/photos/27566375/pexels-photo-27566375.jpeg') center center / cover no-repeat fixed;
+}
+
+ion-content.registro-content::part(scroll) {
+  background: rgba(10, 15, 30, 0.84);
+  min-height: 100%;
+}
+
+.registro-bg-glow {
+  position: fixed;
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, rgba(0, 119, 182, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+// ── Contenedor ─────────────────────────────────
+.registro-container {
+  position: relative;
+  z-index: 1;
+  padding: 20px 18px 40px;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+// ── Hero ───────────────────────────────────────
+.registro-hero {
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 119, 182, 0.3);
+  border: 0.5px solid rgba(0, 150, 199, 0.45);
+  padding: 6px 16px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+
+  ion-icon { font-size: 13px; color: #60c8ff; }
+  span { font-size: 12px; font-weight: 600; color: #60c8ff; letter-spacing: 0.5px; text-transform: uppercase; }
+}
+
+.registro-titulo {
+  font-size: 24px;
+  font-weight: 800;
+  color: white;
+  letter-spacing: -0.4px;
+  line-height: 1.2;
+  margin: 0 0 6px;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+}
+
+.titulo-highlight { color: #00d4a0; }
+
+.registro-subtitulo {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 0;
+}
+
+// ── Card ───────────────────────────────────────
+.registro-card {
+  background: rgba(19, 25, 41, 0.82);
+  border: 0.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 22px 18px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+// ── Labels de sección ──────────────────────────
+.seccion-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.28);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin: 0 0 10px 2px;
+}
+
+.divider-seccion {
+  height: 0.5px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 16px 0 14px;
+}
+
+// ── Campos ─────────────────────────────────────
+.campo-grupo { margin-bottom: 12px; }
+
+.campo-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.38);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  padding-left: 3px;
+}
+
+.campo-inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 0.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 0 14px;
+  height: 50px;
+  transition: border-color 0.2s, background 0.2s;
+
+  &:focus-within {
+    border-color: rgba(0, 150, 199, 0.5);
+    background: rgba(0, 119, 182, 0.08);
+  }
+}
+
+.campo-icon {
+  font-size: 18px;
+  color: #60c8ff;
+  flex-shrink: 0;
+}
+
+.campo-input {
+  --background: transparent;
+  --color: white;
+  --placeholder-color: rgba(255, 255, 255, 0.28);
+  --placeholder-font-size: 14px;
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --box-shadow: none;
+  font-size: 14px;
+  flex: 1;
+  height: 50px;
+}
+
+// ── Selector de Rol ────────────────────────────
+.rol-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.rol-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 88px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 0.5px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all 0.18s ease;
+  padding: 0;
+
+  &.rol-activo {
+    background: rgba(0, 119, 182, 0.18);
+    border-color: rgba(0, 150, 199, 0.5);
+  }
+
+  &:active { transform: scale(0.97); }
+}
+
+.rol-icono-wrap {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.07);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.18s;
+
+  ion-icon { font-size: 18px; color: rgba(255, 255, 255, 0.4); }
+
+  &.rol-icono-activo {
+    background: rgba(0, 150, 199, 0.25);
+    ion-icon { color: #60c8ff; }
+  }
+}
+
+.rol-nombre {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.55);
+
+  .rol-activo & { color: white; }
+}
+
+.rol-desc {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.28);
+}
+
+.rol-check {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #0077b6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ion-icon { font-size: 11px; color: white; }
+}
+
+// ── Info proveedor ─────────────────────────────
+.agencia-wrapper {
+  animation: fadeSlide 0.2s ease;
+}
+
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.agencia-info {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  background: rgba(0, 119, 182, 0.12);
+  border: 0.5px solid rgba(0, 150, 199, 0.28);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+
+  ion-icon {
+    font-size: 16px;
+    color: #60c8ff;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  p {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.42);
+    line-height: 1.5;
+    margin: 0;
+  }
+}
+
+// ── Error ──────────────────────────────────────
+.error-msg {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255, 82, 82, 0.1);
+  border: 0.5px solid rgba(255, 82, 82, 0.3);
+  border-radius: 10px;
+  padding: 9px 13px;
+  margin: 4px 0 10px;
+
+  ion-icon { font-size: 16px; color: #ff6b6b; flex-shrink: 0; }
+  span { font-size: 13px; color: #ff9090; }
+}
+
+// ── Botón principal ────────────────────────────
+.btn-principal {
+  width: 100%;
+  height: 50px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #0d47a1, #0077b6);
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 6px;
+  transition: opacity 0.2s;
+
+  ion-icon { font-size: 18px; }
+  &:active { opacity: 0.85; transform: scale(0.99); }
+  &:disabled { opacity: 0.5; }
+
+  .btn-spinner { --color: white; width: 20px; height: 20px; }
+}

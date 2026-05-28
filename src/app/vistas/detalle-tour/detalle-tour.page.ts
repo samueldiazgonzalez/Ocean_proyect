@@ -7,7 +7,7 @@ import {
   IonSpinner, IonButton, IonIcon, IonText, IonBadge,
   IonFooter, IonRow, IonCol, IonList, IonItem, IonLabel, IonTextarea 
 } from '@ionic/angular/standalone';
-
+import { Share } from '@capacitor/share'; 
 import { addIcons } from 'ionicons';
 import { 
   logoWhatsapp, cashOutline, mapOutline, cardOutline, 
@@ -172,8 +172,8 @@ export class DetalleTourPage implements OnInit {
     }
   }
 
-  abrirWhatsApp() {
-    const telefonoAgencia = '573001234567'; 
+ abrirWhatsApp() {
+    const telefonoAgencia = this.tour?.telefono || this.tour?.telefonoContacto || '573000000000'; 
     const tituloDelTour = this.tour ? this.tour.titulo : 'este paquete turístico';
     const mensaje = `¡Hola! Vi tu "${tituloDelTour}" en la app Ocean 🌊 y me gustaría hacer una reserva.`;
     const url = `https://wa.me/${telefonoAgencia}?text=${encodeURIComponent(mensaje)}`;
@@ -205,6 +205,21 @@ export class DetalleTourPage implements OnInit {
       console.error('Error al apartar cupo:', error);
     } finally {
       this.procesandoReserva = false;
+    }
+  }
+
+  async compartirTour() {
+    if (!this.tour) return;
+    
+    try {
+      await Share.share({
+        title: this.tour.titulo,
+        text: `¡Mira esta increíble experiencia en Ocean! ${this.tour.titulo} por solo $${this.tour.precio} COP. ¿Vamos? 🏖️`,
+        url: 'https://ocean-app.com/', // Una URL simulada de tu proyecto
+        dialogTitle: 'Compartir aventura con amigos',
+      });
+    } catch (error) {
+      console.error('Error al abrir el menú de compartir', error);
     }
   }
 }

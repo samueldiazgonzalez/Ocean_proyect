@@ -11,7 +11,7 @@ import {
 import { addIcons } from 'ionicons';
 import { 
   textOutline, cashOutline, imageOutline, documentTextOutline, 
-  pricetagOutline, timeOutline, checkmarkCircleOutline, trashOutline, addCircleOutline, callOutline } from 'ionicons/icons';
+  pricetagOutline, timeOutline, checkmarkCircleOutline, trashOutline, addCircleOutline, callOutline, locationOutline } from 'ionicons/icons';
 
 import { DatabaseService } from '../../core/services/database';
 import { AuthService } from '../../core/services/auth';
@@ -40,13 +40,16 @@ export class CrearTourPage {
   categoria: string = '';
   duracion: string = '';
   incluye: string = '';
+  telefono: string = ''; 
+  direccion: string = '';         
+  opcionesAdicionales: string = '';
   
   galeria: { url: string }[] = [{ url: '' }];
   
   cargando: boolean = false;
 
   constructor() {
-    addIcons({pricetagOutline,textOutline,cashOutline,timeOutline,callOutline,documentTextOutline,checkmarkCircleOutline,imageOutline,trashOutline,addCircleOutline});
+    addIcons({pricetagOutline,textOutline,cashOutline,timeOutline,callOutline,locationOutline,addCircleOutline,documentTextOutline,checkmarkCircleOutline,imageOutline,trashOutline});
   }
 
   agregarImagen() {
@@ -87,6 +90,8 @@ export class CrearTourPage {
         imagenUrl: imagenesLimpias[0], 
         galeria: imagenesLimpias,
         proveedorId: usuarioActual.uid, 
+        direccion: this.direccion,                     
+        opcionesAdicionales: this.opcionesAdicionales,
         estado: 'pendiente' 
       };
 

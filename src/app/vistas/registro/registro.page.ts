@@ -10,7 +10,7 @@ import {
 } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
-import { personOutline, mailOutline, lockClosedOutline, callOutline, businessOutline } from 'ionicons/icons';
+import { personOutline, mailOutline, lockClosedOutline, callOutline, businessOutline, sparklesOutline, compassOutline, checkmark, informationCircleOutline, alertCircleOutline, arrowForwardOutline } from 'ionicons/icons';
 
 import { AuthService } from '../../core/services/auth';
 
@@ -43,7 +43,7 @@ export class RegistroPage {
   mensajeError: string = '';
 
   constructor() {
-    addIcons({ personOutline, mailOutline, lockClosedOutline, callOutline, businessOutline });
+    addIcons({sparklesOutline,personOutline,callOutline,compassOutline,checkmark,businessOutline,informationCircleOutline,mailOutline,lockClosedOutline,alertCircleOutline,arrowForwardOutline});
   }
 
   async registrar() {
