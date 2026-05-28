@@ -9,6 +9,8 @@ export interface Tour {
   
   categoria?: string;     // <--- Para el número de WhatsApp que agregamos hace un rato
   direccion?: string;            // <--- NUEVO
+  latitud?: number;              // <--- NUEVO para Google Maps
+  longitud?: number;             // <--- NUEVO para Google Maps
   opcionesAdicionales?: string;
   nombreExtra?: string; // Ej: "Habitación VIP con vista al mar" o "Paquete Todo Incluido"
   precioExtra?: number; // Ej: 50000 (el valor adicional)

@@ -3,7 +3,10 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  notificationServiceUrl: 'https://tourism-notification-service-production.up.railway.app',
+  notificationServiceKey: 'tourism_secret_key_2024',
+  googleMapsApiKey: 'AIzaSyBCJHWSgi-srjvvI-Pw-ERdGp53ZhGPlGo'
 };
 
 /*

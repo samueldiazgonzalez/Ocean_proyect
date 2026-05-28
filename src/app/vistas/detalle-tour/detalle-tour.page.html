@@ -13,11 +13,10 @@
         <ion-icon slot="icon-only" [name]="esFavorito ? 'heart' : 'heart-outline'" [color]="esFavorito ? 'danger' : 'light'"></ion-icon>
       </ion-button>
     </ion-buttons>
-    
   </ion-toolbar>
 </ion-header>
 
-<ion-content color="light">
+<ion-content color="light" scrollEvents="true" (ionScroll)="onScroll($event)">
 
   <div class="ion-text-center ion-margin-top" *ngIf="cargando">
     <ion-spinner name="crescent"></ion-spinner>
@@ -52,6 +51,13 @@
       </div>
     </div>
 
+    <div class="sticky-header" [class.visible]="showStickyHeader" style="background: white; padding: 10px; position: sticky; top: 0; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center;" *ngIf="showStickyHeader">
+      <h3 style="margin: 0; font-weight: bold; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 60%;">{{ tour.titulo }}</h3>
+      <ion-button size="small" color="success" (click)="apartarCupo()" [disabled]="procesandoReserva || !puedeReservar()">
+        {{ precioCalculado > 0 ? 'Reservar' : 'Elegir' }}
+      </ion-button>
+    </div>
+
     <div class="ion-padding" style="background: white; margin-bottom: 10px;">
       
       <div *ngIf="resenas.length > 0" style="display: flex; align-items: center; gap: 5px; margin-bottom: 10px;">
@@ -67,24 +73,10 @@
         <span>Duración: <strong>{{ tour.duracion }}</strong></span>
       </div>
 
-      <div *ngIf="tour.direccion" style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; background: #f4f5f8; padding: 10px 15px; border-radius: 10px;">
-        <div style="display: flex; align-items: center; gap: 8px; color: #444; font-size: 14px; max-width: 65%;">
-          <ion-icon name="location" style="font-size: 22px; color: #eb445a;"></ion-icon>
-          <span style="line-height: 1.2;">
-            <small style="color: gray; display: block; font-size: 11px; text-transform: uppercase;">Ubicación</small>
-            <strong>{{ tour.direccion }}</strong>
-          </span>
-        </div>
-        <ion-button size="small" shape="round" color="danger" (click)="abrirMapas()">
-          <ion-icon slot="start" name="map-outline"></ion-icon>
-          Mapa
-        </ion-button>
-      </div>
-
       <div *ngIf="tour.opcionesAdicionales" style="margin-top: 15px; padding: 12px; border-left: 4px solid #ffc409; background: #fffdf5; border-radius: 4px;">
         <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 5px; color: #b8860b; font-weight: bold; font-size: 14px;">
           <ion-icon name="information-circle-outline" style="font-size: 18px;"></ion-icon>
-          <span>A tener en cuenta</span>
+          <span>Información Adicional</span>
         </div>
         <p style="margin: 0; font-size: 14px; color: #555; line-height: 1.5; white-space: pre-line;">
           {{ tour.opcionesAdicionales }}
@@ -99,8 +91,6 @@
 
     <div class="ion-padding" style="background: white; margin-bottom: 10px;" *ngIf="tour.categoria === 'hoteles' && tour.habitaciones && tour.habitaciones.length > 0">
       <h3 style="font-weight: bold; margin-top: 0; font-size: 16px; color: #333;">Selecciona tu Habitación</h3>
-      <p style="color: gray; font-size: 13px; margin-top: 0; margin-bottom: 15px;">Elige la opción que mejor se adapte a tu viaje.</p>
-
       <div *ngFor="let hab of tour.habitaciones" 
            (click)="seleccionarHabitacion(hab)"
            [style.border]="habitacionSeleccionada === hab ? '2px solid #3880ff' : '1px solid #ddd'"
@@ -122,16 +112,12 @@
             <small style="color: gray; font-size: 11px;">por noche</small>
           </div>
         </div>
-        <p *ngIf="hab.descripcion" style="margin: 10px 0 0 35px; font-size: 13px; color: #666;">
-          {{ hab.descripcion }}
-        </p>
+        <p *ngIf="hab.descripcion" style="margin: 10px 0 0 35px; font-size: 13px; color: #666;">{{ hab.descripcion }}</p>
       </div>
     </div>
 
     <div class="ion-padding" style="background: white; margin-bottom: 10px;" *ngIf="tour.categoria !== 'hoteles' && tour.extras && tour.extras.length > 0">
       <h3 style="font-weight: bold; margin-top: 0; font-size: 16px; color: #333;">Mejora tu Experiencia</h3>
-      <p style="color: gray; font-size: 13px; margin-top: 0; margin-bottom: 15px;">Selecciona los complementos que deseas sumar a tu paquete base.</p>
-
       <div *ngFor="let extra of tour.extras" 
            (click)="toggleExtra(extra)"
            [style.border]="extra.seleccionado ? '2px solid #2dd36f' : '1px solid #ddd'"
@@ -150,12 +136,25 @@
 
     <div class="ion-padding" style="background: white; margin-bottom: 10px;" *ngIf="tour.incluye">
       <h3 style="font-weight: bold; margin-top: 0; margin-bottom: 10px; font-size: 16px; color: #333; display: flex; align-items: center; gap: 6px;">
-        <ion-icon name="checkmark-circle-outline" color="success" style="font-size: 22px;"></ion-icon>
-        Incluye de base:
+        <ion-icon name="checkmark-circle-outline" color="success" style="font-size: 22px;"></ion-icon> Lo que incluye
       </h3>
-      <p style="font-size: 15px; color: #4e4e4e; line-height: 1.5; white-space: pre-line; background: #fafff2; padding: 15px; border-radius: 10px; border: 1px solid #e1f5fe;">
-        {{ tour.incluye }}
+      <div style="font-size: 15px; color: #4e4e4e; line-height: 1.5; background: #fafff2; padding: 15px; border-radius: 10px; border: 1px solid #e1f5fe;">
+        <div *ngFor="let item of tour.incluye.split(',')" style="display: flex; align-items: center; gap: 8px; margin-bottom: 5px;">
+          <ion-icon name="checkmark-circle" color="success"></ion-icon>
+          <span>{{ item.trim() }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ion-padding" style="background: white; margin-bottom: 10px;">
+      <h3 style="font-weight: bold; margin-top: 0; font-size: 16px; color: #333; margin-bottom: 15px;">Ubicación</h3>
+      <div *ngIf="tour.latitud && tour.longitud" class="map-container" #mapContainer id="map" style="width: 100%; height: 200px; background: #e0e0e0; border-radius: 10px; margin-bottom: 10px;"></div>
+      <p style="color: gray; font-size: 14px; display: flex; align-items: center; gap: 5px; margin: 0;">
+        <ion-icon name="location" color="danger"></ion-icon> {{ tour.direccion }}
       </p>
+      <ion-button *ngIf="!tour.latitud || !tour.longitud" expand="block" fill="outline" color="danger" (click)="abrirMapas()" style="margin-top: 10px;">
+        <ion-icon slot="start" name="map-outline"></ion-icon> Abrir en Google Maps
+      </ion-button>
     </div>
     
     <div class="ion-padding" style="margin-bottom: 30px;">
@@ -163,16 +162,10 @@
 
       <div *ngIf="usuarioActual && puedeCalificar" style="background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px;">
         <h3 style="margin-top: 0; font-size: 15px; font-weight: bold;">Deja tu reseña:</h3>
-        
         <div style="font-size: 35px; color: #ffc409; margin-bottom: 15px; display: flex; gap: 5px;">
-          <ion-icon [name]="nuevaEstrellas >= 1 ? 'star' : 'star-outline'" (click)="setEstrellas(1)"></ion-icon>
-          <ion-icon [name]="nuevaEstrellas >= 2 ? 'star' : 'star-outline'" (click)="setEstrellas(2)"></ion-icon>
-          <ion-icon [name]="nuevaEstrellas >= 3 ? 'star' : 'star-outline'" (click)="setEstrellas(3)"></ion-icon>
-          <ion-icon [name]="nuevaEstrellas >= 4 ? 'star' : 'star-outline'" (click)="setEstrellas(4)"></ion-icon>
-          <ion-icon [name]="nuevaEstrellas >= 5 ? 'star' : 'star-outline'" (click)="setEstrellas(5)"></ion-icon>
+          <ion-icon *ngFor="let i of [1,2,3,4,5]" [name]="nuevaEstrellas >= i ? 'star' : 'star-outline'" (click)="setEstrellas(i)"></ion-icon>
         </div>
-
-        <ion-textarea [(ngModel)]="nuevoComentario" placeholder="Cuéntale a otros..." rows="3" style="background: #f4f5f8; border-radius: 10px; padding: 10px; margin-bottom: 15px; --padding-start: 10px;"></ion-textarea>
+        <ion-textarea [(ngModel)]="nuevoComentario" placeholder="Cuéntale a otros..." rows="3" style="background: #f4f5f8; border-radius: 10px; padding: 10px; margin-bottom: 15px;"></ion-textarea>
         <ion-button expand="block" shape="round" color="primary" (click)="enviarResena()" [disabled]="nuevaEstrellas === 0 || nuevoComentario.trim() === '' || enviandoResena">
           <ion-spinner *ngIf="enviandoResena" name="dots"></ion-spinner>
           <span *ngIf="!enviandoResena">Publicar reseña</span>
@@ -200,22 +193,24 @@
       </ion-list>
     </div>
 
+    <div style="height: 100px;"></div>
   </div>
 </ion-content>
 
-<ion-footer class="ion-no-border ion-padding-bottom" *ngIf="!cargando && tour">
+<ion-footer class="ion-no-border ion-padding-bottom" *ngIf="!cargando && tour" style="position: fixed; bottom: 0; width: 100%; background: white; box-shadow: 0 -2px 10px rgba(0,0,0,0.1);">
   <ion-toolbar color="light">
     <ion-row>
-      <ion-col size="5">
-        <ion-button expand="block" color="success" shape="round" (click)="abrirWhatsApp()">
+      <ion-col size="3">
+        <ion-button expand="block" color="success" fill="outline" shape="round" (click)="abrirWhatsApp()">
           <ion-icon slot="icon-only" name="logo-whatsapp"></ion-icon>
         </ion-button>
       </ion-col>
-      <ion-col size="7">
-        <ion-button expand="block" color="warning" shape="round" (click)="apartarCupo()" [disabled]="procesandoReserva || !puedeReservar()">
+      <ion-col size="9">
+        <ion-button expand="block" color="primary" shape="round" (click)="apartarCupo()" [disabled]="procesandoReserva || !puedeReservar()">
           <ion-spinner *ngIf="procesandoReserva" name="crescent"></ion-spinner>
-          <ion-icon *ngIf="!procesandoReserva" slot="start" name="card-outline"></ion-icon>
-          <span *ngIf="!procesandoReserva">{{ precioCalculado > 0 ? '$' + precioCalculado : 'Elige opción' }}</span>
+          <span *ngIf="!procesandoReserva" style="font-weight: bold;">
+            {{ precioCalculado > 0 ? 'Reservar • $' + precioCalculado : 'Elige una opción' }}
+          </span>
         </ion-button>
       </ion-col>
     </ion-row>

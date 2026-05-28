@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router'; 
@@ -14,10 +14,12 @@ import {
   star, starOutline, personCircleOutline, chatbubblesOutline, lockClosedOutline,
   pricetagOutline, timeOutline, checkmarkCircleOutline, imagesOutline,
   heart, heartOutline, location, informationCircleOutline,
-  radioButtonOn, radioButtonOff, checkboxOutline, squareOutline, bedOutline, peopleOutline, shareSocialOutline } from 'ionicons/icons';
+  radioButtonOn, radioButtonOff, checkboxOutline, squareOutline, bedOutline, peopleOutline, shareSocialOutline, checkmarkCircle
+} from 'ionicons/icons';
 
 import { DatabaseService } from '../../core/services/database'; 
-import { AuthService } from '../../core/services/auth'; 
+import { AuthService } from '../../core/services/auth';
+import { environment } from '../../../environments/environment'; 
 
 @Component({
   selector: 'app-detalle-tour',
@@ -31,7 +33,9 @@ import { AuthService } from '../../core/services/auth';
     CommonModule, FormsModule, RouterModule 
   ]
 })
-export class DetalleTourPage implements OnInit {
+export class DetalleTourPage implements OnInit, AfterViewInit {
+
+  @ViewChild('mapContainer') mapContainer!: ElementRef;
 
   private route = inject(ActivatedRoute);
   private router = inject(Router); 
@@ -47,17 +51,27 @@ export class DetalleTourPage implements OnInit {
   promedioEstrellas: number = 0;
   nuevaEstrellas: number = 0;
   nuevoComentario: string = '';
+  
+  // Google Maps
+  mapa: any = null;
+  googleMapLoaded: boolean = false;
   enviandoResena: boolean = false;
   puedeCalificar: boolean = false;
 
   fotoSeleccionada: string = '';
   esFavorito: boolean = false;
+  showStickyHeader = false;
 
   precioCalculado: number = 0;
   habitacionSeleccionada: any = null;
 
   constructor() { 
-    addIcons({shareSocialOutline,star,timeOutline,location,mapOutline,informationCircleOutline,peopleOutline,checkmarkCircleOutline,personCircleOutline,logoWhatsapp,cardOutline,cashOutline,starOutline,chatbubblesOutline,lockClosedOutline,pricetagOutline,imagesOutline,heart,heartOutline,radioButtonOn,radioButtonOff,checkboxOutline,squareOutline,bedOutline});
+    addIcons({
+      shareSocialOutline,star,timeOutline,location,mapOutline,informationCircleOutline,peopleOutline,
+      checkmarkCircleOutline,personCircleOutline,logoWhatsapp,cardOutline,cashOutline,starOutline,
+      chatbubblesOutline,lockClosedOutline,pricetagOutline,imagesOutline,heart,heartOutline,
+      radioButtonOn,radioButtonOff,checkboxOutline,squareOutline,bedOutline, checkmarkCircle
+    });
   }
 
   async ngOnInit() {
@@ -84,6 +98,10 @@ export class DetalleTourPage implements OnInit {
           this.verificarSiPuedeCalificar();
           this.verificarSiEsFavorito(); 
         }
+
+        setTimeout(() => {
+          this.initMap();
+        }, 500);
       }
     }
     this.cargando = false;
@@ -133,6 +151,80 @@ export class DetalleTourPage implements OnInit {
 
   cambiarFoto(url: string) { this.fotoSeleccionada = url; }
 
+  onScroll(event: any) {
+    const scrollTop = event.detail.scrollTop;
+    this.showStickyHeader = scrollTop > 300; 
+  }
+
+  ngAfterViewInit() {
+    if (this.tour?.latitud && this.tour?.longitud) {
+      this.initMap();
+    }
+  }
+
+  initMap() {
+    if (!this.tour?.latitud || !this.tour?.longitud) return;
+    if (!this.mapContainer) return;
+
+    if (!(window as any).google) {
+      this.loadGoogleMapsAPI();
+      return;
+    }
+
+    this.createMap();
+  }
+
+  private loadGoogleMapsAPI() {
+    const googleMapsApiKey = environment.googleMapsApiKey;
+    const scriptId = 'google-maps-script';
+    
+    if (document.getElementById(scriptId)) {
+      this.createMap();
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.id = scriptId;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}`;
+    script.onload = () => {
+      this.googleMapLoaded = true;
+      this.createMap();
+    };
+    document.head.appendChild(script);
+  }
+
+  private createMap() {
+    if (!this.tour?.latitud || !this.tour?.longitud) return;
+    if (!this.mapContainer) return;
+
+    const location = { lat: this.tour.latitud, lng: this.tour.longitud };
+
+    this.mapa = new (window as any).google.maps.Map(
+      this.mapContainer.nativeElement,
+      { zoom: 15, center: location, mapTypeControl: true, fullscreenControl: true }
+    );
+
+    const marker = new (window as any).google.maps.Marker({
+      position: location,
+      map: this.mapa,
+      title: this.tour.titulo,
+      icon: 'https://maps.google.com/mapfiles/ms/micons/red-dot.png'
+    });
+
+    const infoWindow = new (window as any).google.maps.InfoWindow({
+      content: `
+        <div style="padding: 10px; font-family: Arial;">
+          <h3 style="margin: 0 0 5px 0; font-size: 14px;">${this.tour.titulo}</h3>
+          <p style="margin: 0 0 5px 0; font-size: 12px;">${this.tour.direccion || 'Ubicación del tour'}</p>
+          <p style="margin: 0; font-size: 12px; color: #3880ff;"><strong>$${this.tour.precio} COP</strong></p>
+        </div>
+      `
+    });
+
+    marker.addListener('click', () => { infoWindow.open(this.mapa, marker); });
+    infoWindow.open(this.mapa, marker);
+  }
+
   verificarSiPuedeCalificar() {
     if (!this.usuarioActual || !this.tour) return;
     this.databaseService.obtenerReservasPorTurista(this.usuarioActual.uid).subscribe(reservas => {
@@ -164,7 +256,7 @@ export class DetalleTourPage implements OnInit {
     if (this.nuevaEstrellas === 0 || this.nuevoComentario.trim() === '' || !this.tour?.id) return;
     this.enviandoResena = true;
     try {
-      const nombreUser = this.usuarioActual.apodo || this.usuarioActual.nombre || 'Turista Explorador';
+      const nombreUser = this.usuarioActual.apodo || this.usuarioActual.nombre || 'Turista';
       await this.databaseService.agregarResena(this.tour.id, this.usuarioActual.uid, nombreUser, this.nuevaEstrellas, this.nuevoComentario);
       this.nuevaEstrellas = 0;
       this.nuevoComentario = '';
@@ -178,11 +270,9 @@ export class DetalleTourPage implements OnInit {
   abrirWhatsApp() {
     if (!this.tour) return;
     let numero = this.tour.telefonoContacto || this.tour.telefono || this.tour.celular;
-    if (!numero) {
-      numero = '573001234567'; 
-    }
+    if (!numero) numero = '573001234567'; 
     const numeroLimpio = numero.toString().replace(/\D/g, '');
-    const tituloDelTour = this.tour.titulo || 'este paquete turístico';
+    const tituloDelTour = this.tour.titulo || 'este paquete';
     const mensaje = `¡Hola! Vi tu "${tituloDelTour}" en la app Ocean 🌊 y me gustaría hacer una reserva.`;
     const url = `https://wa.me/${numeroLimpio}?text=${encodeURIComponent(mensaje)}`;
     window.open(url, '_blank');
@@ -193,6 +283,18 @@ export class DetalleTourPage implements OnInit {
     const busqueda = encodeURIComponent(`${this.tour.direccion}, Cartagena, Colombia`);
     const url = `http://maps.google.com/?q=${busqueda}`;
     window.open(url, '_blank');
+  }
+
+  async compartirTour() {
+    if (!this.tour) return;
+    try {
+      await Share.share({
+        title: this.tour.titulo,
+        text: `¡Mira esta increíble experiencia en Ocean! ${this.tour.titulo} por solo $${this.tour.precio} COP. ¿Vamos? 🏖️`,
+        url: 'https://ocean-app.com/',
+        dialogTitle: 'Compartir aventura con amigos',
+      });
+    } catch (error) {}
   }
 
   async apartarCupo() {
@@ -226,17 +328,5 @@ export class DetalleTourPage implements OnInit {
     } finally {
       this.procesandoReserva = false;
     }
-  }
-
-  async compartirTour() {
-    if (!this.tour) return;
-    try {
-      await Share.share({
-        title: this.tour.titulo,
-        text: `¡Mira esta increíble experiencia en Ocean! ${this.tour.titulo} por solo $${this.tour.precio} COP. ¿Vamos? 🏖️`,
-        url: 'https://ocean-app.com/',
-        dialogTitle: 'Compartir aventura con amigos',
-      });
-    } catch (error) {}
   }
 }
