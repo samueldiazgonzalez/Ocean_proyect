@@ -3,6 +3,7 @@ import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signO
 import { Firestore, doc, setDoc, getDoc } from '@angular/fire/firestore';
 import { Usuario } from '../models/usuario.model';
 import { firstValueFrom } from 'rxjs';
+import { Notification } from './notification';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,7 @@ import { firstValueFrom } from 'rxjs';
 export class AuthService {
   private auth: Auth = inject(Auth);
   private firestore: Firestore = inject(Firestore);
+  private notificationService: Notification = inject(Notification);
 
   public readonly authState$ = authState(this.auth);
 
@@ -21,7 +23,12 @@ export class AuthService {
   async login(email: string, contrasena: string) {
     try {
       const credencial = await signInWithEmailAndPassword(this.auth, email, contrasena);
-      return credencial.user;
+      const user = credencial.user;
+      
+      // Inicializar notificaciones push después del login exitoso
+      await this.notificationService.initPushNotifications(user.uid);
+      
+      return user;
     } catch (error) {
       console.error('Error en login:', error);
       throw error;
@@ -84,6 +91,9 @@ export class AuthService {
         await setDoc(docRef, nuevoUsuario);
       }
 
+      // Inicializar notificaciones push después del login exitoso
+      await this.notificationService.initPushNotifications(user.uid);
+
       return user;
     } catch (error) {
       console.error('Error con Google Auth:', error);
@@ -95,7 +105,19 @@ export class AuthService {
    * CERRAR SESIÓN
    */
   async logout() {
-    await signOut(this.auth);
+    try {
+      const usuarioAuth = await firstValueFrom(this.authState$);
+      
+      // Eliminar token de notificaciones del servidor antes de desconectar
+      if (usuarioAuth) {
+        await firstValueFrom(this.notificationService.removeToken(usuarioAuth.uid));
+      }
+      
+      await signOut(this.auth);
+    } catch (error) {
+      console.error('Error en logout:', error);
+      throw error;
+    }
   }
   /**
    * OBTENER DATOS DEL USUARIO ACTUAL DESDE FIRESTORE
