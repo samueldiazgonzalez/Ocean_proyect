@@ -1,43 +1,86 @@
 <ion-header class="ion-no-border">
-  <ion-toolbar color="primary">
-    <ion-title>Mis Favoritos ❤️</ion-title>
+  <ion-toolbar class="toolbar-favoritos">
+    <ion-title class="toolbar-titulo">
+      <ion-icon name="heart" class="titulo-icon"></ion-icon>
+      Mis Favoritos
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content color="light" class="ion-padding">
-  <div class="ion-text-center ion-margin-bottom" *ngIf="!cargando && toursFavoritos.length > 0">
-    <h2>Tu lista de deseos</h2>
-    <p>Experiencias que te encantaron</p>
-  </div>
+<ion-content class="favoritos-content">
 
-  <div class="ion-text-center ion-padding" *ngIf="cargando">
-    <ion-spinner name="crescent"></ion-spinner>
+  <!-- ── CARGANDO ────────────────────────────── -->
+  <div class="estado-cargando" *ngIf="cargando">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
     <p>Cargando tus favoritos...</p>
   </div>
 
-  <div class="ion-text-center ion-padding" *ngIf="!cargando && toursFavoritos.length === 0">
-    <ion-icon name="heart-outline" style="font-size: 80px; color: #ccc;"></ion-icon>
-    <h2>Aún no tienes favoritos</h2>
+  <!-- ── VACÍO ───────────────────────────────── -->
+  <div class="estado-vacio" *ngIf="!cargando && toursFavoritos.length === 0">
+    <div class="vacio-icono">
+      <ion-icon name="heart-outline"></ion-icon>
+    </div>
+    <h3>Sin favoritos aún</h3>
     <p>Explora el catálogo y toca el corazón para guardar los tours que más te gusten.</p>
-    <ion-button routerLink="/tabs/catalogo" fill="clear">Ir al catálogo</ion-button>
+    <button class="btn-catalogo" routerLink="/tabs/catalogo">
+      <ion-icon name="compass-outline"></ion-icon>
+      Ir al catálogo
+    </button>
   </div>
 
-  <ion-list lines="none" style="background: transparent;">
-    <ion-card *ngFor="let tour of toursFavoritos" class="ion-margin-bottom" style="border-radius: 15px;">
-      <img [src]="tour.imagenUrl" style="height: 150px; width: 100%; object-fit: cover;" />
-      <ion-card-header>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <ion-card-title style="font-size: 1.1rem; font-weight: bold;">{{ tour.titulo }}</ion-card-title>
-          <ion-badge color="secondary">{{ tour.categoria }}</ion-badge>
+  <!-- ── LISTA ───────────────────────────────── -->
+  <div class="favoritos-container" *ngIf="!cargando && toursFavoritos.length > 0">
+
+    <!-- Hero -->
+    <div class="favoritos-hero">
+      <div class="hero-badge">
+        <ion-icon name="heart"></ion-icon>
+        <span>Tu lista de deseos</span>
+      </div>
+      <h2 class="hero-titulo">Experiencias que <span class="titulo-highlight">amaste</span></h2>
+      <p class="hero-subtitulo">Guarda tours y vuelve cuando quieras</p>
+    </div>
+
+    <!-- Cards -->
+    <div class="fav-card" *ngFor="let tour of toursFavoritos">
+
+      <div class="card-img-wrapper">
+        <img [src]="tour.imagenUrl || 'https://via.placeholder.com/400x200?text=Ocean'"
+             alt="{{ tour.titulo }}" class="card-imagen"/>
+        <div class="img-overlay"></div>
+
+        <div class="badge-rating" *ngIf="tour.promedioEstrellas > 0">
+          <ion-icon name="star"></ion-icon>
+          <span>{{ tour.promedioEstrellas }}</span>
         </div>
-        <ion-card-subtitle color="success">${{ tour.precio }} COP</ion-card-subtitle>
-      </ion-card-header>
-      <ion-card-content>
-        <ion-button expand="block" shape="round" [routerLink]="['/detalle-tour', tour.id]">
+        <div class="badge-rating" *ngIf="!tour.promedioEstrellas || tour.promedioEstrellas == 0">
+          <span class="nuevo-txt">Nuevo</span>
+        </div>
+
+        <div class="badge-categoria" *ngIf="tour.categoria">{{ tour.categoria }}</div>
+      </div>
+
+      <div class="card-body">
+        <div class="card-title-row">
+          <h3 class="card-titulo">{{ tour.titulo }}</h3>
+          <div class="heart-btn">
+            <ion-icon name="heart" color="danger"></ion-icon>
+          </div>
+        </div>
+
+        <div class="precio-row">
+          <ion-icon name="cash-outline"></ion-icon>
+          <span>${{ tour.precio }} COP</span>
+        </div>
+
+        <button class="btn-detalle" [routerLink]="['/detalle-tour', tour.id]">
           Ver Detalles
-          <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
-        </ion-button>
-      </ion-card-content>
-    </ion-card>
-  </ion-list>
+          <ion-icon name="arrow-forward-outline"></ion-icon>
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
 </ion-content>

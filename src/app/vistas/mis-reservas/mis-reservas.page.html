@@ -1,59 +1,107 @@
-  <ion-header class="ion-no-border">
-    <ion-toolbar color="primary">
-      <ion-title>Mis Reservas 🎟️</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-header class="ion-no-border">
+  <ion-toolbar class="toolbar-reservas">
+    <ion-title class="toolbar-titulo">
+      <ion-icon name="ticket-outline" class="titulo-icon"></ion-icon>
+      Mis Reservas
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
 
-  <ion-content color="light" class="ion-padding">
+<ion-content class="reservas-content">
 
-    <div class="ion-text-center ion-margin-bottom">
-      <h2>Tu Historial de Viajes</h2>
-      <p>Trazabilidad de tus pagos seguros</p>
+  <!-- ── CARGANDO ────────────────────────────── -->
+  <div class="estado-cargando" *ngIf="cargando">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Consultando transacciones...</p>
+  </div>
+
+  <!-- ── VACÍO ───────────────────────────────── -->
+  <div class="estado-vacio" *ngIf="!cargando && reservasCompletas.length === 0">
+    <div class="vacio-icono">
+      <ion-icon name="ticket-outline"></ion-icon>
+    </div>
+    <h3>Sin reservas aún</h3>
+    <p>Explora nuestro catálogo y agenda tu próxima experiencia.</p>
+    <button class="btn-catalogo" routerLink="/tabs/catalogo">
+      <ion-icon name="compass-outline"></ion-icon>
+      Ir al catálogo
+    </button>
+  </div>
+
+  <!-- ── LISTA ───────────────────────────────── -->
+  <div class="reservas-container" *ngIf="!cargando && reservasCompletas.length > 0">
+
+    <!-- Hero -->
+    <div class="reservas-hero">
+      <div class="hero-badge">
+        <ion-icon name="ticket-outline"></ion-icon>
+        <span>Historial de viajes</span>
+      </div>
+      <h2 class="hero-titulo">Tus <span class="titulo-highlight">experiencias</span> reservadas</h2>
+      <p class="hero-subtitulo">Trazabilidad de tus pagos seguros</p>
     </div>
 
-    <div class="ion-text-center ion-padding" *ngIf="cargando">
-      <ion-spinner name="crescent"></ion-spinner>
-      <p>Consultando transacciones...</p>
-    </div>
+    <!-- Cards -->
+    <div class="reserva-card" *ngFor="let reserva of reservasCompletas">
 
-    <div class="ion-text-center ion-padding" *ngIf="!cargando && reservasCompletas.length === 0">
-      <h2>Aún no tienes reservas</h2>
-      <p color="medium">Explora nuestro catálogo y agenda tu próxima experiencia.</p>
-    </div>
+      <div class="card-top">
 
-    <ion-list inset="true" lines="full" *ngIf="!cargando && reservasCompletas.length > 0">
-      <ion-item *ngFor="let reserva of reservasCompletas">
-        <ion-label>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-            <h2 style="font-weight: bold; font-size: 1.1rem; color: var(--ion-color-dark);">
-              {{ reserva.tituloTour }}
-            </h2>
-            <ion-badge [color]="reserva.estado === 'PENDIENTE' ? 'warning' : 'success'">
-              {{ reserva.estado }}
-            </ion-badge>
+        <!-- Título + estado -->
+        <div class="top-row">
+          <h3 class="tour-nombre">{{ reserva.tituloTour }}</h3>
+          <div class="estado-pill"
+            [class.pendiente]="reserva.estado === 'PENDIENTE'"
+            [class.confirmada]="reserva.estado === 'CONFIRMADA'">
+            {{ reserva.estado }}
           </div>
+        </div>
 
-          <p style="margin: 4px 0; display: flex; align-items: center; gap: 5px;">
-            <ion-icon name="calendar-outline"></ion-icon>
-            {{ reserva.fechaReserva | date:'dd/MM/yyyy - hh:mm a' }}
-          </p>
+        <!-- Fecha -->
+        <div class="info-row">
+          <ion-icon name="calendar-outline"></ion-icon>
+          <span>{{ reserva.fechaReserva | date:'dd/MM/yyyy - hh:mm a' }}</span>
+        </div>
 
-          <p style="margin: 4px 0; display: flex; align-items: center; gap: 5px;" *ngIf="reserva.estado === 'CONFIRMADA'">
-            <ion-icon name="wallet-outline"></ion-icon>
-            Pago: {{ reserva.franquiciaTarjeta | uppercase }} (**** {{ reserva.ultimosDigitos }})
-          </p>
+        <!-- Pago (solo confirmadas) -->
+        <div class="info-row" *ngIf="reserva.estado === 'CONFIRMADA'">
+          <ion-icon name="wallet-outline"></ion-icon>
+          <span>{{ reserva.franquiciaTarjeta | uppercase }} (**** {{ reserva.ultimosDigitos }})</span>
+        </div>
 
-          <h3 style="color: var(--ion-color-success); font-weight: bold; margin-top: 6px; font-size: 1rem;">
-            ${{ reserva.precioTour }} COP
-          </h3>
+        <!-- ID reserva — corregido -->
+        <div class="info-row">
+          <ion-icon name="document-text-outline"></ion-icon>
+          <span>ID: #{{ formatearId(reserva.id) }}</span>
+        </div>
 
-          <ion-button *ngIf="reserva.estado === 'PENDIENTE'" expand="block" color="primary" fill="outline" shape="round" class="ion-margin-top" [routerLink]="['/checkout', reserva.id]">
-            <ion-icon slot="start" name="card-outline"></ion-icon>
-            Pagar para Confirmar
-          </ion-button>
+      </div>
 
-        </ion-label>
-      </ion-item>
-    </ion-list>
+      <div class="card-divider"></div>
 
-  </ion-content>
+      <!-- Footer precio + acción -->
+      <div class="card-footer">
+        <div class="precio-wrap">
+          <span class="precio-label">
+            {{ reserva.estado === 'CONFIRMADA' ? 'Total pagado' : 'Total a pagar' }}
+          </span>
+          <span class="precio-valor">${{ reserva.precioTour }} COP</span>
+        </div>
+
+        <button class="btn-pagar"
+          *ngIf="reserva.estado === 'PENDIENTE'"
+          [routerLink]="['/checkout', reserva.id]">
+          <ion-icon name="card-outline"></ion-icon>
+          Pagar ahora
+        </button>
+
+        <div class="confirmada-badge" *ngIf="reserva.estado === 'CONFIRMADA'">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <span>Pagado</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</ion-content>
