@@ -13,8 +13,8 @@ import {
   logoWhatsapp, cashOutline, mapOutline, cardOutline, 
   star, starOutline, personCircleOutline, chatbubblesOutline, lockClosedOutline,
   pricetagOutline, timeOutline, checkmarkCircleOutline, imagesOutline,
-  heart, heartOutline // 👈 Importamos los corazones
-} from 'ionicons/icons';
+  heart, heartOutline, location, informationCircleOutline,
+  radioButtonOn, radioButtonOff, checkboxOutline, squareOutline, bedOutline, peopleOutline, shareSocialOutline } from 'ionicons/icons';
 
 import { DatabaseService } from '../../core/services/database'; 
 import { AuthService } from '../../core/services/auth'; 
@@ -51,17 +51,13 @@ export class DetalleTourPage implements OnInit {
   puedeCalificar: boolean = false;
 
   fotoSeleccionada: string = '';
-  
-  // 👇 Nueva variable para saber si el tour le gusta al usuario
   esFavorito: boolean = false;
 
+  precioCalculado: number = 0;
+  habitacionSeleccionada: any = null;
+
   constructor() { 
-    addIcons({
-      logoWhatsapp, cardOutline, cashOutline, mapOutline, 
-      star, starOutline, personCircleOutline, chatbubblesOutline, lockClosedOutline,
-      pricetagOutline, timeOutline, checkmarkCircleOutline, imagesOutline,
-      heart, heartOutline
-    });
+    addIcons({shareSocialOutline,star,timeOutline,location,mapOutline,informationCircleOutline,peopleOutline,checkmarkCircleOutline,personCircleOutline,logoWhatsapp,cardOutline,cashOutline,starOutline,chatbubblesOutline,lockClosedOutline,pricetagOutline,imagesOutline,heart,heartOutline,radioButtonOn,radioButtonOff,checkboxOutline,squareOutline,bedOutline});
   }
 
   async ngOnInit() {
@@ -75,53 +71,71 @@ export class DetalleTourPage implements OnInit {
         this.fotoSeleccionada = this.tour.imagenUrl;
         this.cargarResenas(tourId);
         
+        if (this.tour.categoria !== 'hoteles') {
+          this.precioCalculado = this.tour.precio;
+          if (this.tour.extras) {
+            this.tour.extras.forEach((e: any) => e.seleccionado = false);
+          }
+        } else {
+          this.precioCalculado = 0; 
+        }
+
         if (this.usuarioActual) {
           this.verificarSiPuedeCalificar();
-          this.verificarSiEsFavorito(); // 👈 Verificamos si ya le había dado like
+          this.verificarSiEsFavorito(); 
         }
       }
     }
     this.cargando = false;
   }
 
-  // 👇 LÓGICA DE FAVORITOS 👇
+  seleccionarHabitacion(hab: any) {
+    this.habitacionSeleccionada = hab;
+    this.precioCalculado = hab.precio;
+  }
+
+  toggleExtra(extra: any) {
+    extra.seleccionado = !extra.seleccionado;
+    let base = this.tour.precio || 0;
+    let costoExtras = 0;
+    this.tour.extras.forEach((e: any) => {
+      if (e.seleccionado) costoExtras += e.precio;
+    });
+    this.precioCalculado = base + costoExtras;
+  }
+
+  puedeReservar(): boolean {
+    if (this.tour?.categoria === 'hoteles' && !this.habitacionSeleccionada) {
+      return false;
+    }
+    return true;
+  }
+
   verificarSiEsFavorito() {
     if (!this.usuarioActual || !this.tour) return;
-    
     this.databaseService.obtenerFavoritosPorTurista(this.usuarioActual.uid).subscribe(favoritos => {
-      // Si el ID de este tour está en su lista de favoritos, prendemos el corazón
       this.esFavorito = favoritos.some(fav => fav.tourId === this.tour.id);
     });
   }
 
   async toggleFavorito() {
     if (!this.usuarioActual) {
-      // Si es invitado, lo mandamos a loguearse
       this.router.navigate(['/vistas/login']);
       return;
     }
-
     try {
-      // Cambiamos visualmente rápido para que no se sienta lag
       this.esFavorito = !this.esFavorito;
       await this.databaseService.alternarFavorito(this.usuarioActual.uid, this.tour.id, !this.esFavorito);
     } catch (error) {
-      console.error('Error al guardar favorito', error);
-      // Revertimos si falla
       this.esFavorito = !this.esFavorito;
     }
   }
-  // 👆 FIN LÓGICA FAVORITOS 👆
 
-  cambiarFoto(url: string) {
-    this.fotoSeleccionada = url;
-  }
+  cambiarFoto(url: string) { this.fotoSeleccionada = url; }
 
   verificarSiPuedeCalificar() {
     if (!this.usuarioActual || !this.tour) return;
-
     this.databaseService.obtenerReservasPorTurista(this.usuarioActual.uid).subscribe(reservas => {
-      // Cambiamos a 'CONFIRMADA' para que coincida con el checkout biométrico
       const reservaValida = reservas.find(r => r.tourId === this.tour!.id && r.estado === 'CONFIRMADA');
       this.puedeCalificar = !!reservaValida; 
     });
@@ -143,26 +157,15 @@ export class DetalleTourPage implements OnInit {
     this.promedioEstrellas = parseFloat((suma / this.resenas.length).toFixed(1));
   }
 
-  setEstrellas(cantidad: number) {
-    this.nuevaEstrellas = cantidad;
-  }
+  setEstrellas(cantidad: number) { this.nuevaEstrellas = cantidad; }
 
   async enviarResena() {
     if (!this.usuarioActual || !this.puedeCalificar) return;
     if (this.nuevaEstrellas === 0 || this.nuevoComentario.trim() === '' || !this.tour?.id) return;
-
     this.enviandoResena = true;
     try {
       const nombreUser = this.usuarioActual.apodo || this.usuarioActual.nombre || 'Turista Explorador';
-      
-      await this.databaseService.agregarResena(
-        this.tour.id, 
-        this.usuarioActual.uid, 
-        nombreUser, 
-        this.nuevaEstrellas, 
-        this.nuevoComentario
-      );
-
+      await this.databaseService.agregarResena(this.tour.id, this.usuarioActual.uid, nombreUser, this.nuevaEstrellas, this.nuevoComentario);
       this.nuevaEstrellas = 0;
       this.nuevoComentario = '';
     } catch (error) {
@@ -172,16 +175,28 @@ export class DetalleTourPage implements OnInit {
     }
   }
 
- abrirWhatsApp() {
-    const telefonoAgencia = this.tour?.telefono || this.tour?.telefonoContacto || '573000000000'; 
-    const tituloDelTour = this.tour ? this.tour.titulo : 'este paquete turístico';
+  abrirWhatsApp() {
+    if (!this.tour) return;
+    let numero = this.tour.telefonoContacto || this.tour.telefono || this.tour.celular;
+    if (!numero) {
+      numero = '573001234567'; 
+    }
+    const numeroLimpio = numero.toString().replace(/\D/g, '');
+    const tituloDelTour = this.tour.titulo || 'este paquete turístico';
     const mensaje = `¡Hola! Vi tu "${tituloDelTour}" en la app Ocean 🌊 y me gustaría hacer una reserva.`;
-    const url = `https://wa.me/${telefonoAgencia}?text=${encodeURIComponent(mensaje)}`;
+    const url = `https://wa.me/${numeroLimpio}?text=${encodeURIComponent(mensaje)}`;
+    window.open(url, '_blank');
+  }
+
+  abrirMapas() {
+    if (!this.tour || !this.tour.direccion) return;
+    const busqueda = encodeURIComponent(`${this.tour.direccion}, Cartagena, Colombia`);
+    const url = `http://maps.google.com/?q=${busqueda}`;
     window.open(url, '_blank');
   }
 
   async apartarCupo() {
-    if (!this.tour) return;
+    if (!this.tour || !this.puedeReservar()) return;
     this.procesandoReserva = true;
 
     try {
@@ -190,16 +205,21 @@ export class DetalleTourPage implements OnInit {
         return;
       }
 
+      const opcionesEscogidas = this.tour.extras ? this.tour.extras.filter((e:any) => e.seleccionado).map((e:any) => e.nombre) : [];
+
       const nuevaReserva = {
         tourId: this.tour.id,
         turistaId: this.usuarioActual.uid,
         fechaReserva: new Date().toISOString(),
         estado: 'PENDIENTE', 
-        metodoPago: 'POR DEFINIR'
+        metodoPago: 'POR DEFINIR',
+        precioTotal: this.precioCalculado,
+        habitacion: this.habitacionSeleccionada ? this.habitacionSeleccionada.nombre : null,
+        extrasSeleccionados: opcionesEscogidas
       };
 
       await this.databaseService.crearReserva(nuevaReserva);
-      this.router.navigate(['/mis-reservas']);
+      this.router.navigate(['/tabs/mis-reservas']);
 
     } catch (error) {
       console.error('Error al apartar cupo:', error);
@@ -210,16 +230,13 @@ export class DetalleTourPage implements OnInit {
 
   async compartirTour() {
     if (!this.tour) return;
-    
     try {
       await Share.share({
         title: this.tour.titulo,
         text: `¡Mira esta increíble experiencia en Ocean! ${this.tour.titulo} por solo $${this.tour.precio} COP. ¿Vamos? 🏖️`,
-        url: 'https://ocean-app.com/', // Una URL simulada de tu proyecto
+        url: 'https://ocean-app.com/',
         dialogTitle: 'Compartir aventura con amigos',
       });
-    } catch (error) {
-      console.error('Error al abrir el menú de compartir', error);
-    }
+    } catch (error) {}
   }
 }

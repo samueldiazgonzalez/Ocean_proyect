@@ -10,4 +10,9 @@ export interface Tour {
   categoria?: string;     // <--- Para el número de WhatsApp que agregamos hace un rato
   direccion?: string;            // <--- NUEVO
   opcionesAdicionales?: string;
-}
+  nombreExtra?: string; // Ej: "Habitación VIP con vista al mar" o "Paquete Todo Incluido"
+  precioExtra?: number; // Ej: 50000 (el valor adicional)
+extras?: { nombre: string, precio: number }[]; 
+  
+  habitaciones?: { nombre: string, precio: number, capacidad: number, descripcion: string }[];}  
+  

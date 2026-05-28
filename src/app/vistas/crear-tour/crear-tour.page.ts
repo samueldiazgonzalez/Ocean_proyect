@@ -5,13 +5,15 @@ import { Router } from '@angular/router';
 import { 
   IonContent, IonHeader, IonTitle, IonToolbar,
   IonList, IonItem, IonInput, IonTextarea, IonButton, IonIcon, 
-  IonSpinner, IonSelect, IonSelectOption, IonListHeader, IonLabel
+  IonSpinner, IonSelect, IonSelectOption, IonListHeader, IonLabel, 
 } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
 import { 
   textOutline, cashOutline, imageOutline, documentTextOutline, 
-  pricetagOutline, timeOutline, checkmarkCircleOutline, trashOutline, addCircleOutline, callOutline, locationOutline } from 'ionicons/icons';
+  pricetagOutline, timeOutline, checkmarkCircleOutline, trashOutline, 
+  addCircleOutline, callOutline, locationOutline, star, ribbonOutline, bedOutline, peopleOutline, informationCircleOutline,    
+    moonOutline, mapOutline, alertCircleOutline} from 'ionicons/icons';
 
 import { DatabaseService } from '../../core/services/database';
 import { AuthService } from '../../core/services/auth';
@@ -45,23 +47,36 @@ export class CrearTourPage {
   opcionesAdicionales: string = '';
   
   galeria: { url: string }[] = [{ url: '' }];
+  extras: { nombre: string, precio: number }[] = []; 
+  habitaciones: { nombre: string, precio: number, capacidad: number, descripcion: string }[] = []; // <--- NUEVO
   
   cargando: boolean = false;
 
   constructor() {
-    addIcons({pricetagOutline,textOutline,cashOutline,timeOutline,callOutline,locationOutline,addCircleOutline,documentTextOutline,checkmarkCircleOutline,imageOutline,trashOutline});
+    addIcons({
+      pricetagOutline,textOutline,cashOutline,timeOutline,callOutline,
+      locationOutline,addCircleOutline,star,ribbonOutline,documentTextOutline,
+      checkmarkCircleOutline,imageOutline,trashOutline,bedOutline,peopleOutline,
+      informationCircleOutline, moonOutline, mapOutline, alertCircleOutline 
+    });
   }
 
-  agregarImagen() {
-    this.galeria.push({ url: '' });
-  }
+  agregarImagen() { this.galeria.push({ url: '' }); }
+  eliminarImagen(index: number) { this.galeria.splice(index, 1); }
 
-  eliminarImagen(index: number) {
-    this.galeria.splice(index, 1);
+  agregarExtra() { this.extras.push({ nombre: '', precio: null as any }); }
+  eliminarExtra(index: number) { this.extras.splice(index, 1); }
+
+  // 👇 LÓGICA DE HOTELES 👇
+  agregarHabitacion() { 
+    this.habitaciones.push({ nombre: '', precio: null as any, capacidad: null as any, descripcion: '' }); 
   }
+  eliminarHabitacion(index: number) { this.habitaciones.splice(index, 1); }
 
   async guardarTour() {
     const imagenesLimpias = this.galeria.map(img => img.url).filter(url => url.trim() !== '');
+    const extrasLimpios = this.extras.filter(extra => extra.nombre.trim() !== '' && extra.precio > 0);
+    const habitacionesLimpias = this.habitaciones.filter(hab => hab.nombre.trim() !== '' && hab.precio > 0);
 
     if (!this.titulo || !this.descripcion || !this.precio || !this.categoria || imagenesLimpias.length === 0) {
       alert('Por favor, completa los campos obligatorios y añade al menos una foto.');
@@ -72,40 +87,27 @@ export class CrearTourPage {
 
     try {
       const usuarioActual = await this.authService.obtenerDatosUsuarioActual();
-      
-      if (!usuarioActual || !usuarioActual.uid) {
-        alert('Error: No se pudo identificar tu cuenta.');
-        this.cargando = false;
-        return;
-      }
+      if (!usuarioActual || !usuarioActual.uid) return;
 
-      // El objeto que viaja a Firebase es el mismo, manteniendo tus diagramas intactos.
       const nuevoTour = {
         titulo: this.titulo,
         descripcion: this.descripcion,
-        precio: this.precio,
-        categoria: this.categoria, // Si seleccionaron "hoteles", aquí viaja la palabra exacta que tu filtro del catálogo ya reconoce.
+        precio: this.precio, // Si es hotel, este es el precio "Desde..."
+        categoria: this.categoria, 
         duracion: this.duracion,
         incluye: this.incluye,
+        telefonoContacto: this.telefono, 
         imagenUrl: imagenesLimpias[0], 
         galeria: imagenesLimpias,
         proveedorId: usuarioActual.uid, 
         direccion: this.direccion,                     
         opcionesAdicionales: this.opcionesAdicionales,
+        extras: this.categoria === 'hoteles' ? [] : extrasLimpios, // Si es hotel, no guarda extras
+        habitaciones: this.categoria === 'hoteles' ? habitacionesLimpias : [], // Si es tour, no guarda habitaciones
         estado: 'pendiente' 
       };
 
       await this.databaseService.agregarTour(nuevoTour as any);      
-      
-      // Limpiamos
-      this.titulo = '';
-      this.descripcion = '';
-      this.precio = null;
-      this.categoria = '';
-      this.duracion = '';
-      this.incluye = '';
-      this.galeria = [{ url: '' }];
-      
       this.router.navigate(['/tabs/mis-tours']);
       
     } catch (error) {

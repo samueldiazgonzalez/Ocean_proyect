@@ -3,13 +3,12 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/tabs/catalogo"></ion-back-button>
     </ion-buttons>
-    <ion-title>Detalles del Tour</ion-title>
+    <ion-title>Detalles</ion-title>
     
     <ion-buttons slot="end">
       <ion-button (click)="compartirTour()">
         <ion-icon slot="icon-only" name="share-social-outline" color="light"></ion-icon>
       </ion-button>
-      
       <ion-button (click)="toggleFavorito()">
         <ion-icon slot="icon-only" [name]="esFavorito ? 'heart' : 'heart-outline'" [color]="esFavorito ? 'danger' : 'light'"></ion-icon>
       </ion-button>
@@ -27,17 +26,17 @@
 
   <div class="ion-text-center ion-padding" *ngIf="!cargando && !tour">
     <h2>Ups... 😕</h2>
-    <p>No pudimos encontrar este tour. Es posible que haya sido eliminado.</p>
+    <p>No pudimos encontrar este servicio.</p>
     <ion-button routerLink="/tabs/catalogo" fill="clear">Volver al catálogo</ion-button>
   </div>
 
   <div *ngIf="!cargando && tour">
     
     <div style="position: relative; background: #000;">
-      <img [src]="fotoSeleccionada" alt="Tour" style="width: 100%; height: 320px; object-fit: cover; display: block;" />
+      <img [src]="fotoSeleccionada" style="width: 100%; height: 320px; object-fit: cover; display: block;" />
       
       <ion-badge color="success" style="position: absolute; bottom: 15px; right: 15px; font-size: 16px; padding: 8px 12px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
-        ${{ tour.precio }} COP
+        {{ precioCalculado > 0 ? '$' + precioCalculado + ' COP' : 'Elige una opción' }}
       </ion-badge>
 
       <ion-badge *ngIf="tour.categoria" color="secondary" style="position: absolute; bottom: 15px; left: 15px; font-size: 14px; padding: 6px 12px; border-radius: 10px; text-transform: uppercase; font-weight: bold;">
@@ -68,31 +67,91 @@
         <span>Duración: <strong>{{ tour.duracion }}</strong></span>
       </div>
 
-      <div *ngIf="tour.direccion" style="display: flex; align-items: center; gap: 6px; color: #666; font-size: 14px; margin-top: 10px; background: #f4f5f8; padding: 8px 12px; border-radius: 8px; width: fit-content;">
-        <ion-icon name="location-outline" style="font-size: 18px; color: #eb445a;"></ion-icon>
-        <span>Ubicación: <strong>{{ tour.direccion }}</strong></span>
+      <div *ngIf="tour.direccion" style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; background: #f4f5f8; padding: 10px 15px; border-radius: 10px;">
+        <div style="display: flex; align-items: center; gap: 8px; color: #444; font-size: 14px; max-width: 65%;">
+          <ion-icon name="location" style="font-size: 22px; color: #eb445a;"></ion-icon>
+          <span style="line-height: 1.2;">
+            <small style="color: gray; display: block; font-size: 11px; text-transform: uppercase;">Ubicación</small>
+            <strong>{{ tour.direccion }}</strong>
+          </span>
+        </div>
+        <ion-button size="small" shape="round" color="danger" (click)="abrirMapas()">
+          <ion-icon slot="start" name="map-outline"></ion-icon>
+          Mapa
+        </ion-button>
       </div>
 
       <div *ngIf="tour.opcionesAdicionales" style="margin-top: 15px; padding: 12px; border-left: 4px solid #ffc409; background: #fffdf5; border-radius: 4px;">
         <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 5px; color: #b8860b; font-weight: bold; font-size: 14px;">
           <ion-icon name="information-circle-outline" style="font-size: 18px;"></ion-icon>
-          <span>Información Adicional</span>
+          <span>A tener en cuenta</span>
         </div>
         <p style="margin: 0; font-size: 14px; color: #555; line-height: 1.5; white-space: pre-line;">
           {{ tour.opcionesAdicionales }}
         </p>
       </div>
 
-      <h3 style="font-weight: bold; margin-top: 20px; margin-bottom: 8px; font-size: 16px; color: #333;">Descripción del Plan</h3>
+      <h3 style="font-weight: bold; margin-top: 20px; margin-bottom: 8px; font-size: 16px; color: #333;">Descripción</h3>
       <ion-text color="medium">
         <p style="font-size: 15px; line-height: 1.6; margin-top: 0;">{{ tour.descripcion }}</p>
       </ion-text>
     </div>
 
+    <div class="ion-padding" style="background: white; margin-bottom: 10px;" *ngIf="tour.categoria === 'hoteles' && tour.habitaciones && tour.habitaciones.length > 0">
+      <h3 style="font-weight: bold; margin-top: 0; font-size: 16px; color: #333;">Selecciona tu Habitación</h3>
+      <p style="color: gray; font-size: 13px; margin-top: 0; margin-bottom: 15px;">Elige la opción que mejor se adapte a tu viaje.</p>
+
+      <div *ngFor="let hab of tour.habitaciones" 
+           (click)="seleccionarHabitacion(hab)"
+           [style.border]="habitacionSeleccionada === hab ? '2px solid #3880ff' : '1px solid #ddd'"
+           [style.backgroundColor]="habitacionSeleccionada === hab ? '#f0f5ff' : '#fff'"
+           style="border-radius: 12px; padding: 15px; margin-bottom: 10px; transition: 0.2s; cursor: pointer;">
+        
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+          <div style="display: flex; align-items: flex-start; gap: 10px;">
+            <ion-icon [name]="habitacionSeleccionada === hab ? 'radio-button-on' : 'radio-button-off'" [color]="habitacionSeleccionada === hab ? 'primary' : 'medium'" style="font-size: 24px; margin-top: 2px;"></ion-icon>
+            <div>
+              <h4 style="margin: 0; font-weight: bold; font-size: 15px; color: #222;">{{ hab.nombre }}</h4>
+              <div style="display: flex; align-items: center; gap: 4px; color: #666; font-size: 13px; margin-top: 5px;">
+                <ion-icon name="people-outline"></ion-icon> Hasta {{ hab.capacidad }} personas
+              </div>
+            </div>
+          </div>
+          <div style="text-align: right;">
+            <h4 style="margin: 0; font-weight: bold; color: #2dd36f; font-size: 15px;">${{ hab.precio }}</h4>
+            <small style="color: gray; font-size: 11px;">por noche</small>
+          </div>
+        </div>
+        <p *ngIf="hab.descripcion" style="margin: 10px 0 0 35px; font-size: 13px; color: #666;">
+          {{ hab.descripcion }}
+        </p>
+      </div>
+    </div>
+
+    <div class="ion-padding" style="background: white; margin-bottom: 10px;" *ngIf="tour.categoria !== 'hoteles' && tour.extras && tour.extras.length > 0">
+      <h3 style="font-weight: bold; margin-top: 0; font-size: 16px; color: #333;">Mejora tu Experiencia</h3>
+      <p style="color: gray; font-size: 13px; margin-top: 0; margin-bottom: 15px;">Selecciona los complementos que deseas sumar a tu paquete base.</p>
+
+      <div *ngFor="let extra of tour.extras" 
+           (click)="toggleExtra(extra)"
+           [style.border]="extra.seleccionado ? '2px solid #2dd36f' : '1px solid #ddd'"
+           [style.backgroundColor]="extra.seleccionado ? '#f0fff5' : '#fff'"
+           style="border-radius: 12px; padding: 15px; margin-bottom: 10px; transition: 0.2s; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+        
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <ion-icon [name]="extra.seleccionado ? 'checkbox-outline' : 'square-outline'" [color]="extra.seleccionado ? 'success' : 'medium'" style="font-size: 24px;"></ion-icon>
+          <h4 style="margin: 0; font-weight: bold; font-size: 14px; color: #222;">{{ extra.nombre }}</h4>
+        </div>
+        <div style="text-align: right;">
+          <h4 style="margin: 0; font-weight: bold; color: #2dd36f; font-size: 14px;">+ ${{ extra.precio }}</h4>
+        </div>
+      </div>
+    </div>
+
     <div class="ion-padding" style="background: white; margin-bottom: 10px;" *ngIf="tour.incluye">
       <h3 style="font-weight: bold; margin-top: 0; margin-bottom: 10px; font-size: 16px; color: #333; display: flex; align-items: center; gap: 6px;">
         <ion-icon name="checkmark-circle-outline" color="success" style="font-size: 22px;"></ion-icon>
-        Este paquete incluye:
+        Incluye de base:
       </h3>
       <p style="font-size: 15px; color: #4e4e4e; line-height: 1.5; white-space: pre-line; background: #fafff2; padding: 15px; border-radius: 10px; border: 1px solid #e1f5fe;">
         {{ tour.incluye }}
@@ -100,10 +159,10 @@
     </div>
     
     <div class="ion-padding" style="margin-bottom: 30px;">
-      <h2 style="font-weight: bold; margin-bottom: 15px; font-size: 1.3rem;">Experiencias de Viajeros ⭐</h2>
+      <h2 style="font-weight: bold; margin-bottom: 15px; font-size: 1.3rem;">Experiencias ⭐</h2>
 
       <div *ngIf="usuarioActual && puedeCalificar" style="background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px;">
-        <h3 style="margin-top: 0; font-size: 15px; font-weight: bold;">¿Completaste este tour? Deja tu reseña:</h3>
+        <h3 style="margin-top: 0; font-size: 15px; font-weight: bold;">Deja tu reseña:</h3>
         
         <div style="font-size: 35px; color: #ffc409; margin-bottom: 15px; display: flex; gap: 5px;">
           <ion-icon [name]="nuevaEstrellas >= 1 ? 'star' : 'star-outline'" (click)="setEstrellas(1)"></ion-icon>
@@ -113,27 +172,16 @@
           <ion-icon [name]="nuevaEstrellas >= 5 ? 'star' : 'star-outline'" (click)="setEstrellas(5)"></ion-icon>
         </div>
 
-        <ion-textarea 
-          [(ngModel)]="nuevoComentario" 
-          placeholder="Cuéntale a otros cómo fue tu experiencia..." 
-          rows="3" 
-          style="background: #f4f5f8; border-radius: 10px; padding: 10px; margin-bottom: 15px; --padding-start: 10px;">
-        </ion-textarea>
-        
+        <ion-textarea [(ngModel)]="nuevoComentario" placeholder="Cuéntale a otros..." rows="3" style="background: #f4f5f8; border-radius: 10px; padding: 10px; margin-bottom: 15px; --padding-start: 10px;"></ion-textarea>
         <ion-button expand="block" shape="round" color="primary" (click)="enviarResena()" [disabled]="nuevaEstrellas === 0 || nuevoComentario.trim() === '' || enviandoResena">
           <ion-spinner *ngIf="enviandoResena" name="dots"></ion-spinner>
           <span *ngIf="!enviandoResena">Publicar reseña</span>
         </ion-button>
       </div>
-
-      <div *ngIf="usuarioActual && !puedeCalificar" style="text-align: center; margin-bottom: 20px; padding: 20px; background: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-        <ion-icon name="lock-closed-outline" style="font-size: 45px; color: #989aa2;"></ion-icon>
-        <p style="color: gray; margin-bottom: 0; font-size: 14px; padding: 0 10px;">Solo los viajeros que han comprado y completado este tour pueden calificarlo.</p>
-      </div>
       
       <div *ngIf="!usuarioActual" style="text-align: center; margin-bottom: 20px; padding: 20px; background: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
         <ion-icon name="person-circle-outline" style="font-size: 45px; color: #ccc;"></ion-icon>
-        <p style="color: gray; margin-bottom: 15px; font-size: 14px;">Inicia sesión con tu cuenta para poder calificar este servicio.</p>
+        <p style="color: gray; margin-bottom: 15px; font-size: 14px;">Inicia sesión para calificar.</p>
         <ion-button fill="outline" shape="round" size="small" routerLink="/vistas/login">Iniciar Sesión</ion-button>
       </div>
 
@@ -142,21 +190,14 @@
           <ion-icon name="person-circle-outline" slot="start" style="font-size: 40px; color: #92949c; align-self: flex-start; margin-top: 15px;"></ion-icon>
           <ion-label class="ion-text-wrap" style="margin-top: 15px; margin-bottom: 15px;">
             <h3 style="font-weight: bold; font-size: 15px; color: #222;">{{ resena.nombreUsuario }}</h3>
-            
             <div style="color: #ffc409; font-size: 12px; margin-bottom: 6px;">
               <ion-icon *ngFor="let i of [1,2,3,4,5]" [name]="i <= resena.calificacion ? 'star' : 'star-outline'"></ion-icon>
             </div>
-            
             <p style="color: #333; font-size: 14px; line-height: 1.4;">{{ resena.comentario }}</p>
             <p style="font-size: 11px; color: #a6a8b2; margin-top: 6px;">{{ resena.fecha | date:'dd/MM/yyyy' }}</p>
           </ion-label>
         </ion-item>
       </ion-list>
-      
-      <div *ngIf="resenas.length === 0" style="text-align: center; color: gray; margin-top: 20px; margin-bottom: 20px;">
-        <ion-icon name="chatbubbles-outline" style="font-size: 40px; opacity: 0.4;"></ion-icon>
-        <p style="font-size: 14px;">Nadie ha dejado comentarios sobre este viaje todavía.</p>
-      </div>
     </div>
 
   </div>
@@ -165,17 +206,16 @@
 <ion-footer class="ion-no-border ion-padding-bottom" *ngIf="!cargando && tour">
   <ion-toolbar color="light">
     <ion-row>
-      <ion-col size="6">
+      <ion-col size="5">
         <ion-button expand="block" color="success" shape="round" (click)="abrirWhatsApp()">
-          <ion-icon slot="start" name="logo-whatsapp"></ion-icon>
-          WhatsApp
+          <ion-icon slot="icon-only" name="logo-whatsapp"></ion-icon>
         </ion-button>
       </ion-col>
-      <ion-col size="6">
-        <ion-button expand="block" color="warning" shape="round" (click)="apartarCupo()" [disabled]="procesandoReserva">
+      <ion-col size="7">
+        <ion-button expand="block" color="warning" shape="round" (click)="apartarCupo()" [disabled]="procesandoReserva || !puedeReservar()">
           <ion-spinner *ngIf="procesandoReserva" name="crescent"></ion-spinner>
           <ion-icon *ngIf="!procesandoReserva" slot="start" name="card-outline"></ion-icon>
-          <span *ngIf="!procesandoReserva">Reservar</span>
+          <span *ngIf="!procesandoReserva">{{ precioCalculado > 0 ? '$' + precioCalculado : 'Elige opción' }}</span>
         </ion-button>
       </ion-col>
     </ion-row>
