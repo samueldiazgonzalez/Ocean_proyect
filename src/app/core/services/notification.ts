@@ -57,7 +57,7 @@ export class Notification {
       // 5. Manejar tap en la notificación (cuando app está en background)
       PushNotifications.addListener(
         'pushNotificationActionPerformed',
-        (action) => {
+        (action: any) => {
           const data = action.notification.data;
           console.log('👆 Usuario tocó notificación:', data);
 
