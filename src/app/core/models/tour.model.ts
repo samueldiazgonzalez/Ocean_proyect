@@ -9,5 +9,7 @@ export interface Tour {
   
   categoria?: string;     // <--- Para el número de WhatsApp que agregamos hace un rato
   direccion?: string;            // <--- NUEVO
+  latitud?: number;              // <--- NUEVO para Google Maps
+  longitud?: number;             // <--- NUEVO para Google Maps
   opcionesAdicionales?: string;
 }

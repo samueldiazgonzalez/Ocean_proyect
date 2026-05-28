@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router'; 
@@ -13,11 +13,13 @@ import {
   logoWhatsapp, cashOutline, mapOutline, cardOutline, 
   star, starOutline, personCircleOutline, chatbubblesOutline, lockClosedOutline,
   pricetagOutline, timeOutline, checkmarkCircleOutline, imagesOutline,
-  heart, heartOutline // 👈 Importamos los corazones
+  heart, heartOutline, informationCircleOutline, shareSocialOutline,
+  checkmarkCircle
 } from 'ionicons/icons';
 
 import { DatabaseService } from '../../core/services/database'; 
-import { AuthService } from '../../core/services/auth'; 
+import { AuthService } from '../../core/services/auth';
+import { environment } from '../../../environments/environment'; 
 
 @Component({
   selector: 'app-detalle-tour',
@@ -31,7 +33,9 @@ import { AuthService } from '../../core/services/auth';
     CommonModule, FormsModule, RouterModule 
   ]
 })
-export class DetalleTourPage implements OnInit {
+export class DetalleTourPage implements OnInit, AfterViewInit {
+
+  @ViewChild('mapContainer') mapContainer!: ElementRef;
 
   private route = inject(ActivatedRoute);
   private router = inject(Router); 
@@ -47,6 +51,10 @@ export class DetalleTourPage implements OnInit {
   promedioEstrellas: number = 0;
   nuevaEstrellas: number = 0;
   nuevoComentario: string = '';
+  
+  // Google Maps
+  mapa: any = null;
+  googleMapLoaded: boolean = false;
   enviandoResena: boolean = false;
   puedeCalificar: boolean = false;
 
@@ -54,13 +62,15 @@ export class DetalleTourPage implements OnInit {
   
   // 👇 Nueva variable para saber si el tour le gusta al usuario
   esFavorito: boolean = false;
+  showStickyHeader = false;
 
   constructor() { 
     addIcons({
       logoWhatsapp, cardOutline, cashOutline, mapOutline, 
       star, starOutline, personCircleOutline, chatbubblesOutline, lockClosedOutline,
       pricetagOutline, timeOutline, checkmarkCircleOutline, imagesOutline,
-      heart, heartOutline
+      heart, heartOutline, informationCircleOutline, shareSocialOutline,
+      checkmarkCircle
     });
   }
 
@@ -79,6 +89,11 @@ export class DetalleTourPage implements OnInit {
           this.verificarSiPuedeCalificar();
           this.verificarSiEsFavorito(); // 👈 Verificamos si ya le había dado like
         }
+
+        // Inicializar mapa después de un pequeño delay para que el DOM esté listo
+        setTimeout(() => {
+          this.initMap();
+        }, 500);
       }
     }
     this.cargando = false;
@@ -115,6 +130,101 @@ export class DetalleTourPage implements OnInit {
 
   cambiarFoto(url: string) {
     this.fotoSeleccionada = url;
+  }
+
+  onScroll(event: any) {
+    const scrollTop = event.detail.scrollTop;
+    this.showStickyHeader = scrollTop > 300; // Mostrar sticky después de 300px
+  }
+
+  ngAfterViewInit() {
+    if (this.tour?.latitud && this.tour?.longitud) {
+      this.initMap();
+    }
+  }
+
+  initMap() {
+    if (!this.tour?.latitud || !this.tour?.longitud) return;
+    if (!this.mapContainer) return;
+
+    // Verificar si Google Maps ya está cargado
+    if (!(window as any).google) {
+      console.warn('Google Maps no está disponible. Asegúrate de cargar la API.');
+      // Cargar dinámicamente desde CDN
+      this.loadGoogleMapsAPI();
+      return;
+    }
+
+    this.createMap();
+  }
+
+  private loadGoogleMapsAPI() {
+    const googleMapsApiKey = environment.googleMapsApiKey;
+    const scriptId = 'google-maps-script';
+    
+    // Evitar cargar el script múltiples veces
+    if (document.getElementById(scriptId)) {
+      this.createMap();
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.id = scriptId;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}`;
+    script.onload = () => {
+      this.googleMapLoaded = true;
+      this.createMap();
+    };
+    script.onerror = () => {
+      console.error('Error al cargar Google Maps. Verifica tu API key.');
+    };
+    document.head.appendChild(script);
+  }
+
+  private createMap() {
+    if (!this.tour?.latitud || !this.tour?.longitud) return;
+    if (!this.mapContainer) return;
+
+    const location = {
+      lat: this.tour.latitud,
+      lng: this.tour.longitud
+    };
+
+    this.mapa = new (window as any).google.maps.Map(
+      this.mapContainer.nativeElement,
+      {
+        zoom: 15,
+        center: location,
+        mapTypeControl: true,
+        fullscreenControl: true,
+      }
+    );
+
+    // Agregar marcador
+    const marker = new (window as any).google.maps.Marker({
+      position: location,
+      map: this.mapa,
+      title: this.tour.titulo,
+      icon: 'https://maps.google.com/mapfiles/ms/micons/red-dot.png'
+    });
+
+    // Agregar info window (popup)
+    const infoWindow = new (window as any).google.maps.InfoWindow({
+      content: `
+        <div style="padding: 10px; font-family: Arial;">
+          <h3 style="margin: 0 0 5px 0; font-size: 14px;">${this.tour.titulo}</h3>
+          <p style="margin: 0 0 5px 0; font-size: 12px;">${this.tour.direccion || 'Ubicación del tour'}</p>
+          <p style="margin: 0; font-size: 12px; color: #3880ff;"><strong>$${this.tour.precio} COP</strong></p>
+        </div>
+      `
+    });
+
+    marker.addListener('click', () => {
+      infoWindow.open(this.mapa, marker);
+    });
+
+    // Abrir info window por defecto
+    infoWindow.open(this.mapa, marker);
   }
 
   verificarSiPuedeCalificar() {
@@ -180,6 +290,21 @@ export class DetalleTourPage implements OnInit {
     window.open(url, '_blank');
   }
 
+  async compartirTour() {
+    if (!this.tour) return;
+    
+    try {
+      await Share.share({
+        title: this.tour.titulo,
+        text: `¡Mira esta increíble experiencia en Ocean! ${this.tour.titulo} por solo $${this.tour.precio} COP. ¿Vamos? 🏖️`,
+        url: 'https://ocean-app.com/',
+        dialogTitle: 'Compartir aventura con amigos',
+      });
+    } catch (error) {
+      console.error('Error al abrir el menú de compartir', error);
+    }
+  }
+
   async apartarCupo() {
     if (!this.tour) return;
     this.procesandoReserva = true;
@@ -205,21 +330,6 @@ export class DetalleTourPage implements OnInit {
       console.error('Error al apartar cupo:', error);
     } finally {
       this.procesandoReserva = false;
-    }
-  }
-
-  async compartirTour() {
-    if (!this.tour) return;
-    
-    try {
-      await Share.share({
-        title: this.tour.titulo,
-        text: `¡Mira esta increíble experiencia en Ocean! ${this.tour.titulo} por solo $${this.tour.precio} COP. ¿Vamos? 🏖️`,
-        url: 'https://ocean-app.com/', // Una URL simulada de tu proyecto
-        dialogTitle: 'Compartir aventura con amigos',
-      });
-    } catch (error) {
-      console.error('Error al abrir el menú de compartir', error);
     }
   }
 }
