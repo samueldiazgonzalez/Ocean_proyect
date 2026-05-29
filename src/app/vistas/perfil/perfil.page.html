@@ -1,7 +1,7 @@
 <ion-header class="ion-no-border">
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/tabs/catalogo" text="Volver"></ion-back-button>
+  <ion-toolbar class="toolbar-perfil" [class.toolbar-admin]="rol === 'admin'">
+    <ion-buttons slot="start" *ngIf="rol !== 'admin'">
+      <ion-back-button [defaultHref]="rol === 'proveedor' ? '/tabs/mis-tours' : '/tabs/catalogo'" text="Volver"></ion-back-button>
     </ion-buttons>
     <ion-title>Mi Perfil</ion-title>
   </ion-toolbar>

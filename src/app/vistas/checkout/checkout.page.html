@@ -1,61 +1,100 @@
 <ion-header class="ion-no-border">
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/tabs/catalogo"></ion-back-button>
+      <ion-back-button defaultHref="/tabs/mis-reservas"></ion-back-button>
     </ion-buttons>
-    <ion-title>Checkout Seguro</ion-title>
+    <ion-title>🔒 Checkout Seguro</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding" color="light">
+<ion-content>
+  <div class="checkout-bg"></div>
   
-  <ion-card class="tarjeta-visual" [ngClass]="franquicia">
-    <ion-card-content>
-      <div class="logo-franquicia">
-        <span *ngIf="franquicia === 'visa'">VISA</span>
-        <span *ngIf="franquicia === 'mastercard'">MasterCard</span>
-        <span *ngIf="franquicia === 'desconocida'">Billetera Digital</span>
-      </div>
-      <h2 class="numero-display">{{ numeroTarjeta || '#### #### #### ####' }}</h2>
-      <div class="datos-inferiores">
-        <div>
-          <small>Titular</small>
-          <p>{{ nombreTitular || 'NOMBRE APELLIDO' | uppercase }}</p>
+  <div class="body-content">
+    
+    <!-- TARJETA 3D -->
+    <div class="card-scene" (click)="flipCard()">
+      <div class="card-3d" [class.flipped]="isFlipped">
+        <!-- Frente -->
+        <div class="card-face card-front" [ngClass]="getCardClass()">
+          <div class="c1"></div><div class="c2"></div>
+          
+          <div class="card-logo" *ngIf="franquicia === 'visa'">VISA</div>
+          <div class="card-logo mc-logo" *ngIf="franquicia === 'mastercard'">
+            <div class="mc-circle1"></div><div class="mc-circle2"></div>
+          </div>
+          <div class="card-logo" *ngIf="franquicia === 'desconocida'">◈</div>
+
+          <div class="card-chip">
+            <div class="chip-seg"></div><div class="chip-seg"></div><div class="chip-seg"></div>
+            <div class="chip-seg"></div><div class="chip-seg"></div><div class="chip-seg"></div>
+            <div class="chip-seg"></div><div class="chip-seg"></div><div class="chip-seg"></div>
+          </div>
+          <div class="card-number">{{ formatCardNumberDisplay() }}</div>
+          <div class="card-bottom">
+            <div>
+              <div class="card-label">Titular</div>
+              <div class="card-value">{{ (nombreTitular || 'NOMBRE APELLIDO') | uppercase }}</div>
+            </div>
+            <div>
+              <div class="card-label">Vence</div>
+              <div class="card-value">{{ fechaExpiracion || 'MM/YY' }}</div>
+            </div>
+          </div>
         </div>
-        <div>
-          <small>Vence</small>
-          <p>{{ fechaExpiracion || 'MM/YY' }}</p>
+        <!-- Reverso -->
+        <div class="card-face card-back">
+          <div class="card-stripe"></div>
+          <div class="cvv-strip"><span class="cvv-val">{{ cvv ? '•'.repeat(cvv.length) : '•••' }}</span></div>
+          <div class="card-back-label">Este número de 3 dígitos se encuentra en la parte trasera de tu tarjeta</div>
         </div>
       </div>
-    </ion-card-content>
-  </ion-card>
-
-  <ion-list inset="true" lines="full">
-    <ion-item>
-      <ion-input [(ngModel)]="nombreTitular" label="Nombre en la tarjeta" labelPlacement="floating" type="text" autocapitalize="characters"></ion-input>
-    </ion-item>
-
-    <ion-item>
-      <ion-input [(ngModel)]="numeroTarjeta" (ionInput)="verificarTarjeta()" label="Número de Tarjeta" labelPlacement="floating" type="tel" maxlength="16"></ion-input>
-      <ion-icon slot="end" name="checkmark-circle-outline" color="success" *ngIf="esValida && numeroTarjeta.length >= 15"></ion-icon>
-      <ion-icon slot="end" name="close-circle-outline" color="danger" *ngIf="!esValida && numeroTarjeta.length >= 15"></ion-icon>
-    </ion-item>
-
-    <div style="display: flex;">
-      <ion-item style="flex: 1;">
-        <ion-input [(ngModel)]="fechaExpiracion" (ionInput)="formatearExpiracion()" label="Expiración (MM/YY)" labelPlacement="floating" type="text" maxlength="5"></ion-input>
-      </ion-item>
-      <ion-item style="flex: 1;">
-        <ion-input [(ngModel)]="cvv" label="CVV" labelPlacement="floating" type="tel" maxlength="4"></ion-input>
-      </ion-item>
     </div>
-  </ion-list>
 
-  <ion-button expand="block" shape="round" color="primary" class="ion-margin-top" (click)="procesarPago()" [disabled]="cargando || !esValida">
-    <ion-spinner name="crescent" *ngIf="cargando"></ion-spinner>
-    <span *ngIf="!cargando">Pagar Seguro</span>
-  </ion-button>
+    <p class="flip-hint" (click)="flipCard()">👆 Toca para ver el reverso</p>
 
+    <!-- FORMULARIO -->
+    <div class="form-card">
+      <span class="campo-label">Titular de la tarjeta</span>
+      <div class="campo-inner">
+        <span class="campo-icon">👤</span>
+        <input placeholder="NOMBRE APELLIDO" [(ngModel)]="nombreTitular" style="text-transform:uppercase"/>
+      </div>
+      
+      <span class="campo-label">Número de tarjeta</span>
+      <div class="campo-inner">
+        <span class="campo-icon">💳</span>
+        <input placeholder="#### #### #### ####" [ngModel]="numeroTarjetaVisual" (ngModelChange)="onCardNumberChange($event)" type="tel" maxlength="19"/>
+        <ion-icon name="checkmark-circle" class="valid-icon" *ngIf="esValida"></ion-icon>
+        <ion-icon name="close-circle" class="invalid-icon" *ngIf="!esValida && numeroTarjeta.length > 14"></ion-icon>
+      </div>
+      
+      <div class="row-fields">
+        <div>
+          <span class="campo-label">Expiración</span>
+          <div class="campo-inner">
+            <span class="campo-icon">📅</span>
+            <input placeholder="MM/YY" [ngModel]="fechaExpiracion" (ngModelChange)="onExpChange($event)" type="tel" maxlength="5"/>
+          </div>
+        </div>
+        <div>
+          <span class="campo-label">CVV</span>
+          <div class="campo-inner">
+            <span class="campo-icon">🔒</span>
+            <input placeholder="•••" [(ngModel)]="cvv" type="password" maxlength="4" (focus)="isFlipped = true" (blur)="isFlipped = false"/>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-pagar" (click)="procesarPago()" [disabled]="cargando || !esValida">
+      <ion-spinner name="crescent" *ngIf="cargando" style="width:20px;height:20px;"></ion-spinner>
+      <span *ngIf="!cargando">🔒 Pagar Seguro</span>
+    </button>
+    <div class="bio-hint">☝ Se solicitará verificación biométrica</div>
+  </div>
+
+  <!-- MODAL DE TICKET FINAL -->
   <ion-modal [isOpen]="mostrarTicket" (didDismiss)="finalizarYSalir()">
     <ng-template>
       <ion-header class="ion-no-border">
@@ -66,9 +105,7 @@
       <ion-content class="ion-padding" style="--background: #f4f5f8;">
         
         <div style="background: white; border-radius: 15px; padding: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); text-align: center; margin-top: 20px; position: relative;">
-          
           <ion-icon name="checkmark-circle" color="success" style="font-size: 80px; margin-top: -50px; background: white; border-radius: 50%; padding: 5px;"></ion-icon>
-          
           <h2 style="font-weight: bold; color: #333; margin-top: 10px;">Ticket de Abordaje</h2>
           <p style="color: gray; margin-bottom: 25px;">Guarda este código para tu aventura</p>
 

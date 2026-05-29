@@ -1,3 +1,19 @@
+// ── Toolbar ────────────────────────────────────
+.toolbar-perfil {
+  --background: #0d1b2e; /* Mismo azul oscuro del banner normal */
+  --color: white;
+  
+  &.toolbar-admin {
+    --background: #12062a; /* Mismo morado oscuro del banner admin */
+  }
+
+  ion-back-button {
+    --color: white;
+  }
+}
+
+
+
 // ── Fondo ──────────────────────────────────────
 ion-content.perfil-content {
   --background: url('https://images.pexels.com/photos/27566375/pexels-photo-27566375.jpeg') center center / cover no-repeat fixed;

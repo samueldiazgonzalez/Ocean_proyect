@@ -1,0 +1,80 @@
+ion-content {
+  --background: #0a0f1e;
+}
+
+.checkout-bg {
+  position: absolute; inset: 0; 
+  background: url('https://images.pexels.com/photos/27566375/pexels-photo-27566375.jpeg') center/cover; 
+  opacity: 0.12; pointer-events: none;
+}
+
+.body-content {
+  position: relative; z-index: 1; 
+  padding: 24px 16px;
+}
+
+/* CARD 3D */
+.card-scene { width: 100%; height: 200px; perspective: 1000px; margin-bottom: 24px; cursor: pointer; }
+.card-3d {
+  width: 100%; height: 100%; position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(.4,0,.2,1);
+  border-radius: 20px;
+}
+.card-3d.flipped { transform: rotateY(180deg); }
+
+.card-face {
+  position: absolute; inset: 0; border-radius: 20px;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  padding: 20px 22px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  overflow: hidden;
+}
+.card-front { background: linear-gradient(135deg, #0d47a1 0%, #0077b6 60%, #00b4d8 100%); }
+.card-front.visa-style { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
+.card-front.mc-style { background: linear-gradient(135deg, #c41e3a 0%, #b5121b 50%, #8b0000 100%); }
+
+.card-back { background: linear-gradient(135deg,#1a1a2e,#0d47a1); transform: rotateY(180deg); }
+
+/* Decoración */
+.card-circles { position: absolute; right: -20px; top: -20px; }
+.c1 { width: 160px; height: 160px; border-radius: 50%; background: rgba(255,255,255,0.06); position: absolute; top: -30px; right: -30px; }
+.c2 { width: 110px; height: 110px; border-radius: 50%; background: rgba(255,255,255,0.04); position: absolute; top: 20px; right: 20px; }
+
+.card-chip { width: 42px; height: 32px; border-radius: 6px; background: linear-gradient(135deg,#ffd700,#b8860b); margin-bottom: 20px; display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; gap: 1px; padding: 3px; }
+.chip-seg { background: rgba(0,0,0,0.2); border-radius: 1px; }
+
+.card-logo { position: absolute; top: 18px; right: 20px; font-size: 18px; font-weight: 900; color: white; letter-spacing: -1px; }
+.card-logo.mc-logo { display: flex; }
+.mc-circle1 { width: 26px; height: 26px; border-radius: 50%; background: #eb001b; opacity: 0.9; }
+.mc-circle2 { width: 26px; height: 26px; border-radius: 50%; background: #f79e1b; opacity: 0.9; margin-left: -12px; }
+
+.card-number { font-size: 18px; font-weight: 600; color: rgba(255,255,255,0.9); letter-spacing: 2px; margin-bottom: 20px; font-family: 'Courier New', monospace; }
+.card-bottom { display: flex; justify-content: space-between; align-items: flex-end; }
+.card-label { font-size: 9px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+.card-value { font-size: 13px; font-weight: 600; color: white; text-transform: uppercase; }
+
+/* Back */
+.card-stripe { width: 100%; height: 38px; background: #111; margin: 16px 0 14px; }
+.cvv-strip { background: rgba(255,255,255,0.9); border-radius: 4px; padding: 6px 10px; margin: 0 20px; display: flex; justify-content: flex-end; }
+.cvv-val { font-size: 14px; font-weight: 700; color: #333; letter-spacing: 3px; font-family: monospace; min-height: 16px;}
+.card-back-label { text-align: center; font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 10px; }
+
+.flip-hint { text-align: center; font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 24px; }
+
+/* FORM */
+.form-card { background: rgba(19,25,41,0.88); border: 0.5px solid rgba(255,255,255,0.08); border-radius: 18px; padding: 16px 14px; margin-bottom: 20px; }
+.campo-label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.35); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 6px; display: block; padding-left: 4px;}
+.campo-inner { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.07); border: 0.5px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 12px; height: 48px; margin-bottom: 12px; transition: border 0.3s;}
+.campo-inner:focus-within { border-color: rgba(96,200,255,0.5); }
+.campo-inner:last-child { margin-bottom: 0; }
+.campo-icon { font-size: 17px; color: #60c8ff; flex-shrink: 0; }
+.campo-inner input { flex: 1; background: transparent; border: none; outline: none; font-size: 14px; color: rgba(255,255,255,0.8); }
+.valid-icon { font-size: 20px; color: #00d4a0; }
+.invalid-icon { font-size: 20px; color: #ff6b6b; }
+
+.row-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.btn-pagar { width: 100%; height: 52px; border-radius: 14px; background: linear-gradient(135deg,#0d47a1,#0077b6); border: none; color: white; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: opacity 0.3s;}
+.btn-pagar:disabled { opacity: 0.5; cursor: not-allowed; }
+.bio-hint { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 10px; font-size: 12px; color: rgba(255,255,255,0.4); }

@@ -1,9 +1,39 @@
-// ── Toolbar ────────────────────────────────────
 .toolbar-mistours {
   --background: linear-gradient(135deg, #0d47a1, #0077b6);
   --padding-start: 16px;
   --padding-end: 16px;
   --min-height: 58px;
+}
+
+.header-acciones {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.accion-btn {
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  border: 0.5px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  ion-icon {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.85);
+  }
+}
+
+.avatar-btn {
+  background: rgba(0, 212, 160, 0.2);
+  border-color: rgba(0, 212, 160, 0.35);
+
+  ion-icon { color: #00d4a0; }
 }
 
 .toolbar-info {
@@ -44,7 +74,6 @@
   &:active { background: rgba(255,255,255,0.22); }
 }
 
-// ── Fondo ──────────────────────────────────────
 ion-content.mistours-content {
   --background: url('https://images.pexels.com/photos/27566375/pexels-photo-27566375.jpeg') center center / cover no-repeat fixed;
 }
@@ -54,7 +83,6 @@ ion-content.mistours-content::part(scroll) {
   min-height: 100%;
 }
 
-// ── Cargando ───────────────────────────────────
 .estado-cargando {
   display: flex;
   flex-direction: column;
@@ -65,7 +93,6 @@ ion-content.mistours-content::part(scroll) {
   p { font-size: 14px; color: rgba(255, 255, 255, 0.4); }
 }
 
-// ── Vacío ──────────────────────────────────────
 .estado-vacio {
   display: flex;
   flex-direction: column;
@@ -122,12 +149,10 @@ ion-content.mistours-content::part(scroll) {
   ion-icon { font-size: 18px; }
 }
 
-// ── Contenedor ─────────────────────────────────
 .mistours-container {
   padding: 14px 12px 80px;
 }
 
-// ── Stats ──────────────────────────────────────
 .stats-row {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -169,7 +194,6 @@ ion-content.mistours-content::part(scroll) {
   &.dot-amber { background: #fbbf24; }
 }
 
-// ── Tour card ──────────────────────────────────
 .tour-card {
   background: rgba(19, 25, 41, 0.88);
   border: 0.5px solid rgba(255, 255, 255, 0.08);
@@ -182,7 +206,6 @@ ion-content.mistours-content::part(scroll) {
   &:active { transform: scale(0.985); }
 }
 
-// ── Imagen ─────────────────────────────────────
 .card-img-wrapper {
   position: relative;
   height: 150px;
@@ -239,7 +262,6 @@ ion-content.mistours-content::part(scroll) {
   z-index: 5;
 }
 
-// ── Body card ──────────────────────────────────
 .card-body { padding: 12px 13px 14px; }
 
 .card-titulo {
@@ -272,7 +294,6 @@ ion-content.mistours-content::part(scroll) {
   overflow: hidden;
 }
 
-// ── Acciones ───────────────────────────────────
 .acciones-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -303,7 +324,6 @@ ion-content.mistours-content::part(scroll) {
 .btn-pausar  { background: rgba(251,191,36,0.12); border-color: rgba(251,191,36,0.35); color: #fbbf24; }
 .btn-borrar  { background: rgba(255,82,82,0.12);  border-color: rgba(255,82,82,0.3);   color: #ff6b6b; }
 
-// ── FAB ────────────────────────────────────────
 .fab-custom {
   --background: linear-gradient(135deg, #0d47a1, #0077b6);
   --background-activated: #005f8e;
@@ -312,10 +332,6 @@ ion-content.mistours-content::part(scroll) {
   width: 52px;
   height: 52px;
 }
-
-// ══════════════════════════════════════════════
-// ── MODAL ─────────────────────────────────────
-// ══════════════════════════════════════════════
 
 .toolbar-modal {
   --background: #0d1b2e;
@@ -362,7 +378,6 @@ ion-content.modal-content::part(scroll) {
   padding: 16px 14px;
 }
 
-// ── Aviso auditoría ────────────────────────────
 .aviso-auditoria {
   display: flex;
   gap: 10px;
@@ -378,7 +393,6 @@ ion-content.modal-content::part(scroll) {
   strong { color: #fbbf24; }
 }
 
-// ── Sección labels del modal ───────────────────
 .modal-sec-label {
   font-size: 10px;
   font-weight: 700;
@@ -395,7 +409,6 @@ ion-content.modal-content::part(scroll) {
   &:not(:first-of-type) { margin-top: 20px; }
 }
 
-// ── Modal card contenedor ──────────────────────
 .modal-card {
   background: rgba(19, 25, 41, 0.8);
   border: 0.5px solid rgba(255, 255, 255, 0.08);
@@ -404,7 +417,6 @@ ion-content.modal-content::part(scroll) {
   margin-bottom: 4px;
 }
 
-// ── Campos del modal ───────────────────────────
 .modal-campo { margin-bottom: 12px; &:last-child { margin-bottom: 0; } }
 
 .campo-label {
@@ -467,7 +479,6 @@ ion-content.modal-content::part(scroll) {
   color: white;
 }
 
-// ── Habitaciones / Extras ──────────────────────
 .hab-item, .extra-item {
   background: rgba(255, 255, 255, 0.03);
   border: 0.5px solid rgba(255, 255, 255, 0.07);

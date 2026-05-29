@@ -118,7 +118,14 @@ export class PerfilPage {
     try {
       const userRef = doc(this.firestore, `usuarios/${this.uid}`);
       await updateDoc(userRef, { rol: nuevoRol });
-      window.location.replace('/tabs/catalogo');
+      
+      // 👇 MAGIA AQUÍ: Lo enviamos a su pantalla correcta según su nuevo rol
+      if (nuevoRol === 'proveedor') {
+        window.location.replace('/tabs/mis-tours');
+      } else {
+        window.location.replace('/tabs/catalogo');
+      }
+      
     } catch (error) {
       console.error('Error al cambiar rol', error);
       this.cargandoDatos = false;

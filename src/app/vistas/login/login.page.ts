@@ -50,12 +50,13 @@ export class LoginPage {
       const usuarioActual = await this.authService.obtenerDatosUsuarioActual();
 
       if (usuarioActual) {
+        // Usamos location.replace para forzar el reinicio de la interfaz según el rol
         if ((usuarioActual as any).rol === 'admin') {
-          this.router.navigate(['/tabs/perfil']);
+          window.location.replace('/tabs/perfil');
         } else if (usuarioActual.rol === 'proveedor') {
-          this.router.navigate(['/tabs/mis-tours']);
+          window.location.replace('/tabs/mis-tours');
         } else {
-          this.router.navigate(['/tabs/catalogo']);
+          window.location.replace('/tabs/catalogo');
         }
       }
     } catch (error: any) {
@@ -74,12 +75,13 @@ export class LoginPage {
       const datosUsuario = await this.authService.obtenerDatosUsuarioActual();
 
       if (datosUsuario) {
+        // Mismo truco para Google
         if ((datosUsuario as any).rol === 'admin') {
-          this.router.navigate(['/tabs/perfil']);
+          window.location.replace('/tabs/perfil');
         } else if (datosUsuario.rol === 'proveedor') {
-          this.router.navigate(['/tabs/mis-tours']);
+          window.location.replace('/tabs/mis-tours');
         } else {
-          this.router.navigate(['/tabs/catalogo']);
+          window.location.replace('/tabs/catalogo');
         }
       }
     } catch (error: any) {
