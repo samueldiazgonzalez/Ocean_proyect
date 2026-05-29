@@ -12,7 +12,53 @@
   }
 }
 
+// ══════════════════════════════════════════════
+// ── MODAL DE CONFIGURACIÓN ────────────────────
+// ══════════════════════════════════════════════
 
+.config-modal {
+  --background: #0a0f1e; /* Fondo oscuro que combina con el resto */
+  --border-radius: 28px 28px 0 0; /* Bordes bien redondeados arriba */
+}
+
+.config-toolbar {
+  --background: #0a0f1e;
+  --border-bottom: none;
+  padding-top: 8px;
+}
+
+.config-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: white;
+}
+
+.config-close-btn {
+  --color: rgba(255, 255, 255, 0.3);
+  margin-right: 8px;
+  
+  ion-icon { 
+    font-size: 26px; 
+  }
+  
+  &:active { 
+    --color: white; 
+  }
+}
+
+.config-content {
+  --background: #0a0f1e;
+  padding-top: 10px;
+}
+
+.config-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.35);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin: 10px 0 12px 6px;
+}
 
 // ── Fondo ──────────────────────────────────────
 ion-content.perfil-content {
