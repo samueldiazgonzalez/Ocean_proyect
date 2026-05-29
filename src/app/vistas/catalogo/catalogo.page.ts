@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, ViewChild} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { 
   IonContent, IonHeader, IonTitle, IonToolbar,
   IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent,
@@ -12,7 +12,7 @@ import {
 import { AuthService } from '../../core/services/auth'; 
 
 import { addIcons } from 'ionicons';
-import { cashOutline, arrowForwardOutline, star, water, search, notificationsOutline, personCircleOutline, heartOutline, heart, searchOutline, compassOutline, personOutline, optionsOutline, waterOutline, gridOutline, checkmark, leafOutline, peopleOutline, flameOutline, bookOutline, flowerOutline, ribbonOutline, businessOutline } from 'ionicons/icons';
+import { cashOutline, arrowForwardOutline, star, water, search, notificationsOutline, personCircleOutline, heartOutline, heart, searchOutline, compassOutline, personOutline, optionsOutline, waterOutline, gridOutline, checkmark, leafOutline, peopleOutline, flameOutline, bookOutline, flowerOutline, ribbonOutline, businessOutline, briefcaseOutline } from 'ionicons/icons';
 import { DatabaseService } from '../../core/services/database';
 
 @Component({
@@ -31,42 +31,93 @@ import { DatabaseService } from '../../core/services/database';
 export class CatalogoPage implements OnInit {
   private databaseService = inject(DatabaseService);
   private authService = inject(AuthService);
+  private router = inject(Router);
   @ViewChild('popoverFiltros') popover!: IonPopover;
 
   tours: any[] = []; 
   toursFiltrados: any[] = []; 
   cargando: boolean = true;
   
-  // VARIABLES DE ESTADO Y FILTROS
   categoriaSeleccionada: string = 'todos';
   textoBusqueda: string = '';
   tipoInventario: string = 'aventuras'; 
 
-  // VARIABLES PARA EL SCROLL MÁGICO
+  rol: string = 'viajero';
+
   isHeaderHidden: boolean = false;
   private lastScrollPosition = 0;
-
-  constructor() {
-    addIcons({waterOutline,heartOutline,notificationsOutline,personOutline,searchOutline,optionsOutline,gridOutline,checkmark,leafOutline,peopleOutline,flameOutline,bookOutline,flowerOutline,ribbonOutline,businessOutline,compassOutline,star,cashOutline,arrowForwardOutline,water,personCircleOutline,search});
+navegar(ruta: string) {
+    this.router.navigateByUrl(ruta);
   }
+  constructor() {
+    addIcons({
+      waterOutline,
+      heartOutline,
+      notificationsOutline,
+      personOutline,
+      searchOutline,
+      optionsOutline,
+      gridOutline,
+      checkmark,
+      leafOutline,
+      peopleOutline,
+      flameOutline,
+      bookOutline,
+      flowerOutline,
+      ribbonOutline,
+      businessOutline,
+      compassOutline,
+      star,
+      cashOutline,
+      arrowForwardOutline,
+      water,
+      personCircleOutline,
+      search,
+      heart,
+      briefcaseOutline
+    });
+  }
+
+
 
   async ionViewWillEnter() {
     this.cargarCatalogo();
   }
 
-  ngOnInit() {} 
+  async ngOnInit() { 
+    const usuario = await this.authService.obtenerDatosUsuarioActual();
+    if (usuario) {
+      this.rol = usuario.rol;
+    }
+  }
 
   async abrirFiltros(event: Event) {
     this.popover.event = event;
     await this.popover.present();
   }
 
-  cargarCatalogo() {
+ async cargarCatalogo() {
     this.cargando = true;
+    
+    // Obtenemos el usuario al iniciar para saber si tiene favoritos guardados
+    const usuarioActual = await this.authService.obtenerDatosUsuarioActual();
+
     this.databaseService.obtenerTours().subscribe({
       next: (data) => {
         this.tours = data;
         
+        // 1. CARGAR FAVORITOS: Si el usuario tiene sesión, buscamos sus corazones rojos
+        if (usuarioActual && usuarioActual.uid) {
+          this.databaseService.obtenerFavoritosPorTurista(usuarioActual.uid).subscribe(favoritos => {
+            const idsFavoritos = favoritos.map((f:any) => f.tourId);
+            this.tours.forEach(tour => {
+              // Si el ID del tour está en su lista de favoritos, pintamos el corazón
+              tour.esFavorito = idsFavoritos.includes(tour.id);
+            });
+          });
+        }
+
+        // 2. CARGAR RESEÑAS
         this.tours.forEach(tour => {
           if (tour.id) {
             this.databaseService.obtenerResenasPorTour(tour.id).subscribe(resenas => {
@@ -92,11 +143,41 @@ export class CatalogoPage implements OnInit {
       }
     });
   }
+
+  async toggleFavorito(tour: any, event?: Event) {
+    // Esto evita que al tocar el corazón se abra la tarjeta del tour accidentalmente
+    if (event) {
+      event.stopPropagation();
+    }
+
+    const usuarioActual = await this.authService.obtenerDatosUsuarioActual();
+
+    if (!usuarioActual || !usuarioActual.uid) {
+      // Usamos alert en vez de console.log para que el usuario entienda qué pasa
+      alert('❤️ Debes iniciar sesión como Turista para guardar tus lugares favoritos.');
+      return;
+    }
+
+    // Efecto visual instantáneo (cambiamos el color del corazón antes de consultar a Firebase)
+    const estadoAnterior = !!tour.esFavorito;
+    tour.esFavorito = !estadoAnterior;
+
+    try {
+      await this.databaseService.alternarFavorito(
+        usuarioActual.uid, 
+        tour.id,           
+        estadoAnterior     
+      );
+    } catch (error) {
+      console.error('Error al sincronizar el favorito con la base de datos', error);
+      // Si el internet falla, devolvemos el corazón a su estado original
+      tour.esFavorito = estadoAnterior; 
+    }
+  }
   
   cambiarTipoInventario(event: any) {
     this.tipoInventario = event.detail.value;
     
-    // Reseteamos los otros filtros para evitar conflictos visuales
     this.categoriaSeleccionada = 'todos';
     this.textoBusqueda = '';
     
@@ -106,14 +187,12 @@ export class CatalogoPage implements OnInit {
   filtrarTours() {
     let temp = [...this.tours];
 
-    // 1. Filtro de Pestañas (Aventuras vs Hoteles) - ¡RESTAURADO!
     if (this.tipoInventario === 'hoteles') {
       temp = temp.filter(tour => tour.categoria && tour.categoria.toLowerCase().trim() === 'hoteles');
     } else {
       temp = temp.filter(tour => !tour.categoria || tour.categoria.toLowerCase().trim() !== 'hoteles');
     }
 
-    // 2. Filtro de Categoría del Popover (Relajante, Extremo, etc.)
     if (this.categoriaSeleccionada !== 'todos') {
       temp = temp.filter(tour => 
         tour.categoria && 
@@ -121,7 +200,6 @@ export class CatalogoPage implements OnInit {
       );
     }
 
-    // 3. Filtro de Búsqueda por Texto
     if (this.textoBusqueda && this.textoBusqueda.trim() !== '') {
       const termino = this.textoBusqueda.toLowerCase().trim();
       temp = temp.filter(tour => 
@@ -158,39 +236,14 @@ export class CatalogoPage implements OnInit {
     this.filtrarTours(); 
   }
 
-  async toggleFavorito(tour: any) {
-    const usuarioActual = await this.authService.obtenerDatosUsuarioActual();
 
-    if (!usuarioActual || !usuarioActual.uid) {
-      console.log('El usuario debe iniciar sesión para dar me gusta');
-      return;
-    }
 
-    const estadoAnterior = !!tour.esFavorito;
-    tour.esFavorito = !estadoAnterior;
-
-    try {
-      await this.databaseService.alternarFavorito(
-        usuarioActual.uid, 
-        tour.id,           
-        estadoAnterior     
-      );
-      console.log(`Favorito modificado con éxito: ${tour.titulo}`);
-    } catch (error) {
-      console.error('Error al sincronizar el favorito con la base de datos', error);
-      tour.esFavorito = estadoAnterior; 
-    }
-  }
-
-  // 👇 FUNCIÓN PARA EL SCROLL MÁGICO 👇
   handleScroll(event: any) {
     const currentScrollPosition = event.detail.scrollTop;
 
-    // Si pasamos de los 100px y scrolleamos hacia abajo, ocultamos el header
     if (currentScrollPosition > 100 && currentScrollPosition > this.lastScrollPosition) {
       this.isHeaderHidden = true;
-    } 
-    // Si scrolleamos hacia arriba, lo mostramos
+    }   
     else if (currentScrollPosition < this.lastScrollPosition) {
       this.isHeaderHidden = false;
     }

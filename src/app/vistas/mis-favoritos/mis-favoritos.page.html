@@ -1,5 +1,9 @@
 <ion-header class="ion-no-border">
-  <ion-toolbar class="toolbar-favoritos">
+  <ion-toolbar class="toolbar-favoritos" color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/catalogo" text="Volver"></ion-back-button>
+    </ion-buttons>
+    
     <ion-title class="toolbar-titulo">
       <ion-icon name="heart" class="titulo-icon"></ion-icon>
       Mis Favoritos
@@ -8,14 +12,11 @@
 </ion-header>
 
 <ion-content class="favoritos-content">
-
-  <!-- ── CARGANDO ────────────────────────────── -->
   <div class="estado-cargando" *ngIf="cargando">
     <ion-spinner name="crescent" color="primary"></ion-spinner>
     <p>Cargando tus favoritos...</p>
   </div>
 
-  <!-- ── VACÍO ───────────────────────────────── -->
   <div class="estado-vacio" *ngIf="!cargando && toursFavoritos.length === 0">
     <div class="vacio-icono">
       <ion-icon name="heart-outline"></ion-icon>
@@ -28,10 +29,7 @@
     </button>
   </div>
 
-  <!-- ── LISTA ───────────────────────────────── -->
   <div class="favoritos-container" *ngIf="!cargando && toursFavoritos.length > 0">
-
-    <!-- Hero -->
     <div class="favoritos-hero">
       <div class="hero-badge">
         <ion-icon name="heart"></ion-icon>
@@ -41,9 +39,7 @@
       <p class="hero-subtitulo">Guarda tours y vuelve cuando quieras</p>
     </div>
 
-    <!-- Cards -->
     <div class="fav-card" *ngFor="let tour of toursFavoritos">
-
       <div class="card-img-wrapper">
         <img [src]="tour.imagenUrl || 'https://via.placeholder.com/400x200?text=Ocean'"
              alt="{{ tour.titulo }}" class="card-imagen"/>
@@ -78,9 +74,6 @@
           <ion-icon name="arrow-forward-outline"></ion-icon>
         </button>
       </div>
-
     </div>
-
   </div>
-
 </ion-content>

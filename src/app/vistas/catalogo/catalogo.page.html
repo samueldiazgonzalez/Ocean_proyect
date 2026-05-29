@@ -11,14 +11,20 @@
     </ion-button>
 
     <div class="header-acciones" slot="end">
-      <button class="accion-btn">
+      <button class="accion-btn" (click)="navegar('/mis-favoritos')" *ngIf="rol === 'viajero'">
         <ion-icon name="heart-outline"></ion-icon>
       </button>
+
+      <button class="accion-btn" (click)="navegar('/tabs/mis-tours')" *ngIf="rol === 'proveedor'">
+        <ion-icon name="briefcase-outline"></ion-icon>
+      </button>
+
       <button class="accion-btn">
         <ion-icon name="notifications-outline"></ion-icon>
         <span class="notif-dot"></span>
       </button>
-      <button class="accion-btn avatar-btn">
+
+      <button class="accion-btn avatar-btn" (click)="navegar('/tabs/perfil')">
         <ion-icon name="person-outline"></ion-icon>
       </button>
     </div>
@@ -175,7 +181,7 @@
             <ion-card-content class="card-body">
               <div class="card-title-row">
                 <h2 class="tour-titulo">{{ tour.titulo }}</h2>
-                <button class="btn-favorito" (click)="toggleFavorito(tour)">
+                <button class="btn-favorito" (click)="toggleFavorito(tour, $event)">
                   <ion-icon 
                     [name]="tour.esFavorito ? 'heart' : 'heart-outline'" 
                     [color]="tour.esFavorito ? 'danger' : ''">

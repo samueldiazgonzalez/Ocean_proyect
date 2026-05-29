@@ -5,7 +5,8 @@ import { RouterModule } from '@angular/router';
 import { 
   IonContent, IonHeader, IonTitle, IonToolbar, IonList, 
   IonSpinner, IonIcon, IonCard, IonCardContent, IonBadge, IonButton,
-  IonCardHeader, IonCardTitle, IonCardSubtitle // 👈 Aquí agregamos los que faltaban
+  IonCardHeader, IonCardTitle, IonCardSubtitle,
+  IonButtons, IonBackButton
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { heart, heartOutline, arrowForwardOutline, star } from 'ionicons/icons';
@@ -21,7 +22,8 @@ import { AuthService } from '../../core/services/auth';
   imports: [
     IonContent, IonHeader, IonTitle, IonToolbar, IonList, 
     IonSpinner, IonIcon, IonCard, IonCardContent, IonBadge, IonButton,
-    IonCardHeader, IonCardTitle, IonCardSubtitle, // 👈 Y los declaramos aquí también
+    IonCardHeader, IonCardTitle, IonCardSubtitle,
+    IonButtons, IonBackButton,
     CommonModule, FormsModule, RouterModule
   ]
 })

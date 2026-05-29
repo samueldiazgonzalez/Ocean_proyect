@@ -1,16 +1,21 @@
-<ion-content class="perfil-content">
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/catalogo" text="Volver"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Mi Perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
 
+<ion-content class="perfil-content">
   <div class="registro-bg-glow"></div>
 
-  <!-- ── BANNER ─────────────────────────────── -->
   <div class="perfil-banner" [class.banner-admin]="rol === 'admin'">
-
     <div class="banner-loading" *ngIf="cargandoDatos">
       <ion-spinner name="crescent" color="light"></ion-spinner>
     </div>
 
     <div class="banner-body" *ngIf="!cargandoDatos">
-
       <div class="avatar-wrap">
         <div class="avatar-ring"
           [class.ring-admin]="rol === 'admin'"
@@ -36,14 +41,10 @@
       <p class="banner-desc" *ngIf="rol === 'admin'">Administrador del Sistema Ocean</p>
       <p class="banner-desc" *ngIf="rol === 'proveedor'">Agencia de Turismo Registrada</p>
       <p class="banner-desc" *ngIf="rol === 'viajero'">Turista Explorador</p>
-
     </div>
   </div>
 
-  <!-- ── CUERPO ──────────────────────────────── -->
   <div class="perfil-body">
-
-    <!-- ADMIN -->
     <ng-container *ngIf="rol === 'admin'">
       <p class="sec-label">Herramientas de control</p>
       <div class="admin-hero-card" routerLink="/panel-admin">
@@ -58,7 +59,6 @@
       </div>
     </ng-container>
 
-    <!-- VIAJERO Y PROVEEDOR -->
     <ng-container *ngIf="rol !== 'admin'">
       <p class="sec-label">Mi actividad</p>
       <div class="menu-card">
@@ -85,7 +85,22 @@
       </div>
     </ng-container>
 
-    <!-- AJUSTES (todos) -->
+    <ng-container *ngIf="rol !== 'admin' && !esInvitado">
+      <p class="sec-label">Modo de Cuenta</p>
+      <div class="menu-card">
+        <div class="menu-item" (click)="cambiarRol()">
+          <div class="menu-icon mi-blue">
+            <ion-icon name="swap-horizontal-outline"></ion-icon>
+          </div>
+          <div class="menu-texto">
+            <span class="menu-titulo">Cambiar a modo {{ rol === 'viajero' ? 'Agencia' : 'Turista' }}</span>
+            <span class="menu-sub">Alternar funciones de la app</span>
+          </div>
+          <ion-icon name="chevron-forward-outline" class="menu-arrow"></ion-icon>
+        </div>
+      </div>
+    </ng-container>
+
     <p class="sec-label">Ajustes</p>
     <div class="menu-card">
       <div class="menu-item">
@@ -114,7 +129,5 @@
       <ion-icon name="log-out-outline"></ion-icon>
       Cerrar Sesión Segura
     </button>
-
   </div>
-
 </ion-content>

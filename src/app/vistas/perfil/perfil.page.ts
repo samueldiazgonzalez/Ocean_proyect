@@ -5,15 +5,17 @@ import { Router, RouterModule } from '@angular/router';
 import { 
   IonContent, IonHeader, IonTitle, IonToolbar, IonButton,
   IonIcon, IonList, IonItem, IonLabel, IonSpinner,
-  IonBadge, IonListHeader, IonCard, AlertController
+  IonBadge, IonListHeader, IonCard, AlertController,
+  IonButtons, IonBackButton
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { 
   personCircle, briefcaseOutline, settingsOutline, 
   helpCircleOutline, logOutOutline, ticketOutline,
   logInOutline, personAddOutline, shieldCheckmark, heartOutline,
-  pencilOutline
+  pencilOutline, chevronForwardOutline, swapHorizontalOutline
 } from 'ionicons/icons';
+import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
 
 import { AuthService } from '../../core/services/auth';
 import { DatabaseService } from '../../core/services/database';
@@ -26,7 +28,7 @@ import { DatabaseService } from '../../core/services/database';
   imports: [
     IonContent, IonHeader, IonTitle, IonToolbar, IonButton,
     IonIcon, IonList, IonItem, IonLabel, IonSpinner,
-    IonBadge, IonListHeader, IonCard,
+    IonBadge, IonListHeader, IonCard, IonButtons, IonBackButton,
     CommonModule, FormsModule, RouterModule 
   ]
 })
@@ -35,6 +37,7 @@ export class PerfilPage {
   private databaseService = inject(DatabaseService);
   private router = inject(Router);
   private alertController = inject(AlertController);
+  private firestore = inject(Firestore);
 
   uid: string = '';
   nombre: string = '';
@@ -49,7 +52,7 @@ export class PerfilPage {
       personCircle, briefcaseOutline, settingsOutline, 
       helpCircleOutline, logOutOutline, ticketOutline,
       logInOutline, personAddOutline, shieldCheckmark, heartOutline,
-      pencilOutline
+      pencilOutline, chevronForwardOutline, swapHorizontalOutline
     });
   }
 
@@ -106,12 +109,24 @@ export class PerfilPage {
     await alert.present();
   }
 
-  async cerrarSesion() {
-    // 1. Cerramos la sesión en Firebase
-    await this.authService.logout();
+  async cambiarRol() {
+    if (!this.uid) return;
     
-    // 2. LA SOLUCIÓN: Usamos window.location.replace en lugar del router de Angular.
-    // Esto borra el caché de la memoria al recargar la app y te lanza al login limpiecito.
+    this.cargandoDatos = true;
+    const nuevoRol = this.rol === 'viajero' ? 'proveedor' : 'viajero';
+    
+    try {
+      const userRef = doc(this.firestore, `usuarios/${this.uid}`);
+      await updateDoc(userRef, { rol: nuevoRol });
+      window.location.replace('/tabs/catalogo');
+    } catch (error) {
+      console.error('Error al cambiar rol', error);
+      this.cargandoDatos = false;
+    }
+  }
+
+  async cerrarSesion() {
+    await this.authService.logout();
     window.location.replace('/vistas/login');
   }
 }
