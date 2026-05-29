@@ -39,7 +39,7 @@ export class PanelAdminPage implements OnInit {
   toursPendientes: Tour[] = [];
   toursActivos: Tour[] = [];
   totalToursActivos: number = 0;
-  segmentoActual: string = 'pendientes';
+  segmentoActual: string = 'activos';
   chart: any;
 
   constructor() {
@@ -47,10 +47,7 @@ export class PanelAdminPage implements OnInit {
   }
 
   ngOnInit() {
-    this.databaseService.obtenerToursPendientes().subscribe(tours => {
-      this.toursPendientes = tours;
-    });
-
+    // Solo cargar tours activos (aprobados) - sin validación pendiente
     this.databaseService.obtenerTours().subscribe(tours => {
       this.toursActivos = tours;
       this.totalToursActivos = tours.length;
@@ -59,6 +56,17 @@ export class PanelAdminPage implements OnInit {
         this.generarGrafica();
       }, 300);
     });
+  }
+
+  getCategoryClass(categoria: string | undefined): string {
+    if (!categoria) return 'cat-other';
+    const categoriaMap: { [key: string]: string } = {
+      'tours': 'cat-tour',
+      'hoteles': 'cat-hotel',
+      'experiencias': 'cat-exp',
+      'transporte': 'cat-transport'
+    };
+    return categoriaMap[categoria.toLowerCase()] || 'cat-other';
   }
 
   generarGrafica() {
@@ -106,33 +114,6 @@ export class PanelAdminPage implements OnInit {
         }
       }
     });
-  }
-
-  cambiarTab(event: any) {
-    this.segmentoActual = event.detail.value;
-  }
-
-  async confirmarAprobacion(tourId: string | undefined) {
-    if (!tourId) return;
-
-    const alert = await this.alertController.create({
-      header: 'Auditoría de Tour',
-      message: '¿Estás seguro de aprobar este paquete? Se volverá público en el catálogo.',
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        { text: 'Sí, Aprobar', handler: () => { this.aprobar(tourId); } }
-      ]
-    });
-
-    await alert.present();
-  }
-
-  async aprobar(tourId: string) {
-    try {
-      await this.databaseService.aprobarTour(tourId);
-    } catch (error) {
-      console.error(error);
-    }
   }
 
   async suspender(tourId: string | undefined) {
