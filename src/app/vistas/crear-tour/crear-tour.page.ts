@@ -104,7 +104,8 @@ export class CrearTourPage {
         opcionesAdicionales: this.opcionesAdicionales,
         extras: this.categoria === 'hoteles' ? [] : extrasLimpios, // Si es hotel, no guarda extras
         habitaciones: this.categoria === 'hoteles' ? habitacionesLimpias : [], // Si es tour, no guarda habitaciones
-        estado: 'pendiente' 
+        estado: 'aprobado',  // Tours se publican directamente sin validación
+        fechaPublicacion: new Date().toISOString()
       };
 
       await this.databaseService.agregarTour(nuevoTour as any);      

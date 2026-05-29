@@ -63,8 +63,12 @@ export const routes: Routes = [
     loadComponent: () => import('./vistas/panel-admin/panel-admin.page').then( m => m.PanelAdminPage)
   },
   {
+    path: 'configuracion',
+    loadComponent: () => import('./vistas/configuracion/configuracion.page').then( m => m.ConfiguracionPage)
+  },
+  {
    
-  path: 'mis-favoritos', // ¡Fíjate bien qué dice aquí!
+  path: 'mis-favoritos',
   loadComponent: () => import('./vistas/mis-favoritos/mis-favoritos.page').then( m => m.MisFavoritosPage)
 }
 

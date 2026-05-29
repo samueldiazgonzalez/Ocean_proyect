@@ -1,0 +1,99 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="toolbar-config">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/perfil" class="back-btn-config"></ion-back-button>
+    </ion-buttons>
+    <div class="toolbar-info">
+      <span class="toolbar-titulo">⚙️ {{ getTexto('titulo') }}</span>
+      <span class="toolbar-sub">{{ getTexto('subtitulo') }}</span>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="config-content">
+  <div class="config-container">
+
+    <!-- ── APARIENCIA ─────────────────────────── -->
+    <div class="config-section">
+      <div class="section-header">
+        <ion-icon name="palette-outline" class="section-icon"></ion-icon>
+        <h2 class="section-titulo">{{ getTexto('seccion_apariencia') }}</h2>
+      </div>
+
+      <div class="config-card">
+        <div class="config-item">
+          <div class="item-info">
+            <h3 class="item-titulo">{{ getTexto('tema') }}</h3>
+            <p class="item-desc">{{ getTexto('tema_desc') }}</p>
+          </div>
+          <ion-select 
+            [(ngModel)]="settings.tema"
+            (ionChange)="onTemaChange($event)"
+            interface="popover"
+            class="tema-select">
+            <ion-select-option *ngFor="let opt of temaOpciones" [value]="opt.valor">
+              {{ opt.label }}
+            </ion-select-option>
+          </ion-select>
+        </div>
+
+        <div class="config-divider"></div>
+
+        <div class="config-item">
+          <div class="item-info">
+            <h3 class="item-titulo">{{ getTexto('cambiar_tema') }}</h3>
+            <p class="item-desc">
+              <ion-icon [name]="settings.tema === 'light' ? 'sunny-outline' : 'moon-outline'" class="tema-icon"></ion-icon>
+              {{ settings.tema === 'light' ? 'Claro' : 'Oscuro' }}
+            </p>
+          </div>
+          <button class="btn-toggle" (click)="toggleTema()">
+            <ion-icon [name]="settings.tema === 'light' ? 'moon-outline' : 'sunny-outline'"></ion-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── IDIOMA ─────────────────────────── -->
+    <div class="config-section">
+      <div class="section-header">
+        <ion-icon name="globe-outline" class="section-icon"></ion-icon>
+        <h2 class="section-titulo">{{ getTexto('seccion_idioma') }}</h2>
+      </div>
+
+      <div class="config-card">
+        <div class="config-item">
+          <div class="item-info">
+            <h3 class="item-titulo">{{ getTexto('idioma') }}</h3>
+            <p class="item-desc">{{ getTexto('idioma_desc') }}</p>
+          </div>
+          <ion-select 
+            [(ngModel)]="settings.idioma"
+            (ionChange)="onIdiomaChange($event)"
+            interface="popover"
+            class="idioma-select">
+            <ion-select-option *ngFor="let opt of idiomaOpciones" [value]="opt.valor">
+              {{ opt.label }}
+            </ion-select-option>
+          </ion-select>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── INFO ─────────────────────────── -->
+    <div class="config-section config-section-footer">
+      <div class="info-card">
+        <ion-icon name="information-circle-outline" class="info-icon"></ion-icon>
+        <div class="info-texto">
+          <p class="info-titulo">{{ settings.idioma === 'es' ? 'Información' : 'Information' }}</p>
+          <p class="info-desc">
+            {{ settings.idioma === 'es' 
+              ? 'Los cambios se guardan automáticamente' 
+              : 'Changes are saved automatically' }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</ion-content>
