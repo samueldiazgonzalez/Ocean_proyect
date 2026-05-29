@@ -1,0 +1,387 @@
+// ── Toolbar ────────────────────────────────────
+.toolbar-admin {
+  --background: linear-gradient(135deg, #3b0764, #1e3a8a);
+  --padding-start: 0;
+  --min-height: 58px;
+}
+
+.toolbar-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-left: 6px;
+}
+
+.toolbar-titulo {
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+  line-height: 1;
+}
+
+.toolbar-sub {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.back-btn-admin {
+  --color: rgba(255, 255, 255, 0.75);
+}
+
+// ── Segmento ───────────────────────────────────
+.toolbar-segmento {
+  --background: rgba(10, 15, 30, 0.92);
+  --border-bottom: 0.5px solid rgba(255, 255, 255, 0.07);
+  --min-height: 48px;
+  --padding-start: 12px;
+  --padding-end: 12px;
+}
+
+.admin-segment {
+  --background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  border: 0.5px solid rgba(255, 255, 255, 0.1);
+
+  ion-segment-button {
+    --color: rgba(255, 255, 255, 0.38);
+    --color-checked: #c084fc;
+    --background-checked: rgba(168, 85, 247, 0.2);
+    --indicator-color: transparent;
+    --border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    min-height: 36px;
+
+    ion-icon { font-size: 14px; margin-bottom: 0; }
+    ion-label { font-size: 12px; }
+  }
+}
+
+// ── Fondo ──────────────────────────────────────
+ion-content.admin-content {
+  --background: url('https://images.pexels.com/photos/27566375/pexels-photo-27566375.jpeg') center center / cover no-repeat fixed;
+}
+
+ion-content.admin-content::part(scroll) {
+  background: rgba(10, 15, 30, 0.88);
+  min-height: 100%;
+}
+
+// ── Contenedor ─────────────────────────────────
+.admin-container {
+  padding: 16px 14px 48px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+// ── Stats ──────────────────────────────────────
+.stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.stat-card {
+  background: rgba(19, 25, 41, 0.88);
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-icon-wrap {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+
+  ion-icon { font-size: 20px; }
+
+  &.si-blue  { background: rgba(0, 119, 182, 0.2);  ion-icon { color: #60c8ff; } }
+  &.si-amber { background: rgba(251, 191, 36, 0.15); ion-icon { color: #fbbf24; } }
+}
+
+.stat-num {
+  font-size: 30px;
+  font-weight: 800;
+  color: white;
+  line-height: 1;
+}
+
+.stat-lbl {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+// ── Gráfica ────────────────────────────────────
+.chart-card {
+  background: rgba(19, 25, 41, 0.88);
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 16px 14px;
+  margin-bottom: 20px;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.chart-titulo {
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+  margin: 0 0 3px;
+}
+
+.chart-sub {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.32);
+  margin: 0;
+}
+
+.chart-badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: rgba(168, 85, 247, 0.15);
+  border: 0.5px solid rgba(168, 85, 247, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ion-icon { font-size: 18px; color: #c084fc; }
+}
+
+.chart-wrapper {
+  position: relative;
+  height: 220px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// ── Sec label ──────────────────────────────────
+.sec-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.28);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin: 0 0 10px 2px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  ion-icon { font-size: 13px; color: #c084fc; }
+}
+
+// ── Pendiente card ─────────────────────────────
+.pendiente-card {
+  background: rgba(19, 25, 41, 0.88);
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 13px 13px 12px;
+  margin-bottom: 10px;
+}
+
+.pc-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  gap: 8px;
+}
+
+.pc-info { flex: 1; }
+
+.pc-titulo {
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+  margin: 0 0 4px;
+  line-height: 1.3;
+}
+
+.pc-precio {
+  font-size: 13px;
+  font-weight: 700;
+  color: #00d4a0;
+}
+
+.pc-cat {
+  background: rgba(0, 119, 182, 0.2);
+  border: 0.5px solid rgba(0, 150, 199, 0.35);
+  color: #60c8ff;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.pc-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-accion {
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 0.5px solid;
+  transition: opacity 0.15s;
+  flex: 1;
+  justify-content: center;
+
+  ion-icon { font-size: 15px; }
+  &:active { opacity: 0.75; }
+
+  &.btn-ver {
+    background: rgba(0, 119, 182, 0.15);
+    border-color: rgba(0, 150, 199, 0.35);
+    color: #60c8ff;
+  }
+
+  &.btn-aprobar {
+    background: rgba(0, 212, 160, 0.15);
+    border-color: rgba(0, 212, 160, 0.4);
+    color: #00d4a0;
+  }
+}
+
+// ── Activo card ────────────────────────────────
+.activo-card {
+  background: rgba(19, 25, 41, 0.88);
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  margin-bottom: 9px;
+}
+
+.activo-thumb-wrap {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.activo-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.activo-info { flex: 1; }
+
+.activo-titulo {
+  font-size: 13px;
+  font-weight: 700;
+  color: white;
+  margin: 0 0 5px;
+  line-height: 1.3;
+}
+
+.pub-pill {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 9px;
+  font-weight: 700;
+  background: rgba(0, 212, 160, 0.15);
+  border: 0.5px solid rgba(0, 212, 160, 0.35);
+  color: #00d4a0;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.activo-acciones {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-icono {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 0.5px solid;
+  transition: opacity 0.15s;
+
+  ion-icon { font-size: 17px; }
+  &:active { opacity: 0.7; }
+
+  &.btn-pausar {
+    background: rgba(251, 191, 36, 0.12);
+    border-color: rgba(251, 191, 36, 0.3);
+    ion-icon { color: #fbbf24; }
+  }
+
+  &.btn-borrar {
+    background: rgba(255, 82, 82, 0.12);
+    border-color: rgba(255, 82, 82, 0.28);
+    ion-icon { color: #ff6b6b; }
+  }
+}
+
+// ── Estado vacío ───────────────────────────────
+.estado-vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 50px 20px;
+  gap: 10px;
+  text-align: center;
+}
+
+.vacio-icono {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(168, 85, 247, 0.1);
+  border: 0.5px solid rgba(168, 85, 247, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+
+  ion-icon { font-size: 32px; color: rgba(192, 132, 252, 0.5); }
+}
+
+.estado-vacio h3 {
+  font-size: 18px;
+  font-weight: 800;
+  color: white;
+  margin: 0;
+}
+
+.estado-vacio p {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.35);
+  margin: 0;
+  max-width: 220px;
+  line-height: 1.5;
+}

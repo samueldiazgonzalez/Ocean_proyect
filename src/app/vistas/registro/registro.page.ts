@@ -1,16 +1,18 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { 
   IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton,
-  IonCard, IonCardContent, IonItem, IonIcon, IonInput, IonButton, 
-  IonSelect, IonSelectOption, IonSpinner, IonText,
-  IonList, IonLabel
+  IonIcon, IonInput, IonSpinner
 } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
-import { personOutline, mailOutline, lockClosedOutline, callOutline, businessOutline, sparklesOutline, compassOutline, checkmark, informationCircleOutline, alertCircleOutline, arrowForwardOutline } from 'ionicons/icons';
+import { 
+  sparklesOutline, personOutline, callOutline, compassOutline, checkmark,
+  businessOutline, informationCircleOutline, mailOutline, lockClosedOutline, 
+  alertCircleOutline, arrowForwardOutline
+} from 'ionicons/icons';
 
 import { AuthService } from '../../core/services/auth';
 
@@ -21,10 +23,8 @@ import { AuthService } from '../../core/services/auth';
   standalone: true,
   imports: [
     IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton,
-    IonCard, IonCardContent, IonItem, IonIcon, IonInput, IonButton, 
-    IonSelect, IonSelectOption, IonSpinner, IonText, 
-    IonList, IonLabel,
-    CommonModule, FormsModule
+    IonIcon, IonInput, IonSpinner,
+    CommonModule, FormsModule, RouterModule
   ]
 })
 export class RegistroPage {
@@ -43,7 +43,11 @@ export class RegistroPage {
   mensajeError: string = '';
 
   constructor() {
-    addIcons({sparklesOutline,personOutline,callOutline,compassOutline,checkmark,businessOutline,informationCircleOutline,mailOutline,lockClosedOutline,alertCircleOutline,arrowForwardOutline});
+    addIcons({
+      sparklesOutline, personOutline, callOutline, compassOutline, checkmark,
+      businessOutline, informationCircleOutline, mailOutline, lockClosedOutline,
+      alertCircleOutline, arrowForwardOutline
+    });
   }
 
   async registrar() {
@@ -73,17 +77,13 @@ export class RegistroPage {
         nombreAgencia: this.nombreAgencia
       };
 
-      // 5. Enviamos correo, contraseña y los datos extra al servicio
       await this.authService.registrarUsuario(this.correo, this.contrasena, datosExtra);
       
       console.log('¡Registro exitoso con datos completos!');
       
-     // 6. REDIRECCIÓN INTELIGENTE SEGÚN EL ROL:
       if (this.rol === 'proveedor') {
-        // ¡Agregamos 'tabs' a la ruta!
         this.router.navigate(['/tabs/mis-tours']); 
       } else {
-        // Al turista lo mandamos a vitrinear al catálogo
         this.router.navigate(['/tabs/catalogo']);
       }
 

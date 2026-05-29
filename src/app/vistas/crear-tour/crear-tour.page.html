@@ -1,195 +1,258 @@
 <ion-header class="ion-no-border">
-  <ion-toolbar color="primary">
-    <ion-title>Publicar Servicio</ion-title>
+  <ion-toolbar class="toolbar-crear">
+    <div class="toolbar-info" slot="start">
+      <span class="toolbar-titulo">📦 Publicar Servicio</span>
+      <span class="toolbar-sub">Completa los datos de tu oferta</span>
+    </div>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding" color="light">
-  
-  <div class="ion-text-center ion-margin-bottom ion-padding-top">
-    <h2>¿Qué vas a publicar?</h2>
-    <p>Selecciona la categoría para empezar</p>
-  </div>
+<ion-content class="crear-content">
 
-  <ion-list inset="true" lines="full">
-    <ion-item>
-      <ion-icon name="pricetag-outline" slot="start" color="primary"></ion-icon>
-      <ion-select [(ngModel)]="categoria" label="Tipo de Servicio" labelPlacement="floating">
-        <ion-select-option value="Relajante">Relajante 🧘</ion-select-option>
-        <ion-select-option value="Extremo">Extremo 🧗</ion-select-option>
-        <ion-select-option value="Cultural">Cultural 🏛️</ion-select-option>
-        <ion-select-option value="Familiar">Familiar 👨‍👩‍👧‍👦</ion-select-option>
-        <ion-select-option value="Ecológico">Ecológico 🍃</ion-select-option>
-        <ion-select-option value="Fiesta">Fiesta 🎉</ion-select-option>
-        <ion-select-option value="hoteles">Hoteles y Alojamientos 🏨</ion-select-option>
-      </ion-select>
-    </ion-item>
-  </ion-list>
+  <div class="crear-container">
 
-  <!-- 👇 TODO ESTO ESTÁ OCULTO HASTA QUE SELECCIONE UNA CATEGORÍA 👇 -->
-  <div *ngIf="categoria !== ''">
-    
-    <ion-list inset="true" lines="full">
-      <ion-list-header>
-        <ion-label>Información Básica</ion-label>
-      </ion-list-header>
+    <!-- Hero -->
+    <div class="crear-hero">
+      <div class="hero-badge">
+        <ion-icon name="add-circle-outline"></ion-icon>
+        <span>Nuevo servicio</span>
+      </div>
+      <h2 class="hero-titulo">¿Qué vas a <span class="titulo-highlight">publicar?</span></h2>
+      <p class="hero-subtitulo">Selecciona la categoría para empezar</p>
+    </div>
 
-      <!-- CAMBIOS DINÁMICOS: TÍTULO -->
-      <ion-item>
-        <ion-icon name="text-outline" slot="start"></ion-icon>
-        <ion-input [(ngModel)]="titulo" [label]="categoria === 'hoteles' ? 'Nombre del Alojamiento' : 'Nombre de la Experiencia/Tour'" labelPlacement="floating" type="text"></ion-input>
-      </ion-item>
+    <!-- ── SELECTOR DE CATEGORÍA ── -->
+    <p class="sec-label">Tipo de servicio</p>
+    <div class="cat-grid">
+      <button class="cat-btn" [class.cat-activa]="categoria === 'Relajante'" (click)="categoria = 'Relajante'">
+        <span class="cat-emoji">🧘</span><span class="cat-name">Relajante</span>
+      </button>
+      <button class="cat-btn" [class.cat-activa]="categoria === 'Extremo'" (click)="categoria = 'Extremo'">
+        <span class="cat-emoji">🧗</span><span class="cat-name">Extremo</span>
+      </button>
+      <button class="cat-btn" [class.cat-activa]="categoria === 'Cultural'" (click)="categoria = 'Cultural'">
+        <span class="cat-emoji">🏛️</span><span class="cat-name">Cultural</span>
+      </button>
+      <button class="cat-btn" [class.cat-activa]="categoria === 'Familiar'" (click)="categoria = 'Familiar'">
+        <span class="cat-emoji">👨‍👩‍👧‍👦</span><span class="cat-name">Familiar</span>
+      </button>
+      <button class="cat-btn" [class.cat-activa]="categoria === 'Ecológico'" (click)="categoria = 'Ecológico'">
+        <span class="cat-emoji">🍃</span><span class="cat-name">Ecológico</span>
+      </button>
+      <button class="cat-btn" [class.cat-activa]="categoria === 'Fiesta'" (click)="categoria = 'Fiesta'">
+        <span class="cat-emoji">🎉</span><span class="cat-name">Fiesta</span>
+      </button>
+      <button class="cat-btn cat-full" [class.cat-activa]="categoria === 'hoteles'" (click)="categoria = 'hoteles'">
+        <span class="cat-emoji">🏨</span><span class="cat-name">Hoteles y Alojamientos</span>
+      </button>
+    </div>
 
-      <!-- CAMBIOS DINÁMICOS: PRECIO -->
-      <ion-item *ngIf="categoria === 'hoteles'">
-        <ion-icon name="cash-outline" slot="start"></ion-icon>
-        <ion-input [(ngModel)]="precio" label="Precio 'Desde...' (Noche más barata)" labelPlacement="floating" type="number"></ion-input>
-      </ion-item>
+    <!-- ── TODO OCULTO HASTA ELEGIR CATEGORÍA ── -->
+    <div *ngIf="categoria !== ''">
 
-      <ion-item *ngIf="categoria !== 'hoteles'">
-        <ion-icon name="cash-outline" slot="start"></ion-icon>
-        <ion-input [(ngModel)]="precio" label="Precio Base (Por persona)" labelPlacement="floating" type="number"></ion-input>
-      </ion-item>
+      <!-- ── INFO BÁSICA ── -->
+      <p class="sec-label">Información básica</p>
+      <div class="form-card">
 
-      <!-- CAMBIOS DINÁMICOS: DURACIÓN VS NOCHES -->
-      <ion-item *ngIf="categoria === 'hoteles'">
-        <ion-icon name="moon-outline" slot="start"></ion-icon>
-        <ion-input [(ngModel)]="duracion" label="Estadía mínima (Ej: 2 noches)" labelPlacement="floating" type="text"></ion-input>
-      </ion-item>
-
-      <ion-item *ngIf="categoria !== 'hoteles'">
-        <ion-icon name="time-outline" slot="start"></ion-icon>
-        <ion-input [(ngModel)]="duracion" label="Duración (Ej: 4 horas, Todo el día)" labelPlacement="floating" type="text"></ion-input>
-      </ion-item>
-
-      <!-- CONTACTO SIEMPRE ES IGUAL -->
-      <ion-item>
-        <ion-icon name="call-outline" slot="start"></ion-icon>
-        <ion-input [(ngModel)]="telefono" label="WhatsApp de Contacto" labelPlacement="floating" type="tel"></ion-input>
-      </ion-item>
-
-      <!-- CAMBIOS DINÁMICOS: UBICACIÓN VS PUNTO DE ENCUENTRO -->
-      <ion-item *ngIf="categoria === 'hoteles'">
-        <ion-icon name="location-outline" slot="start"></ion-icon>
-        <ion-input [(ngModel)]="direccion" label="Dirección Exacta" labelPlacement="floating" type="text"></ion-input>
-      </ion-item>
-
-      <ion-item *ngIf="categoria !== 'hoteles'">
-        <ion-icon name="map-outline" slot="start"></ion-icon>
-        <ion-input [(ngModel)]="direccion" label="Punto de Encuentro / Salida" labelPlacement="floating" type="text"></ion-input>
-      </ion-item>
-
-      <!-- CAMBIOS DINÁMICOS: POLÍTICAS VS RECOMENDACIONES -->
-      <ion-item *ngIf="categoria === 'hoteles'">
-        <ion-icon name="alert-circle-outline" slot="start"></ion-icon>
-        <ion-textarea [(ngModel)]="opcionesAdicionales" label="Políticas (Mascotas, Check-in...)" labelPlacement="floating" [autoGrow]="true"></ion-textarea>
-      </ion-item>
-
-      <ion-item *ngIf="categoria !== 'hoteles'">
-        <ion-icon name="information-circle-outline" slot="start"></ion-icon>
-        <ion-textarea [(ngModel)]="opcionesAdicionales" label="Recomendaciones (Qué llevar...)" labelPlacement="floating" [autoGrow]="true"></ion-textarea>
-      </ion-item>
-    </ion-list>
-
-    <!-- 👇 SECCIÓN DINÁMICA SOLO PARA HOTELES 👇 -->
-    <ion-list inset="true" lines="full" *ngIf="categoria === 'hoteles'">
-      <ion-list-header>
-        <ion-label color="tertiary">
-          <ion-icon name="bed-outline"></ion-icon> 
-          Gestor de Habitaciones
-        </ion-label>
-      </ion-list-header>
-      <p style="padding: 0 15px; font-size: 13px; color: gray; margin-top: 0;">Añade los tipos de habitación que ofreces.</p>
-
-      <div *ngFor="let hab of habitaciones; let i = index" style="border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px; background-color: #f0f8ff;">
-        <ion-item lines="none" color="transparent">
-          <ion-icon name="bed-outline" slot="start" color="tertiary"></ion-icon>
-          <ion-input [(ngModel)]="hab.nombre" [label]="'Nombre Habitación ' + (i + 1)" labelPlacement="floating" type="text" placeholder="Ej. Suite Vista al Mar"></ion-input>
-        </ion-item>
-        <div style="display: flex;">
-          <ion-item lines="none" color="transparent" style="flex: 1;">
-            <ion-icon name="cash-outline" slot="start" color="success"></ion-icon>
-            <ion-input [(ngModel)]="hab.precio" label="Precio / Noche" labelPlacement="floating" type="number"></ion-input>
-          </ion-item>
-          <ion-item lines="none" color="transparent" style="flex: 1;">
-            <ion-icon name="people-outline" slot="start" color="primary"></ion-icon>
-            <ion-input [(ngModel)]="hab.capacidad" label="Personas" labelPlacement="floating" type="number"></ion-input>
-          </ion-item>
+        <div class="campo-grupo">
+          <span class="campo-label">
+            {{ categoria === 'hoteles' ? 'Nombre del alojamiento' : 'Nombre de la experiencia / tour' }}
+          </span>
+          <div class="campo-inner">
+            <ion-icon name="text-outline" class="campo-icon"></ion-icon>
+            <ion-input [(ngModel)]="titulo" class="campo-input"
+              placeholder="Ej: Tour Islas del Rosario"></ion-input>
+          </div>
         </div>
-        <ion-item lines="none" color="transparent">
-          <ion-icon name="information-circle-outline" slot="start" color="medium"></ion-icon>
-          <ion-input [(ngModel)]="hab.descripcion" label="¿Qué incluye?" labelPlacement="floating" type="text"></ion-input>
-          <ion-button fill="clear" color="danger" slot="end" (click)="eliminarHabitacion(i)">
-            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
-          </ion-button>
-        </ion-item>
+
+        <div class="campo-grupo">
+          <span class="campo-label">
+            {{ categoria === 'hoteles' ? "Precio 'Desde...' (noche más barata)" : 'Precio base (por persona)' }}
+          </span>
+          <div class="campo-inner">
+            <ion-icon name="cash-outline" class="campo-icon"></ion-icon>
+            <ion-input [(ngModel)]="precio" type="number" class="campo-input" placeholder="0"></ion-input>
+          </div>
+        </div>
+
+        <div class="campo-grupo">
+          <span class="campo-label">
+            {{ categoria === 'hoteles' ? 'Estadía mínima' : 'Duración' }}
+          </span>
+          <div class="campo-inner">
+            <ion-icon [name]="categoria === 'hoteles' ? 'moon-outline' : 'time-outline'" class="campo-icon"></ion-icon>
+            <ion-input [(ngModel)]="duracion" class="campo-input"
+              [placeholder]="categoria === 'hoteles' ? 'Ej: 2 noches' : 'Ej: 4 horas, Todo el día'"></ion-input>
+          </div>
+        </div>
+
+        <div class="campo-grupo">
+          <span class="campo-label">WhatsApp de contacto</span>
+          <div class="campo-inner">
+            <ion-icon name="call-outline" class="campo-icon"></ion-icon>
+            <ion-input [(ngModel)]="telefono" type="tel" class="campo-input"
+              placeholder="+57 300 000 0000"></ion-input>
+          </div>
+        </div>
+
+        <div class="campo-grupo">
+          <span class="campo-label">
+            {{ categoria === 'hoteles' ? 'Dirección exacta' : 'Punto de encuentro / salida' }}
+          </span>
+          <div class="campo-inner">
+            <ion-icon [name]="categoria === 'hoteles' ? 'location-outline' : 'map-outline'" class="campo-icon"></ion-icon>
+            <ion-input [(ngModel)]="direccion" class="campo-input"
+              placeholder="Ej: Calle 5 #3-20, Cartagena"></ion-input>
+          </div>
+        </div>
+
+        <div class="campo-grupo">
+          <span class="campo-label">
+            {{ categoria === 'hoteles' ? 'Políticas (mascotas, check-in...)' : 'Recomendaciones (qué llevar...)' }}
+          </span>
+          <div class="campo-inner campo-textarea">
+            <ion-icon [name]="categoria === 'hoteles' ? 'alert-circle-outline' : 'information-circle-outline'"
+              class="campo-icon"></ion-icon>
+            <ion-textarea [(ngModel)]="opcionesAdicionales" class="campo-input"
+              [autoGrow]="true" placeholder="Escribe aquí..."></ion-textarea>
+          </div>
+        </div>
+
       </div>
 
-      <ion-button fill="clear" expand="block" (click)="agregarHabitacion()" style="margin: 10px;">
-        <ion-icon slot="start" name="add-circle-outline"></ion-icon> Añadir Habitación
-      </ion-button>
-    </ion-list>
+      <!-- ── HABITACIONES (solo hoteles) ── -->
+      <ng-container *ngIf="categoria === 'hoteles'">
+        <p class="sec-label">
+          <ion-icon name="bed-outline"></ion-icon> Gestor de habitaciones
+        </p>
+        <div class="form-card">
+          <p class="sec-hint">Añade los tipos de habitación que ofreces.</p>
 
-    <!-- 👇 SECCIÓN DINÁMICA SOLO PARA TOURS/AVENTURAS 👇 -->
-    <ion-list inset="true" lines="full" *ngIf="categoria !== 'hoteles'">
-      <ion-list-header>
-        <ion-label color="warning">
-          <ion-icon name="star"></ion-icon> 
-          Extras Opcionales
-        </ion-label>
-      </ion-list-header>
-      <p style="padding: 0 15px; font-size: 13px; color: gray; margin-top: 0;">Añade opciones como "Transporte VIP" o "Almuerzo".</p>
+          <div class="hab-item" *ngFor="let hab of habitaciones; let i = index">
+            <div class="hab-header">
+              <span class="hab-titulo">Habitación {{ i + 1 }}</span>
+              <button class="btn-eliminar-item" (click)="eliminarHabitacion(i)">
+                <ion-icon name="trash-outline"></ion-icon>
+              </button>
+            </div>
+            <div class="campo-inner">
+              <ion-icon name="bed-outline" class="campo-icon"></ion-icon>
+              <ion-input [(ngModel)]="hab.nombre" class="campo-input"
+                placeholder="Ej: Suite Vista al Mar"></ion-input>
+            </div>
+            <div class="hab-row">
+              <div class="campo-inner" style="flex:1">
+                <ion-icon name="cash-outline" class="campo-icon"></ion-icon>
+                <ion-input [(ngModel)]="hab.precio" type="number"
+                  class="campo-input" placeholder="Precio/noche"></ion-input>
+              </div>
+              <div class="campo-inner" style="flex:1">
+                <ion-icon name="people-outline" class="campo-icon"></ion-icon>
+                <ion-input [(ngModel)]="hab.capacidad" type="number"
+                  class="campo-input" placeholder="Personas"></ion-input>
+              </div>
+            </div>
+            <div class="campo-inner" style="margin-top:8px">
+              <ion-icon name="information-circle-outline" class="campo-icon"></ion-icon>
+              <ion-input [(ngModel)]="hab.descripcion" class="campo-input"
+                placeholder="¿Qué incluye?"></ion-input>
+            </div>
+          </div>
 
-      <div *ngFor="let extra of extras; let i = index" style="border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px; background-color: #fff9e6;">
-        <ion-item lines="none" color="transparent">
-          <ion-icon name="ribbon-outline" slot="start" color="warning"></ion-icon>
-          <ion-input [(ngModel)]="extra.nombre" [label]="'Nombre Extra ' + (i + 1)" labelPlacement="floating" type="text"></ion-input>
-        </ion-item>
-        <ion-item lines="none" color="transparent">
-          <ion-icon name="add-circle-outline" slot="start" color="success"></ion-icon>
-          <ion-input [(ngModel)]="extra.precio" label="Costo Adicional (+ COP)" labelPlacement="floating" type="number"></ion-input>
-          <ion-button fill="clear" color="danger" slot="end" (click)="eliminarExtra(i)">
-            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
-          </ion-button>
-        </ion-item>
+          <button class="btn-agregar" (click)="agregarHabitacion()">
+            <ion-icon name="add-circle-outline"></ion-icon> Añadir habitación
+          </button>
+        </div>
+      </ng-container>
+
+      <!-- ── EXTRAS (solo tours) ── -->
+      <ng-container *ngIf="categoria !== 'hoteles'">
+        <p class="sec-label">
+          <ion-icon name="ribbon-outline"></ion-icon> Extras opcionales
+        </p>
+        <div class="form-card">
+          <p class="sec-hint">Añade opciones como "Transporte VIP" o "Almuerzo".</p>
+
+          <div class="extra-item" *ngFor="let extra of extras; let i = index">
+            <div class="hab-header">
+              <span class="hab-titulo">Extra {{ i + 1 }}</span>
+              <button class="btn-eliminar-item" (click)="eliminarExtra(i)">
+                <ion-icon name="trash-outline"></ion-icon>
+              </button>
+            </div>
+            <div class="campo-inner">
+              <ion-icon name="ribbon-outline" class="campo-icon"></ion-icon>
+              <ion-input [(ngModel)]="extra.nombre" class="campo-input"
+                placeholder="Nombre del extra"></ion-input>
+            </div>
+            <div class="campo-inner" style="margin-top:8px">
+              <ion-icon name="add-circle-outline" class="campo-icon"></ion-icon>
+              <ion-input [(ngModel)]="extra.precio" type="number"
+                class="campo-input" placeholder="Costo adicional (COP)"></ion-input>
+            </div>
+          </div>
+
+          <button class="btn-agregar" (click)="agregarExtra()">
+            <ion-icon name="add-circle-outline"></ion-icon> Añadir extra
+          </button>
+        </div>
+      </ng-container>
+
+      <!-- ── DETALLES ── -->
+      <p class="sec-label">Detalles del servicio</p>
+      <div class="form-card">
+        <div class="campo-grupo">
+          <span class="campo-label">Descripción general</span>
+          <div class="campo-inner campo-textarea">
+            <ion-icon name="document-text-outline" class="campo-icon"></ion-icon>
+            <ion-textarea [(ngModel)]="descripcion" class="campo-input"
+              [autoGrow]="true" placeholder="Describe tu servicio..."></ion-textarea>
+          </div>
+        </div>
+        <div class="campo-grupo">
+          <span class="campo-label">
+            {{ categoria === 'hoteles' ? 'Servicios base (WiFi, Piscina...)' : '¿Qué incluye el paquete base?' }}
+          </span>
+          <div class="campo-inner campo-textarea">
+            <ion-icon name="checkmark-circle-outline" class="campo-icon"></ion-icon>
+            <ion-textarea [(ngModel)]="incluye" class="campo-input"
+              [autoGrow]="true" placeholder="Ej: Transporte, guía, almuerzo..."></ion-textarea>
+          </div>
+        </div>
       </div>
 
-      <ion-button fill="clear" expand="block" (click)="agregarExtra()" style="margin: 10px;">
-        <ion-icon slot="start" name="add-circle-outline"></ion-icon> Añadir Opción Extra
-      </ion-button>
-    </ion-list>
+      <!-- ── GALERÍA ── -->
+      <p class="sec-label">
+        <ion-icon name="images-outline"></ion-icon> Galería de fotos
+      </p>
+      <div class="form-card">
+        <div class="campo-grupo" *ngFor="let imagen of galeria; let i = index">
+          <span class="campo-label">Foto {{ i + 1 }}</span>
+          <div class="campo-inner">
+            <ion-icon name="image-outline" class="campo-icon"></ion-icon>
+            <ion-input [(ngModel)]="imagen.url" type="url"
+              class="campo-input" placeholder="https://..."></ion-input>
+            <button *ngIf="galeria.length > 1"
+              class="btn-eliminar-inline" (click)="eliminarImagen(i)">
+              <ion-icon name="trash-outline"></ion-icon>
+            </button>
+          </div>
+        </div>
+        <button class="btn-agregar" (click)="agregarImagen()">
+          <ion-icon name="add-circle-outline"></ion-icon> Añadir otra foto
+        </button>
+      </div>
 
-    <!-- DETALLES Y FOTOS (SIEMPRE VISIBLES) -->
-    <ion-list inset="true" lines="full">
-      <ion-list-header><ion-label>Detalles del Servicio</ion-label></ion-list-header>
-      <ion-item>
-        <ion-icon name="document-text-outline" slot="start"></ion-icon>
-        <ion-textarea [(ngModel)]="descripcion" label="Descripción general" labelPlacement="floating" [autoGrow]="true"></ion-textarea>
-      </ion-item>
-      <ion-item>
-        <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
-        <ion-textarea [(ngModel)]="incluye" [label]="categoria === 'hoteles' ? 'Servicios base (Wifi, Piscina...)' : '¿Qué incluye el paquete base?'" labelPlacement="floating" [autoGrow]="true"></ion-textarea>
-      </ion-item>
-    </ion-list>
+      <!-- ── PUBLICAR ── -->
+      <button class="btn-publicar" (click)="guardarTour()" [disabled]="cargando">
+        <ion-spinner *ngIf="cargando" name="crescent" class="pub-spinner"></ion-spinner>
+        <span *ngIf="!cargando">
+          Publicar Servicio
+          <ion-icon name="arrow-forward-outline"></ion-icon>
+        </span>
+      </button>
 
-    <ion-list inset="true" lines="full">
-      <ion-list-header><ion-label>Galería de Fotos 📸</ion-label></ion-list-header>
-      <ion-item *ngFor="let imagen of galeria; let i = index">
-        <ion-icon name="image-outline" slot="start"></ion-icon>
-        <ion-input [(ngModel)]="imagen.url" [label]="'URL de Foto ' + (i + 1)" labelPlacement="floating" type="url"></ion-input>
-        <ion-button *ngIf="galeria.length > 1" fill="clear" color="danger" slot="end" (click)="eliminarImagen(i)">
-          <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
-        </ion-button>
-      </ion-item>
-      <ion-button fill="clear" expand="block" (click)="agregarImagen()" style="margin: 10px;">
-        <ion-icon slot="start" name="add-circle-outline"></ion-icon> Añadir otra foto
-      </ion-button>
-    </ion-list>
-
-    <ion-button expand="block" shape="round" color="primary" class="ion-margin-top ion-margin-bottom" (click)="guardarTour()" [disabled]="cargando">
-      <ion-spinner name="crescent" *ngIf="cargando"></ion-spinner>
-      <span *ngIf="!cargando">Publicar Servicio</span>
-    </ion-button>
+    </div>
 
   </div>
 

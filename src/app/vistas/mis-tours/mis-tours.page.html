@@ -1,226 +1,368 @@
 <ion-header class="ion-no-border">
-  <ion-toolbar color="primary">
-    <ion-title>Mi Inventario 🏢</ion-title>
+  <ion-toolbar class="toolbar-mistours">
+    <div class="toolbar-info" slot="start">
+      <span class="toolbar-titulo">🏢 Mi Inventario</span>
+      <span class="toolbar-sub">Gestiona tus publicaciones</span>
+    </div>
+    <ion-buttons slot="end">
+      <button class="btn-nuevo" routerLink="/tabs/crear-tour">
+        <ion-icon name="add-outline"></ion-icon>
+        Nuevo
+      </button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content color="light" class="ion-padding">
+<ion-content class="mistours-content">
 
-  <div class="ion-text-center ion-margin-top" *ngIf="cargando">
-    <ion-spinner name="crescent"></ion-spinner>
+  <!-- ── CARGANDO ────────────────────────────── -->
+  <div class="estado-cargando" *ngIf="cargando">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
     <p>Cargando tus paquetes...</p>
   </div>
 
-  <div class="ion-text-center ion-padding" *ngIf="!cargando && misTours.length === 0">
-    <h2>¡Aún no tienes tours!</h2>
-    <p color="medium">Publica tu primer paquete turístico para que los viajeros lo descubran.</p>
-    <ion-button routerLink="/tabs/crear-tour" shape="round" color="primary" class="ion-margin-top">
-      <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+  <!-- ── VACÍO ───────────────────────────────── -->
+  <div class="estado-vacio" *ngIf="!cargando && misTours.length === 0">
+    <div class="vacio-icono">
+      <ion-icon name="business-outline"></ion-icon>
+    </div>
+    <h3>¡Aún no tienes tours!</h3>
+    <p>Publica tu primer paquete turístico para que los viajeros lo descubran.</p>
+    <button class="btn-crear" routerLink="/tabs/crear-tour">
+      <ion-icon name="add-circle-outline"></ion-icon>
       Crear mi primer tour
-    </ion-button>
+    </button>
   </div>
 
-  <ion-grid *ngIf="!cargando && misTours.length > 0">
-    <ion-row>
-      <ion-col size="12" size-md="6" *ngFor="let tour of misTours">
-        <ion-card class="tour-card" style="border-radius: 12px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden;">
-          
-          <div style="position: relative;">
-            <img [src]="tour.imagenUrl || 'https://via.placeholder.com/400x200?text=Ocean+Tour'" alt="Tour" style="width: 100%; height: 150px; object-fit: cover; display: block;"/>
-            <ion-badge [color]="tour.estado === 'aprobado' ? 'success' : 'warning'" style="position: absolute; top: 10px; right: 10px; padding: 6px 10px; border-radius: 8px;">
-              {{ tour.estado === 'aprobado' ? 'Público' : 'En Auditoría' }}
-            </ion-badge>
-          </div>
-          
-          <ion-card-header>
-            <ion-card-title style="font-size: 1.1rem; font-weight: bold;">{{ tour.titulo }}</ion-card-title>
-            <ion-card-subtitle color="success">
-              <ion-icon name="cash-outline"></ion-icon> ${{ tour.precio }} COP
-            </ion-card-subtitle>
-          </ion-card-header>
+  <!-- ── LISTA ───────────────────────────────── -->
+  <div class="mistours-container" *ngIf="!cargando && misTours.length > 0">
 
-          <ion-card-content>
-            <p style="display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; color: #666; margin-bottom: 15px;">
-              {{ tour.descripcion }}
-            </p>
-            
-            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-              <ion-button fill="outline" size="small" [routerLink]="['/detalle-tour', tour.id]" style="flex: 1 1 calc(50% - 4px); margin: 0;">
-                <ion-icon name="eye-outline" slot="start"></ion-icon> Ver
-              </ion-button>
-              
-              <ion-button fill="outline" color="tertiary" size="small" (click)="editarTour(tour)" style="flex: 1 1 calc(50% - 4px); margin: 0;">
-                <ion-icon name="create-outline" slot="start"></ion-icon> Editar
-              </ion-button>
-              
-              <ion-button fill="outline" color="warning" size="small" (click)="suspender(tour.id)" *ngIf="tour.estado === 'aprobado'" style="flex: 1 1 calc(50% - 4px); margin: 0;">
-                <ion-icon name="pause-circle-outline" slot="start"></ion-icon> Pausar
-              </ion-button>
+    <!-- Stats rápidas -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <span class="stat-num">{{ misTours.length }}</span>
+        <span class="stat-lbl">Total</span>
+        <div class="stat-dot dot-blue"></div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">{{ toursPublicos }}</span>
+        <span class="stat-lbl">Públicos</span>
+        <div class="stat-dot dot-green"></div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">{{ toursAuditoria }}</span>
+        <span class="stat-lbl">Auditoría</span>
+        <div class="stat-dot dot-amber"></div>
+      </div>
+    </div>
 
-              <ion-button fill="outline" color="danger" size="small" (click)="eliminar(tour.id)" style="flex: 1 1 calc(50% - 4px); margin: 0;">
-                <ion-icon name="trash-outline" slot="start"></ion-icon> Borrar
-              </ion-button>
+    <!-- Grid de tarjetas -->
+    <ion-grid class="ion-no-padding">
+      <ion-row>
+        <ion-col size="12" size-md="6" *ngFor="let tour of misTours">
+
+          <div class="tour-card">
+
+            <!-- Imagen -->
+            <div class="card-img-wrapper">
+              <img [src]="tour.imagenUrl || 'https://via.placeholder.com/400x200?text=Ocean+Tour'"
+                   alt="{{ tour.titulo }}" class="card-imagen"/>
+              <div class="img-overlay"></div>
+
+              <div class="estado-badge"
+                [class.badge-publico]="tour.estado === 'aprobado'"
+                [class.badge-auditoria]="tour.estado !== 'aprobado'">
+                {{ tour.estado === 'aprobado' ? 'Público' : 'En Auditoría' }}
+              </div>
+
+              <div class="badge-categoria" *ngIf="tour.categoria">{{ tour.categoria }}</div>
             </div>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="!cargando && misTours.length > 0">
-    <ion-fab-button routerLink="/tabs/crear-tour" color="primary">
+            <!-- Cuerpo -->
+            <div class="card-body">
+              <h3 class="card-titulo">{{ tour.titulo }}</h3>
+
+              <div class="precio-row">
+                <ion-icon name="cash-outline"></ion-icon>
+                <span>${{ tour.precio }} COP</span>
+              </div>
+
+              <p class="descripcion">{{ tour.descripcion }}</p>
+
+              <!-- Acciones -->
+              <div class="acciones-grid">
+                <button class="acc-btn btn-ver" [routerLink]="['/detalle-tour', tour.id]">
+                  <ion-icon name="eye-outline"></ion-icon> Ver
+                </button>
+                <button class="acc-btn btn-editar" (click)="editarTour(tour)">
+                  <ion-icon name="create-outline"></ion-icon> Editar
+                </button>
+                <button class="acc-btn btn-pausar"
+                  *ngIf="tour.estado === 'aprobado'"
+                  (click)="suspender(tour.id)">
+                  <ion-icon name="pause-circle-outline"></ion-icon> Pausar
+                </button>
+                <button class="acc-btn btn-borrar"
+                  [class.full-width]="tour.estado !== 'aprobado'"
+                  (click)="eliminar(tour.id)">
+                  <ion-icon name="trash-outline"></ion-icon> Borrar
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+  </div>
+
+  <!-- ── FAB ─────────────────────────────────── -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed"
+    *ngIf="!cargando && misTours.length > 0">
+    <ion-fab-button class="fab-custom" routerLink="/tabs/crear-tour">
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
+  <!-- ══════════════════════════════════════════ -->
+  <!-- ── MODAL DE EDICIÓN ─────────────────────── -->
+  <!-- ══════════════════════════════════════════ -->
   <ion-modal [isOpen]="isModalOpen" (didDismiss)="cerrarModal()">
     <ng-template>
+
       <ion-header class="ion-no-border">
-        <ion-toolbar color="tertiary">
+        <ion-toolbar class="toolbar-modal">
           <ion-buttons slot="start">
-            <ion-button (click)="cerrarModal()"><ion-icon name="close-outline" slot="icon-only"></ion-icon></ion-button>
-          </ion-buttons>
-          <ion-title>Editar Publicación</ion-title>
-          <ion-buttons slot="end">
-            <ion-button (click)="guardarEdicion()" [disabled]="guardandoEdicion" style="font-weight: bold;">
-              <ion-spinner *ngIf="guardandoEdicion" name="dots"></ion-spinner>
-              <span *ngIf="!guardandoEdicion">Guardar</span>
+            <ion-button (click)="cerrarModal()" class="modal-close-btn">
+              <ion-icon name="close-outline" slot="icon-only"></ion-icon>
             </ion-button>
+          </ion-buttons>
+          <ion-title class="modal-titulo">Editar Publicación</ion-title>
+          <ion-buttons slot="end">
+            <button class="modal-save-btn" (click)="guardarEdicion()" [disabled]="guardandoEdicion">
+              <ion-spinner *ngIf="guardandoEdicion" name="dots" class="save-spinner"></ion-spinner>
+              <span *ngIf="!guardandoEdicion">
+                <ion-icon name="checkmark-outline"></ion-icon> Guardar
+              </span>
+            </button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
 
-      <ion-content color="light" class="ion-padding" *ngIf="tourEditando">
-        
-        <div style="background: #fff3cd; color: #856404; padding: 10px 15px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; display: flex; align-items: center; gap: 10px;">
-          <ion-icon name="alert-circle-outline" style="font-size: 24px; flex-shrink: 0;"></ion-icon>
-          <span>Al modificar tu servicio, este pasará temporalmente a estado <strong>"En Auditoría"</strong> hasta que un administrador verifique los cambios.</span>
+      <ion-content class="modal-content" *ngIf="tourEditando">
+
+        <!-- Banner de aviso -->
+        <div class="aviso-auditoria">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          <p>Al modificar tu servicio pasará temporalmente a <strong>"En Auditoría"</strong> hasta que un administrador verifique los cambios.</p>
         </div>
 
-        <ion-list inset="true" lines="full">
-          <ion-list-header><ion-label>Información Básica</ion-label></ion-list-header>
+        <!-- ── Información básica ── -->
+        <p class="modal-sec-label">Información básica</p>
+        <div class="modal-card">
 
-          <ion-item>
-            <ion-icon name="pricetag-outline" slot="start" color="primary"></ion-icon>
-            <ion-select [(ngModel)]="tourEditando.categoria" label="Categoría" labelPlacement="floating">
-              <ion-select-option value="Relajante">Relajante 🧘</ion-select-option>
-              <ion-select-option value="Extremo">Extremo 🧗</ion-select-option>
-              <ion-select-option value="Cultural">Cultural 🏛️</ion-select-option>
-              <ion-select-option value="Familiar">Familiar 👨‍👩‍👧‍👦</ion-select-option>
-              <ion-select-option value="Ecológico">Ecológico 🍃</ion-select-option>
-              <ion-select-option value="Fiesta">Fiesta 🎉</ion-select-option>
-              <ion-select-option value="hoteles">Hoteles y Alojamientos 🏨</ion-select-option>
-            </ion-select>
-          </ion-item>
-
-          <ion-item>
-            <ion-icon name="text-outline" slot="start"></ion-icon>
-            <ion-input [(ngModel)]="tourEditando.titulo" [label]="tourEditando.categoria === 'hoteles' ? 'Nombre del Alojamiento' : 'Nombre de la Experiencia'" labelPlacement="floating" type="text"></ion-input>
-          </ion-item>
-
-          <ion-item>
-            <ion-icon name="cash-outline" slot="start"></ion-icon>
-            <ion-input [(ngModel)]="tourEditando.precio" [label]="tourEditando.categoria === 'hoteles' ? 'Precio Desde (Noche)' : 'Precio Base (Persona)'" labelPlacement="floating" type="number"></ion-input>
-          </ion-item>
-
-          <ion-item>
-            <ion-icon [name]="tourEditando.categoria === 'hoteles' ? 'moon-outline' : 'time-outline'" slot="start"></ion-icon>
-            <ion-input [(ngModel)]="tourEditando.duracion" [label]="tourEditando.categoria === 'hoteles' ? 'Estadía mínima' : 'Duración'" labelPlacement="floating" type="text"></ion-input>
-          </ion-item>
-
-          <ion-item>
-            <ion-icon name="call-outline" slot="start"></ion-icon>
-            <ion-input [(ngModel)]="tourEditando.telefono" label="WhatsApp de Contacto" labelPlacement="floating" type="tel"></ion-input>
-          </ion-item>
-
-          <ion-item>
-            <ion-icon [name]="tourEditando.categoria === 'hoteles' ? 'location-outline' : 'map-outline'" slot="start"></ion-icon>
-            <ion-input [(ngModel)]="tourEditando.direccion" [label]="tourEditando.categoria === 'hoteles' ? 'Dirección Exacta' : 'Punto de Encuentro'" labelPlacement="floating" type="text"></ion-input>
-          </ion-item>
-
-          <ion-item>
-            <ion-icon [name]="tourEditando.categoria === 'hoteles' ? 'alert-circle-outline' : 'information-circle-outline'" slot="start"></ion-icon>
-            <ion-textarea [(ngModel)]="tourEditando.opcionesAdicionales" [label]="tourEditando.categoria === 'hoteles' ? 'Políticas del lugar' : 'Recomendaciones'" labelPlacement="floating" [autoGrow]="true"></ion-textarea>
-          </ion-item>
-        </ion-list>
-
-        <ion-list inset="true" lines="full" *ngIf="tourEditando.categoria === 'hoteles'">
-          <ion-list-header><ion-label color="tertiary"><ion-icon name="bed-outline"></ion-icon> Habitaciones</ion-label></ion-list-header>
-          
-          <div *ngFor="let hab of tourEditando.habitaciones; let i = index" style="border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px; background-color: #f0f8ff;">
-            <ion-item lines="none" color="transparent">
-              <ion-icon name="bed-outline" slot="start" color="tertiary"></ion-icon>
-              <ion-input [(ngModel)]="hab.nombre" [label]="'Nombre Habitación ' + (i + 1)" labelPlacement="floating" type="text"></ion-input>
-            </ion-item>
-            <div style="display: flex;">
-              <ion-item lines="none" color="transparent" style="flex: 1;">
-                <ion-icon name="cash-outline" slot="start" color="success"></ion-icon>
-                <ion-input [(ngModel)]="hab.precio" label="Precio / Noche" labelPlacement="floating" type="number"></ion-input>
-              </ion-item>
-              <ion-item lines="none" color="transparent" style="flex: 1;">
-                <ion-icon name="people-outline" slot="start" color="primary"></ion-icon>
-                <ion-input [(ngModel)]="hab.capacidad" label="Personas" labelPlacement="floating" type="number"></ion-input>
-              </ion-item>
+          <div class="modal-campo">
+            <span class="campo-label">Categoría</span>
+            <div class="campo-inner">
+              <ion-icon name="pricetag-outline" class="campo-icon"></ion-icon>
+              <ion-select [(ngModel)]="tourEditando.categoria" class="campo-select"
+                interface="popover" placeholder="Selecciona">
+                <ion-select-option value="Relajante">Relajante 🧘</ion-select-option>
+                <ion-select-option value="Extremo">Extremo 🧗</ion-select-option>
+                <ion-select-option value="Cultural">Cultural 🏛️</ion-select-option>
+                <ion-select-option value="Familiar">Familiar 👨‍👩‍👧‍👦</ion-select-option>
+                <ion-select-option value="Ecológico">Ecológico 🍃</ion-select-option>
+                <ion-select-option value="Fiesta">Fiesta 🎉</ion-select-option>
+                <ion-select-option value="hoteles">Hoteles 🏨</ion-select-option>
+              </ion-select>
             </div>
-            <ion-item lines="none" color="transparent">
-              <ion-icon name="information-circle-outline" slot="start" color="medium"></ion-icon>
-              <ion-input [(ngModel)]="hab.descripcion" label="¿Qué incluye?" labelPlacement="floating" type="text"></ion-input>
-              <ion-button fill="clear" color="danger" slot="end" (click)="eliminarHabitacionEdit(i)">
-                <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
-              </ion-button>
-            </ion-item>
           </div>
-          <ion-button fill="clear" expand="block" (click)="agregarHabitacionEdit()" style="margin: 10px;">
-            <ion-icon slot="start" name="add-circle-outline"></ion-icon> Añadir Habitación
-          </ion-button>
-        </ion-list>
 
-        <ion-list inset="true" lines="full" *ngIf="tourEditando.categoria !== 'hoteles'">
-          <ion-list-header><ion-label color="warning"><ion-icon name="star"></ion-icon> Extras Opcionales</ion-label></ion-list-header>
-          
-          <div *ngFor="let extra of tourEditando.extras; let i = index" style="border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px; background-color: #fff9e6;">
-            <ion-item lines="none" color="transparent">
-              <ion-icon name="ribbon-outline" slot="start" color="warning"></ion-icon>
-              <ion-input [(ngModel)]="extra.nombre" [label]="'Nombre Extra ' + (i + 1)" labelPlacement="floating" type="text"></ion-input>
-            </ion-item>
-            <ion-item lines="none" color="transparent">
-              <ion-icon name="add-circle-outline" slot="start" color="success"></ion-icon>
-              <ion-input [(ngModel)]="extra.precio" label="Costo Adicional (+ COP)" labelPlacement="floating" type="number"></ion-input>
-              <ion-button fill="clear" color="danger" slot="end" (click)="eliminarExtraEdit(i)">
-                <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
-              </ion-button>
-            </ion-item>
+          <div class="modal-campo">
+            <span class="campo-label">
+              {{ tourEditando.categoria === 'hoteles' ? 'Nombre del alojamiento' : 'Nombre de la experiencia' }}
+            </span>
+            <div class="campo-inner">
+              <ion-icon name="text-outline" class="campo-icon"></ion-icon>
+              <ion-input [(ngModel)]="tourEditando.titulo" class="campo-input"
+                placeholder="Ej: Tour Islas del Rosario"></ion-input>
+            </div>
           </div>
-          <ion-button fill="clear" expand="block" (click)="agregarExtraEdit()" style="margin: 10px;">
-            <ion-icon slot="start" name="add-circle-outline"></ion-icon> Añadir Opción Extra
-          </ion-button>
-        </ion-list>
 
-        <ion-list inset="true" lines="full">
-          <ion-list-header><ion-label>Detalles del Servicio</ion-label></ion-list-header>
-          <ion-item>
-            <ion-icon name="document-text-outline" slot="start"></ion-icon>
-            <ion-textarea [(ngModel)]="tourEditando.descripcion" label="Descripción general" labelPlacement="floating" [autoGrow]="true"></ion-textarea>
-          </ion-item>
-          <ion-item>
-            <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
-            <ion-textarea [(ngModel)]="tourEditando.incluye" [label]="tourEditando.categoria === 'hoteles' ? 'Servicios base' : '¿Qué incluye?'" labelPlacement="floating" [autoGrow]="true"></ion-textarea>
-          </ion-item>
-        </ion-list>
+          <div class="modal-campo">
+            <span class="campo-label">
+              {{ tourEditando.categoria === 'hoteles' ? 'Precio desde (noche)' : 'Precio base (persona)' }}
+            </span>
+            <div class="campo-inner">
+              <ion-icon name="cash-outline" class="campo-icon"></ion-icon>
+              <ion-input [(ngModel)]="tourEditando.precio" type="number"
+                class="campo-input" placeholder="0"></ion-input>
+            </div>
+          </div>
 
-        <ion-list inset="true" lines="full">
-          <ion-list-header><ion-label>Galería de Fotos</ion-label></ion-list-header>
-          <ion-item *ngFor="let imagen of tourEditando.galeria; let i = index">
-            <ion-icon name="image-outline" slot="start"></ion-icon>
-            <ion-input [(ngModel)]="imagen.url" [label]="'URL de Foto ' + (i + 1)" labelPlacement="floating" type="url"></ion-input>
-            <ion-button *ngIf="tourEditando.galeria.length > 1" fill="clear" color="danger" slot="end" (click)="eliminarImagenEdit(i)">
-              <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
-            </ion-button>
-          </ion-item>
-          <ion-button fill="clear" expand="block" (click)="agregarImagenEdit()" style="margin: 10px;">
-            <ion-icon slot="start" name="add-circle-outline"></ion-icon> Añadir otra foto
-          </ion-button>
-        </ion-list>
+          <div class="modal-campo">
+            <span class="campo-label">
+              {{ tourEditando.categoria === 'hoteles' ? 'Estadía mínima' : 'Duración' }}
+            </span>
+            <div class="campo-inner">
+              <ion-icon [name]="tourEditando.categoria === 'hoteles' ? 'moon-outline' : 'time-outline'"
+                class="campo-icon"></ion-icon>
+              <ion-input [(ngModel)]="tourEditando.duracion" class="campo-input"
+                placeholder="Ej: 1 día"></ion-input>
+            </div>
+          </div>
+
+          <div class="modal-campo">
+            <span class="campo-label">WhatsApp de contacto</span>
+            <div class="campo-inner">
+              <ion-icon name="call-outline" class="campo-icon"></ion-icon>
+              <ion-input [(ngModel)]="tourEditando.telefono" type="tel"
+                class="campo-input" placeholder="+57 300 000 0000"></ion-input>
+            </div>
+          </div>
+
+          <div class="modal-campo">
+            <span class="campo-label">
+              {{ tourEditando.categoria === 'hoteles' ? 'Dirección exacta' : 'Punto de encuentro' }}
+            </span>
+            <div class="campo-inner">
+              <ion-icon [name]="tourEditando.categoria === 'hoteles' ? 'location-outline' : 'map-outline'"
+                class="campo-icon"></ion-icon>
+              <ion-input [(ngModel)]="tourEditando.direccion" class="campo-input"
+                placeholder="Ej: Calle 5 #3-20, Cartagena"></ion-input>
+            </div>
+          </div>
+
+          <div class="modal-campo">
+            <span class="campo-label">
+              {{ tourEditando.categoria === 'hoteles' ? 'Políticas del lugar' : 'Recomendaciones' }}
+            </span>
+            <div class="campo-inner campo-textarea">
+              <ion-icon [name]="tourEditando.categoria === 'hoteles' ? 'alert-circle-outline' : 'information-circle-outline'"
+                class="campo-icon"></ion-icon>
+              <ion-textarea [(ngModel)]="tourEditando.opcionesAdicionales"
+                class="campo-input" [autoGrow]="true" placeholder="Escribe aquí..."></ion-textarea>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ── Habitaciones (hoteles) ── -->
+        <ng-container *ngIf="tourEditando.categoria === 'hoteles'">
+          <p class="modal-sec-label">
+            <ion-icon name="bed-outline"></ion-icon> Habitaciones
+          </p>
+          <div class="modal-card">
+            <div class="hab-item" *ngFor="let hab of tourEditando.habitaciones; let i = index">
+              <div class="hab-header">
+                <span class="hab-titulo">Habitación {{ i + 1 }}</span>
+                <button class="btn-eliminar-item" (click)="eliminarHabitacionEdit(i)">
+                  <ion-icon name="trash-outline"></ion-icon>
+                </button>
+              </div>
+              <div class="modal-campo">
+                <div class="campo-inner">
+                  <ion-icon name="bed-outline" class="campo-icon"></ion-icon>
+                  <ion-input [(ngModel)]="hab.nombre" placeholder="Nombre" class="campo-input"></ion-input>
+                </div>
+              </div>
+              <div class="hab-row">
+                <div class="campo-inner" style="flex:1">
+                  <ion-icon name="cash-outline" class="campo-icon"></ion-icon>
+                  <ion-input [(ngModel)]="hab.precio" type="number" placeholder="Precio/noche" class="campo-input"></ion-input>
+                </div>
+                <div class="campo-inner" style="flex:1">
+                  <ion-icon name="people-outline" class="campo-icon"></ion-icon>
+                  <ion-input [(ngModel)]="hab.capacidad" type="number" placeholder="Personas" class="campo-input"></ion-input>
+                </div>
+              </div>
+              <div class="campo-inner" style="margin-top:8px">
+                <ion-icon name="information-circle-outline" class="campo-icon"></ion-icon>
+                <ion-input [(ngModel)]="hab.descripcion" placeholder="¿Qué incluye?" class="campo-input"></ion-input>
+              </div>
+            </div>
+            <button class="btn-agregar" (click)="agregarHabitacionEdit()">
+              <ion-icon name="add-circle-outline"></ion-icon> Añadir habitación
+            </button>
+          </div>
+        </ng-container>
+
+        <!-- ── Extras (tours) ── -->
+        <ng-container *ngIf="tourEditando.categoria !== 'hoteles'">
+          <p class="modal-sec-label">
+            <ion-icon name="ribbon-outline"></ion-icon> Extras opcionales
+          </p>
+          <div class="modal-card">
+            <div class="extra-item" *ngFor="let extra of tourEditando.extras; let i = index">
+              <div class="hab-header">
+                <span class="hab-titulo">Extra {{ i + 1 }}</span>
+                <button class="btn-eliminar-item" (click)="eliminarExtraEdit(i)">
+                  <ion-icon name="trash-outline"></ion-icon>
+                </button>
+              </div>
+              <div class="campo-inner">
+                <ion-icon name="ribbon-outline" class="campo-icon"></ion-icon>
+                <ion-input [(ngModel)]="extra.nombre" placeholder="Nombre del extra" class="campo-input"></ion-input>
+              </div>
+              <div class="campo-inner" style="margin-top:8px">
+                <ion-icon name="add-circle-outline" class="campo-icon"></ion-icon>
+                <ion-input [(ngModel)]="extra.precio" type="number" placeholder="Costo adicional (COP)" class="campo-input"></ion-input>
+              </div>
+            </div>
+            <button class="btn-agregar" (click)="agregarExtraEdit()">
+              <ion-icon name="add-circle-outline"></ion-icon> Añadir extra
+            </button>
+          </div>
+        </ng-container>
+
+        <!-- ── Detalles ── -->
+        <p class="modal-sec-label">Detalles del servicio</p>
+        <div class="modal-card">
+          <div class="modal-campo">
+            <span class="campo-label">Descripción general</span>
+            <div class="campo-inner campo-textarea">
+              <ion-icon name="document-text-outline" class="campo-icon"></ion-icon>
+              <ion-textarea [(ngModel)]="tourEditando.descripcion"
+                class="campo-input" [autoGrow]="true" placeholder="Describe tu servicio..."></ion-textarea>
+            </div>
+          </div>
+          <div class="modal-campo">
+            <span class="campo-label">
+              {{ tourEditando.categoria === 'hoteles' ? 'Servicios base' : '¿Qué incluye?' }}
+            </span>
+            <div class="campo-inner campo-textarea">
+              <ion-icon name="checkmark-circle-outline" class="campo-icon"></ion-icon>
+              <ion-textarea [(ngModel)]="tourEditando.incluye"
+                class="campo-input" [autoGrow]="true" placeholder="Ej: Transporte, guía, almuerzo..."></ion-textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Galería ── -->
+        <p class="modal-sec-label">
+          <ion-icon name="images-outline"></ion-icon> Galería de fotos
+        </p>
+        <div class="modal-card">
+          <div class="modal-campo" *ngFor="let imagen of tourEditando.galeria; let i = index">
+            <span class="campo-label">Foto {{ i + 1 }}</span>
+            <div class="campo-inner">
+              <ion-icon name="image-outline" class="campo-icon"></ion-icon>
+              <ion-input [(ngModel)]="imagen.url" type="url"
+                placeholder="https://..." class="campo-input"></ion-input>
+              <button *ngIf="tourEditando.galeria.length > 1"
+                class="btn-eliminar-inline" (click)="eliminarImagenEdit(i)">
+                <ion-icon name="trash-outline"></ion-icon>
+              </button>
+            </div>
+          </div>
+          <button class="btn-agregar" (click)="agregarImagenEdit()">
+            <ion-icon name="add-circle-outline"></ion-icon> Añadir otra foto
+          </button>
+        </div>
+
+        <div style="height: 32px;"></div>
 
       </ion-content>
     </ng-template>

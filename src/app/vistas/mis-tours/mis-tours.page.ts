@@ -15,7 +15,8 @@ import {
   trashOutline, addCircleOutline, closeOutline, saveOutline, pricetagOutline, 
   textOutline, timeOutline, callOutline, locationOutline, star, ribbonOutline, 
   documentTextOutline, checkmarkCircleOutline, imageOutline, moonOutline, 
-  mapOutline, alertCircleOutline, bedOutline, peopleOutline, informationCircleOutline 
+  mapOutline, alertCircleOutline, bedOutline, peopleOutline, informationCircleOutline,
+  businessOutline, imagesOutline, checkmarkOutline
 } from 'ionicons/icons';
 import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
 
@@ -47,10 +48,18 @@ export class MisToursPage implements OnInit {
   cargando: boolean = true;
   usuarioActual: any = null;
 
-  // Variables para el Modal de Edición
   isModalOpen: boolean = false;
   tourEditando: any = null;
   guardandoEdicion: boolean = false;
+
+  // ── Getters para stats ─────────────────────
+  get toursPublicos(): number {
+    return this.misTours.filter(t => (t as any).estado === 'aprobado').length;
+  }
+
+  get toursAuditoria(): number {
+    return this.misTours.filter(t => (t as any).estado !== 'aprobado').length;
+  }
 
   constructor() {
     addIcons({ 
@@ -58,7 +67,8 @@ export class MisToursPage implements OnInit {
       trashOutline, addCircleOutline, closeOutline, saveOutline, pricetagOutline, 
       textOutline, timeOutline, callOutline, locationOutline, star, ribbonOutline, 
       documentTextOutline, checkmarkCircleOutline, imageOutline, moonOutline, 
-      mapOutline, alertCircleOutline, bedOutline, peopleOutline, informationCircleOutline
+      mapOutline, alertCircleOutline, bedOutline, peopleOutline, informationCircleOutline,
+      businessOutline, imagesOutline, checkmarkOutline
     });
   }
 
@@ -118,25 +128,16 @@ export class MisToursPage implements OnInit {
     await alert.present();
   }
 
-  // 👇 LÓGICA DEL MODAL DE EDICIÓN AVANZADA 👇
-
   editarTour(tour: Tour) {
-    // Clonamos el objeto para no afectar la vista principal si el usuario cancela
     this.tourEditando = JSON.parse(JSON.stringify(tour));
     
-    // 👇 FIX PARA LAS FOTOS 👇
-    // Si ya existe una galería (que viene como lista de textos desde Firebase), 
-    // la convertimos en lista de objetos para que el formulario la pueda leer.
     if (this.tourEditando.galeria && this.tourEditando.galeria.length > 0) {
       this.tourEditando.galeria = this.tourEditando.galeria.map((img: any) => {
-        // Si es un texto puro, lo convertimos a objeto. Si ya era objeto, lo dejamos igual.
         return typeof img === 'string' ? { url: img } : img;
       });
     } else {
-      // Si el tour es muy viejo y no tenía galería, usamos su imagen principal
       this.tourEditando.galeria = [{ url: this.tourEditando.imagenUrl || '' }];
     }
-    // 👆 FIN DEL FIX 👆
 
     if (!this.tourEditando.extras) this.tourEditando.extras = [];
     if (!this.tourEditando.habitaciones) this.tourEditando.habitaciones = [];
@@ -147,20 +148,17 @@ export class MisToursPage implements OnInit {
 
   cerrarModal() {
     this.isModalOpen = false;
-    setTimeout(() => this.tourEditando = null, 300); // Limpiar después de la animación
+    setTimeout(() => this.tourEditando = null, 300);
   }
 
-  // Funciones auxiliares para los arrays dentro del Modal
   agregarImagenEdit() { this.tourEditando.galeria.push({ url: '' }); }
   eliminarImagenEdit(i: number) { this.tourEditando.galeria.splice(i, 1); }
-
   agregarExtraEdit() { this.tourEditando.extras.push({ nombre: '', precio: null }); }
   eliminarExtraEdit(i: number) { this.tourEditando.extras.splice(i, 1); }
-
   agregarHabitacionEdit() { this.tourEditando.habitaciones.push({ nombre: '', precio: null, capacidad: null, descripcion: '' }); }
   eliminarHabitacionEdit(i: number) { this.tourEditando.habitaciones.splice(i, 1); }
 
- async guardarEdicion() {
+  async guardarEdicion() {
     if (!this.tourEditando.titulo || !this.tourEditando.categoria) {
       alert('⚠️ Por favor, ingresa al menos el título y la categoría.');
       return;
@@ -169,17 +167,15 @@ export class MisToursPage implements OnInit {
     this.guardandoEdicion = true;
 
     try {
-      // 👇 PROTECCIÓN ANTICRASH: Verificamos que existan antes de hacer .trim() 👇
       const imagenesLimpias = (this.tourEditando.galeria || [])
-        .map((img:any) => img.url)
-        .filter((u:any) => u && typeof u === 'string' && u.trim() !== '');
+        .map((img: any) => img.url)
+        .filter((u: any) => u && typeof u === 'string' && u.trim() !== '');
 
       const extrasLimpios = (this.tourEditando.extras || [])
-        .filter((e:any) => e && e.nombre && typeof e.nombre === 'string' && e.nombre.trim() !== '' && e.precio > 0);
+        .filter((e: any) => e && e.nombre && typeof e.nombre === 'string' && e.nombre.trim() !== '' && e.precio > 0);
 
       const habitacionesLimpias = (this.tourEditando.habitaciones || [])
-        .filter((h:any) => h && h.nombre && typeof h.nombre === 'string' && h.nombre.trim() !== '' && h.precio > 0);
-      // 👆 FIN DE LA PROTECCIÓN 👆
+        .filter((h: any) => h && h.nombre && typeof h.nombre === 'string' && h.nombre.trim() !== '' && h.precio > 0);
 
       const tourRef = doc(this.firestore, `tours/${this.tourEditando.id}`);
       
@@ -197,23 +193,20 @@ export class MisToursPage implements OnInit {
         imagenUrl: imagenesLimpias.length > 0 ? imagenesLimpias[0] : '',
         extras: this.tourEditando.categoria === 'hoteles' ? [] : extrasLimpios,
         habitaciones: this.tourEditando.categoria === 'hoteles' ? habitacionesLimpias : [],
-        estado: 'pendiente' // Pasa a auditoría
+        estado: 'pendiente'
       };
 
-      // Guardamos en Firebase
       await updateDoc(tourRef, updateData);
       
-      // Actualizamos la tarjeta visualmente al instante
       const index = this.misTours.findIndex(t => t.id === this.tourEditando.id);
       if (index !== -1) {
         this.misTours[index] = { ...this.misTours[index], ...updateData };
       }
 
-      // Cerramos el modal
       this.cerrarModal();
 
     } catch (err) {
-      console.error("Error al guardar la edición:", err);
+      console.error('Error al guardar la edición:', err);
       alert('❌ Hubo un error al guardar. Revisa que tu conexión esté bien.');
     } finally {
       this.guardandoEdicion = false;

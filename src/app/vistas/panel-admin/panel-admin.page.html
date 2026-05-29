@@ -1,117 +1,152 @@
-<ion-header>
-  <ion-toolbar color="dark">
+<ion-header class="ion-no-border">
+  <ion-toolbar class="toolbar-admin">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/tabs/perfil"></ion-back-button>
+      <ion-back-button defaultHref="/tabs/perfil" class="back-btn-admin"></ion-back-button>
     </ion-buttons>
-    <ion-title>Control de Plataforma</ion-title>
+    <div class="toolbar-info">
+      <span class="toolbar-titulo">🛡 Control de Plataforma</span>
+      <span class="toolbar-sub">Panel de administración Ocean</span>
+    </div>
   </ion-toolbar>
 
-  <ion-toolbar color="dark">
-    <ion-segment [(ngModel)]="segmentoActual" (ionChange)="cambiarTab($event)">
+  <ion-toolbar class="toolbar-segmento">
+    <ion-segment [(ngModel)]="segmentoActual" (ionChange)="cambiarTab($event)" class="admin-segment">
       <ion-segment-button value="pendientes">
+        <ion-icon name="time-outline"></ion-icon>
         <ion-label>Por Aprobar</ion-label>
       </ion-segment-button>
       <ion-segment-button value="activos">
+        <ion-icon name="checkmark-circle-outline"></ion-icon>
         <ion-label>Publicados</ion-label>
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
 </ion-header>
 
-<ion-content color="light">
-  <div class="ion-padding">
-    <h2>Dashboard 📊</h2>
-    
-    <ion-grid>
-      <ion-row>
-        <ion-col size="6">
-          <ion-card color="primary" class="ion-no-margin">
-            <ion-card-header>
-              <ion-icon name="earth-outline" style="font-size: 24px;"></ion-icon>
-              <ion-card-title style="font-size: 1.5rem; font-weight: bold;">{{ totalToursActivos }}</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>Tours Activos</ion-card-content>
-          </ion-card>
-        </ion-col>
-        
-        <ion-col size="6">
-          <ion-card color="warning" class="ion-no-margin">
-            <ion-card-header>
-              <ion-icon name="ticket-outline" style="font-size: 24px;"></ion-icon>
-              <ion-card-title style="font-size: 1.5rem; font-weight: bold;">{{ toursPendientes.length }}</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>Por Revisar</ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+<ion-content class="admin-content">
 
-    <ion-card class="ion-no-margin ion-margin-top" style="border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-      <ion-card-header>
-        <ion-card-title style="font-size: 1.2rem; font-weight: bold;">Distribución del Catálogo 🥧</ion-card-title>
-        <p style="color: gray; margin: 0; font-size: 14px;">Servicios publicados por categoría</p>
-      </ion-card-header>
-      <ion-card-content style="position: relative; height: 250px; display: flex; justify-content: center;">
+  <div class="admin-container">
+
+    <!-- ── STATS ───────────────────────────────── -->
+    <div class="stats-row">
+      <div class="stat-card stat-blue">
+        <div class="stat-icon-wrap si-blue">
+          <ion-icon name="earth-outline"></ion-icon>
+        </div>
+        <span class="stat-num">{{ totalToursActivos }}</span>
+        <span class="stat-lbl">Tours Activos</span>
+      </div>
+      <div class="stat-card stat-amber">
+        <div class="stat-icon-wrap si-amber">
+          <ion-icon name="time-outline"></ion-icon>
+        </div>
+        <span class="stat-num">{{ toursPendientes.length }}</span>
+        <span class="stat-lbl">Por Revisar</span>
+      </div>
+    </div>
+
+    <!-- ── GRÁFICA ─────────────────────────────── -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <div>
+          <h3 class="chart-titulo">Distribución del Catálogo</h3>
+          <p class="chart-sub">Servicios publicados por categoría</p>
+        </div>
+        <div class="chart-badge">
+          <ion-icon name="pie-chart-outline"></ion-icon>
+        </div>
+      </div>
+      <div class="chart-wrapper">
         <canvas id="categoriasChart"></canvas>
-      </ion-card-content>
-    </ion-card>
-
-  </div>
-
-  <div *ngIf="segmentoActual === 'pendientes'">
-    <h2 class="ion-padding-horizontal ion-margin-top">Auditoría Pendiente</h2>
-    <ion-list *ngIf="toursPendientes.length > 0; else sinTours" inset="true">
-      <ion-item *ngFor="let tour of toursPendientes">
-        <ion-label>
-          <h2 style="font-weight: bold;">{{ tour.titulo }}</h2>
-          <p>${{ tour.precio }} COP</p>
-        </ion-label>
-        
-        <ion-button slot="end" fill="clear" color="primary" [routerLink]="['/detalle-tour', tour.id]">
-          <ion-icon slot="icon-only" name="eye-outline"></ion-icon>
-        </ion-button>
-        
-        <ion-button slot="end" color="success" shape="round" (click)="confirmarAprobacion(tour.id)">
-          <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>
-          Aprobar
-        </ion-button>
-        
-      </ion-item>
-    </ion-list>
-
-    <ng-template #sinTours>
-      <div class="ion-padding ion-text-center">
-        <img src="assets/icon/favicon.png" style="width: 80px; opacity: 0.5;" alt="Mesa limpia">
-        <p style="color: gray; margin-top: 20px;">No hay información pendiente de auditoría. ¡Bandeja limpia!</p>
       </div>
-    </ng-template>
-  </div>
+    </div>
 
-  <div *ngIf="segmentoActual === 'activos'">
-    <h2 class="ion-padding-horizontal ion-margin-top">Tours Públicos</h2>
-    <ion-list *ngIf="toursActivos.length > 0; else sinActivos" inset="true">
-      <ion-item *ngFor="let tour of toursActivos">
-        <ion-thumbnail slot="start">
-          <img [src]="tour.imagenUrl" />
-        </ion-thumbnail>
-        <ion-label>
-          <h2 style="font-weight: bold;">{{ tour.titulo }}</h2>
-          <ion-badge color="success">Público</ion-badge>
-        </ion-label>
-        <ion-button slot="end" fill="clear" color="warning" (click)="suspender(tour.id)">
-          <ion-icon name="pause-circle"></ion-icon>
-        </ion-button>
-        <ion-button slot="end" fill="clear" color="danger" (click)="eliminar(tour.id)">
-          <ion-icon name="trash"></ion-icon>
-        </ion-button>
-      </ion-item>
-    </ion-list>
+    <!-- ══════════════════════════════════════ -->
+    <!-- ── PENDIENTES ─────────────────────── -->
+    <!-- ══════════════════════════════════════ -->
+    <div *ngIf="segmentoActual === 'pendientes'">
 
-    <ng-template #sinActivos>
-      <div class="ion-padding ion-text-center">
-        <p style="color: gray; margin-top: 20px;">No hay tours públicos actualmente.</p>
-      </div>
-    </ng-template>
+      <p class="sec-label">
+        <ion-icon name="time-outline"></ion-icon>
+        Auditoría pendiente
+      </p>
+
+      <!-- Lista -->
+      <ng-container *ngIf="toursPendientes.length > 0; else sinPendientes">
+        <div class="pendiente-card" *ngFor="let tour of toursPendientes">
+          <div class="pc-top">
+            <div class="pc-info">
+              <h3 class="pc-titulo">{{ tour.titulo }}</h3>
+              <span class="pc-precio">${{ tour.precio }} COP</span>
+            </div>
+            <div class="pc-cat" *ngIf="tour.categoria">{{ tour.categoria }}</div>
+          </div>
+          <div class="pc-actions">
+            <button class="btn-accion btn-ver" [routerLink]="['/detalle-tour', tour.id]">
+              <ion-icon name="eye-outline"></ion-icon> Ver
+            </button>
+            <button class="btn-accion btn-aprobar" (click)="confirmarAprobacion(tour.id)">
+              <ion-icon name="checkmark-circle-outline"></ion-icon> Aprobar
+            </button>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #sinPendientes>
+        <div class="estado-vacio">
+          <div class="vacio-icono">
+            <ion-icon name="checkmark-done-outline"></ion-icon>
+          </div>
+          <h3>¡Bandeja limpia!</h3>
+          <p>No hay información pendiente de auditoría.</p>
+        </div>
+      </ng-template>
+
+    </div>
+
+    <!-- ══════════════════════════════════════ -->
+    <!-- ── ACTIVOS ────────────────────────── -->
+    <!-- ══════════════════════════════════════ -->
+    <div *ngIf="segmentoActual === 'activos'">
+
+      <p class="sec-label">
+        <ion-icon name="earth-outline"></ion-icon>
+        Tours públicos
+      </p>
+
+      <ng-container *ngIf="toursActivos.length > 0; else sinActivos">
+        <div class="activo-card" *ngFor="let tour of toursActivos">
+          <div class="activo-thumb-wrap">
+            <img [src]="tour.imagenUrl || 'https://via.placeholder.com/50'"
+                 class="activo-thumb" alt="{{ tour.titulo }}"/>
+          </div>
+          <div class="activo-info">
+            <h3 class="activo-titulo">{{ tour.titulo }}</h3>
+            <span class="pub-pill">Público</span>
+          </div>
+          <div class="activo-acciones">
+            <button class="btn-icono btn-pausar" (click)="suspender(tour.id)">
+              <ion-icon name="pause-circle"></ion-icon>
+            </button>
+            <button class="btn-icono btn-borrar" (click)="eliminar(tour.id)">
+              <ion-icon name="trash"></ion-icon>
+            </button>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #sinActivos>
+        <div class="estado-vacio">
+          <div class="vacio-icono">
+            <ion-icon name="earth-outline"></ion-icon>
+          </div>
+          <h3>Sin tours públicos</h3>
+          <p>No hay tours publicados actualmente.</p>
+        </div>
+      </ng-template>
+
+    </div>
+
   </div>
 
 </ion-content>

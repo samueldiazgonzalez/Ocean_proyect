@@ -1,51 +1,547 @@
-.header-section {
-  h2 { font-weight: bold; margin-bottom: 5px; color: #333; }
-  p { color: #666; margin-top: 0; font-size: 14px; }
+// ── Toolbar ────────────────────────────────────
+.toolbar-mistours {
+  --background: linear-gradient(135deg, #0d47a1, #0077b6);
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --min-height: 58px;
 }
 
-.tour-card {
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-}
-
-.img-wrapper {
-  position: relative;
-  height: 160px;
-  
-  img { 
-    width: 100%; 
-    height: 100%; 
-    object-fit: cover; 
-  }
-  
-  .badge-estado {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    padding: 6px 10px;
-    border-radius: 8px;
-    font-size: 12px;
-    backdrop-filter: blur(4px);
-  }
-}
-
-.botones-grid {
+.toolbar-info {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 2px;
+  margin-left: 4px;
+}
+
+.toolbar-titulo {
+  font-size: 17px;
+  font-weight: 700;
+  color: white;
+  line-height: 1;
+}
+
+.toolbar-sub {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.btn-nuevo {
+  height: 32px;
+  padding: 0 14px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 0.5px solid rgba(255, 255, 255, 0.25);
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  margin-right: 4px;
+
+  ion-icon { font-size: 15px; }
+  &:active { background: rgba(255,255,255,0.22); }
+}
+
+// ── Fondo ──────────────────────────────────────
+ion-content.mistours-content {
+  --background: url('https://images.pexels.com/photos/27566375/pexels-photo-27566375.jpeg') center center / cover no-repeat fixed;
+}
+
+ion-content.mistours-content::part(scroll) {
+  background: rgba(10, 15, 30, 0.85);
+  min-height: 100%;
+}
+
+// ── Cargando ───────────────────────────────────
+.estado-cargando {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80px 20px;
+  gap: 16px;
+
+  p { font-size: 14px; color: rgba(255, 255, 255, 0.4); }
+}
+
+// ── Vacío ──────────────────────────────────────
+.estado-vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80px 24px;
+  gap: 12px;
+  text-align: center;
+}
+
+.vacio-icono {
+  width: 84px;
+  height: 84px;
+  border-radius: 24px;
+  background: rgba(0, 119, 182, 0.1);
+  border: 0.5px solid rgba(0, 150, 199, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+
+  ion-icon { font-size: 38px; color: rgba(96, 200, 255, 0.5); }
+}
+
+.estado-vacio h3 {
+  font-size: 20px;
+  font-weight: 800;
+  color: white;
+  margin: 0;
+}
+
+.estado-vacio p {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.38);
+  line-height: 1.6;
+  max-width: 260px;
+  margin: 0;
+}
+
+.btn-crear {
+  height: 46px;
+  padding: 0 24px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #0d47a1, #0077b6);
+  border: none;
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
   gap: 8px;
-  margin-top: 10px;
-  
-  ion-button {
-    flex: 1 1 calc(50% - 4px); /* Pone exactamente 2 botones por fila */
-    margin: 0;
-    --padding-start: 5px;
-    --padding-end: 5px;
+  cursor: pointer;
+  margin-top: 4px;
+
+  ion-icon { font-size: 18px; }
+}
+
+// ── Contenedor ─────────────────────────────────
+.mistours-container {
+  padding: 14px 12px 80px;
+}
+
+// ── Stats ──────────────────────────────────────
+.stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  background: rgba(19, 25, 41, 0.85);
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 12px 10px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.stat-num {
+  font-size: 22px;
+  font-weight: 800;
+  color: white;
+}
+
+.stat-lbl {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.32);
+}
+
+.stat-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-top: 4px;
+
+  &.dot-blue  { background: #60c8ff; }
+  &.dot-green { background: #00d4a0; }
+  &.dot-amber { background: #fbbf24; }
+}
+
+// ── Tour card ──────────────────────────────────
+.tour-card {
+  background: rgba(19, 25, 41, 0.88);
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+  transition: transform 0.2s;
+
+  &:active { transform: scale(0.985); }
+}
+
+// ── Imagen ─────────────────────────────────────
+.card-img-wrapper {
+  position: relative;
+  height: 150px;
+  overflow: hidden;
+}
+
+.card-imagen {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.img-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0) 35%, rgba(0,0,0,0.6) 100%);
+}
+
+.estado-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  z-index: 5;
+
+  &.badge-publico {
+    background: rgba(0, 212, 160, 0.2);
+    border: 0.5px solid rgba(0, 212, 160, 0.45);
+    color: #00d4a0;
+  }
+
+  &.badge-auditoria {
+    background: rgba(251, 191, 36, 0.2);
+    border: 0.5px solid rgba(251, 191, 36, 0.45);
+    color: #fbbf24;
   }
 }
 
-.estado-cargando, .estado-vacio {
-  text-align: center;
-  margin-top: 40px;
-  color: #777;
+.badge-categoria {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background: rgba(0, 119, 182, 0.85);
+  color: white;
+  padding: 3px 11px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 600;
+  border: 0.5px solid rgba(255, 255, 255, 0.2);
+  z-index: 5;
+}
+
+// ── Body card ──────────────────────────────────
+.card-body { padding: 12px 13px 14px; }
+
+.card-titulo {
+  font-size: 15px;
+  font-weight: 700;
+  color: white;
+  margin: 0 0 5px;
+}
+
+.precio-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #00d4a0;
+
+  ion-icon { font-size: 15px; }
+}
+
+.descripcion {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.35);
+  line-height: 1.5;
+  margin-bottom: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// ── Acciones ───────────────────────────────────
+.acciones-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+}
+
+.acc-btn {
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 0.5px solid;
+  transition: opacity 0.15s;
+
+  ion-icon { font-size: 15px; }
+  &:active { opacity: 0.75; }
+
+  &.full-width { grid-column: span 2; }
+}
+
+.btn-ver     { background: rgba(0,119,182,0.15);  border-color: rgba(0,150,199,0.35);  color: #60c8ff; }
+.btn-editar  { background: rgba(168,85,247,0.15); border-color: rgba(168,85,247,0.35); color: #c084fc; }
+.btn-pausar  { background: rgba(251,191,36,0.12); border-color: rgba(251,191,36,0.35); color: #fbbf24; }
+.btn-borrar  { background: rgba(255,82,82,0.12);  border-color: rgba(255,82,82,0.3);   color: #ff6b6b; }
+
+// ── FAB ────────────────────────────────────────
+.fab-custom {
+  --background: linear-gradient(135deg, #0d47a1, #0077b6);
+  --background-activated: #005f8e;
+  --border-radius: 16px;
+  --box-shadow: 0 8px 24px rgba(0, 119, 182, 0.4);
+  width: 52px;
+  height: 52px;
+}
+
+// ══════════════════════════════════════════════
+// ── MODAL ─────────────────────────────────────
+// ══════════════════════════════════════════════
+
+.toolbar-modal {
+  --background: #0d1b2e;
+  --border-bottom: 0.5px solid rgba(255,255,255,0.08);
+}
+
+.modal-titulo {
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+}
+
+.modal-close-btn {
+  --color: rgba(255, 255, 255, 0.6);
+}
+
+.modal-save-btn {
+  height: 32px;
+  padding: 0 14px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #0d47a1, #0077b6);
+  border: none;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  margin-right: 4px;
+
+  ion-icon { font-size: 14px; }
+  &:disabled { opacity: 0.5; }
+
+  .save-spinner { --color: white; width: 16px; height: 16px; }
+}
+
+ion-content.modal-content {
+  --background: #0a0f1e;
+}
+
+ion-content.modal-content::part(scroll) {
+  background: rgba(10, 15, 30, 0.96);
+  padding: 16px 14px;
+}
+
+// ── Aviso auditoría ────────────────────────────
+.aviso-auditoria {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: rgba(251, 191, 36, 0.1);
+  border: 0.5px solid rgba(251, 191, 36, 0.35);
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin-bottom: 20px;
+
+  ion-icon { font-size: 20px; color: #fbbf24; flex-shrink: 0; margin-top: 1px; }
+  p { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.5; margin: 0; }
+  strong { color: #fbbf24; }
+}
+
+// ── Sección labels del modal ───────────────────
+.modal-sec-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.28);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin: 0 0 8px 2px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  ion-icon { font-size: 13px; color: #60c8ff; }
+
+  &:not(:first-of-type) { margin-top: 20px; }
+}
+
+// ── Modal card contenedor ──────────────────────
+.modal-card {
+  background: rgba(19, 25, 41, 0.8);
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 14px 13px;
+  margin-bottom: 4px;
+}
+
+// ── Campos del modal ───────────────────────────
+.modal-campo { margin-bottom: 12px; &:last-child { margin-bottom: 0; } }
+
+.campo-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  padding-left: 2px;
+}
+
+.campo-inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 0.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 0 12px;
+  min-height: 46px;
+  transition: border-color 0.2s, background 0.2s;
+
+  &:focus-within {
+    border-color: rgba(0, 150, 199, 0.5);
+    background: rgba(0, 119, 182, 0.08);
+  }
+
+  &.campo-textarea { align-items: flex-start; padding-top: 10px; padding-bottom: 10px; }
+}
+
+.campo-icon {
+  font-size: 17px;
+  color: #60c8ff;
+  flex-shrink: 0;
+}
+
+.campo-input {
+  --background: transparent;
+  --color: white;
+  --placeholder-color: rgba(255, 255, 255, 0.25);
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --box-shadow: none;
+  font-size: 14px;
+  flex: 1;
+  min-height: 46px;
+}
+
+.campo-select {
+  --background: transparent;
+  --color: white;
+  --placeholder-color: rgba(255, 255, 255, 0.25);
+  --padding-start: 0;
+  flex: 1;
+  font-size: 14px;
+  color: white;
+}
+
+// ── Habitaciones / Extras ──────────────────────
+.hab-item, .extra-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 0.5px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.hab-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.hab-titulo {
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.hab-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.btn-eliminar-item {
+  background: rgba(255, 82, 82, 0.12);
+  border: 0.5px solid rgba(255, 82, 82, 0.3);
+  border-radius: 8px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  ion-icon { font-size: 15px; color: #ff6b6b; }
+}
+
+.btn-eliminar-inline {
+  background: rgba(255, 82, 82, 0.1);
+  border: 0.5px solid rgba(255, 82, 82, 0.25);
+  border-radius: 8px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+
+  ion-icon { font-size: 14px; color: #ff6b6b; }
+}
+
+.btn-agregar {
+  width: 100%;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(0, 119, 182, 0.12);
+  border: 0.5px dashed rgba(0, 150, 199, 0.35);
+  color: #60c8ff;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  cursor: pointer;
+  margin-top: 6px;
+
+  ion-icon { font-size: 17px; }
+  &:active { background: rgba(0, 119, 182, 0.2); }
 }
