@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { 
   IonContent, IonHeader, IonTitle, IonToolbar,
   IonList, IonItem, IonInput, IonTextarea, IonButton, IonIcon, 
-  IonSpinner, IonSelect, IonSelectOption, IonListHeader, IonLabel, 
+  IonSpinner, IonSelect, IonSelectOption, IonListHeader, IonLabel, IonButtons, IonBackButton
 } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
@@ -26,7 +26,7 @@ import { AuthService } from '../../core/services/auth';
   imports: [
     IonContent, IonHeader, IonTitle, IonToolbar,
     IonList, IonItem, IonInput, IonTextarea, IonButton, IonIcon, 
-    IonSpinner, IonSelect, IonSelectOption, IonListHeader, IonLabel,
+    IonSpinner, IonSelect, IonSelectOption, IonListHeader, IonLabel, IonButtons, IonBackButton,
     CommonModule, FormsModule
   ]
 })

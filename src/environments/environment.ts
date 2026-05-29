@@ -5,8 +5,7 @@
 export const environment = {
   production: false,
   notificationServiceUrl: 'https://tourism-notification-service-production.up.railway.app',
-  notificationServiceKey: 'tourism_secret_key_2024',
-  googleMapsApiKey: 'AIzaSyBCJHWSgi-srjvvI-Pw-ERdGp53ZhGPlGo'
+  notificationServiceKey: 'tourism_secret_key_2024'
 };
 
 /*

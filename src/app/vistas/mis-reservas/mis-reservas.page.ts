@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { 
   IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, 
-  IonLabel, IonBadge, IonSpinner, IonIcon, IonCard, IonCardContent 
+  IonLabel, IonBadge, IonSpinner, IonIcon, IonCard, IonCardContent, IonButtons, IonBackButton
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { calendarOutline, walletOutline, textOutline, cardOutline,
@@ -21,7 +21,7 @@ import { AuthService } from '../../core/services/auth';
   standalone: true,
   imports: [
     IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, 
-    IonLabel, IonBadge, IonSpinner, IonIcon, IonCard, IonCardContent,
+    IonLabel, IonBadge, IonSpinner, IonIcon, IonCard, IonCardContent, IonButtons, IonBackButton,
     CommonModule, FormsModule, RouterModule
   ]
 })
