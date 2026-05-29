@@ -7,7 +7,7 @@ import {
   IonItem, IonInput, IonButton, IonIcon, IonCard, IonCardContent, IonList, IonSpinner, IonModal
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { checkmarkCircleOutline, closeCircleOutline, checkmarkCircle } from 'ionicons/icons';
+import { checkmarkCircleOutline, closeCircleOutline, checkmarkCircle, closeCircle } from 'ionicons/icons';
 
 import { CardService } from '../../core/services/card';
 import { ToastService } from '../../core/services/toast';
@@ -35,10 +35,15 @@ export class CheckoutPage implements OnInit {
 
   reservaId: string | null = null;
   
+  // Datos crudos
   numeroTarjeta: string = '';
   fechaExpiracion: string = '';
   cvv: string = '';
   nombreTitular: string = '';
+
+  // Datos para la visualización bonita
+  numeroTarjetaVisual: string = '';
+  isFlipped: boolean = false; 
 
   franquicia: string = 'desconocida';
   esValida: boolean = false;
@@ -48,7 +53,7 @@ export class CheckoutPage implements OnInit {
   qrUrlGenerado: string = '';
 
   constructor() {
-    addIcons({ checkmarkCircleOutline, closeCircleOutline, checkmarkCircle });
+    addIcons({checkmarkCircle, closeCircle, checkmarkCircleOutline, closeCircleOutline});
   }
 
   async ngOnInit() {
@@ -60,17 +65,54 @@ export class CheckoutPage implements OnInit {
     }
   }
 
-  verificarTarjeta() {
-    this.franquicia = this.cardService.obtenerFranquicia(this.numeroTarjeta);
-    const numLimpio = this.numeroTarjeta.replace(/\s/g, '');
-    this.esValida = numLimpio.length >= 15 ? this.cardService.validarLuhn(numLimpio) : false;
+  // ─── Lógica Visual de la Tarjeta 3D ──────────────────────────
+
+  flipCard() {
+    this.isFlipped = !this.isFlipped;
   }
 
-  formatearExpiracion() {
-    if (this.fechaExpiracion.length === 2 && !this.fechaExpiracion.includes('/')) {
-      this.fechaExpiracion += '/';
-    }
+  getCardClass() {
+    if (this.franquicia === 'visa') return 'visa-style';
+    if (this.franquicia === 'mastercard') return 'mc-style';
+    return '';
   }
+
+  formatCardNumberDisplay() {
+    if (!this.numeroTarjeta) return '#### #### #### ####';
+    // Rellena con # si faltan números y los separa cada 4 espacios
+    let padded = this.numeroTarjeta.padEnd(16, '#');
+    return padded.replace(/(.{4})/g, '$1 ').trim();
+  }
+
+  // ─── Manejo de Inputs (Formateo automático) ──────────────────
+
+  onCardNumberChange(value: string) {
+    // 1. Quitar todo lo que no sea número
+    const digits = value.replace(/\D/g, '');
+    this.numeroTarjeta = digits;
+    
+    // 2. Ponerle los espacios para que se vea bonito en el input (Ej: 4111 1111...)
+    this.numeroTarjetaVisual = digits.replace(/(\d{4})(?=\d)/g, '$1 ');
+    
+    // 3. Verificar si es válida
+    this.verificarTarjeta();
+  }
+
+  onExpChange(value: string) {
+    // Quitar lo que no sea número y agregar el "/" automáticamente
+    let clean = value.replace(/\D/g, '');
+    if (clean.length > 2) {
+      clean = clean.substring(0, 2) + '/' + clean.substring(2, 4);
+    }
+    this.fechaExpiracion = clean;
+  }
+
+  verificarTarjeta() {
+    this.franquicia = this.cardService.obtenerFranquicia(this.numeroTarjeta);
+    this.esValida = this.numeroTarjeta.length >= 15 ? this.cardService.validarLuhn(this.numeroTarjeta) : false;
+  }
+
+  // ─── Procesamiento y Pago ────────────────────────────────────
 
   async procesarPago() {
     if (!this.esValida || !this.fechaExpiracion || !this.cvv || !this.nombreTitular) {
@@ -105,7 +147,7 @@ export class CheckoutPage implements OnInit {
 
       await this.databaseService.actualizarReserva(this.reservaId, datosActualizados);
       
-      const textoQr = `OCEAN-${this.reservaId}-${this.nombreTitular.replace(' ', '')}`;
+      const textoQr = `OCEAN-${this.reservaId}-${this.nombreTitular.replace(/\s/g, '')}`;
       this.qrUrlGenerado = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(textoQr)}&color=3880ff`;
 
       this.cargando = false;

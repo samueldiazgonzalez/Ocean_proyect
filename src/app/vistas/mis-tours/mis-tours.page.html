@@ -1,30 +1,29 @@
 <ion-header class="ion-no-border">
   <ion-toolbar class="toolbar-mistours">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/tabs/catalogo" text="Volver"></ion-back-button>
-    </ion-buttons>
+    
     <div class="toolbar-info" slot="start">
       <span class="toolbar-titulo">🏢 Mi Inventario</span>
       <span class="toolbar-sub">Gestiona tus publicaciones</span>
     </div>
-    <ion-buttons slot="end">
+    <div class="header-acciones" slot="end">
       <button class="btn-nuevo" routerLink="/tabs/crear-tour">
         <ion-icon name="add-outline"></ion-icon>
         Nuevo
       </button>
-    </ion-buttons>
+      <button class="accion-btn avatar-btn" (click)="navegar('/tabs/perfil')">
+        <ion-icon name="person-outline"></ion-icon>
+      </button>
+    </div>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="mistours-content">
 
-  <!-- ── CARGANDO ────────────────────────────── -->
   <div class="estado-cargando" *ngIf="cargando">
     <ion-spinner name="crescent" color="primary"></ion-spinner>
     <p>Cargando tus paquetes...</p>
   </div>
 
-  <!-- ── VACÍO ───────────────────────────────── -->
   <div class="estado-vacio" *ngIf="!cargando && misTours.length === 0">
     <div class="vacio-icono">
       <ion-icon name="business-outline"></ion-icon>
@@ -37,10 +36,8 @@
     </button>
   </div>
 
-  <!-- ── LISTA ───────────────────────────────── -->
   <div class="mistours-container" *ngIf="!cargando && misTours.length > 0">
 
-    <!-- Stats rápidas -->
     <div class="stats-row">
       <div class="stat-card">
         <span class="stat-num">{{ misTours.length }}</span>
@@ -59,14 +56,12 @@
       </div>
     </div>
 
-    <!-- Grid de tarjetas -->
     <ion-grid class="ion-no-padding">
       <ion-row>
         <ion-col size="12" size-md="6" *ngFor="let tour of misTours">
 
           <div class="tour-card">
 
-            <!-- Imagen -->
             <div class="card-img-wrapper">
               <img [src]="tour.imagenUrl || 'https://via.placeholder.com/400x200?text=Ocean+Tour'"
                    alt="{{ tour.titulo }}" class="card-imagen"/>
@@ -81,7 +76,6 @@
               <div class="badge-categoria" *ngIf="tour.categoria">{{ tour.categoria }}</div>
             </div>
 
-            <!-- Cuerpo -->
             <div class="card-body">
               <h3 class="card-titulo">{{ tour.titulo }}</h3>
 
@@ -92,7 +86,6 @@
 
               <p class="descripcion">{{ tour.descripcion }}</p>
 
-              <!-- Acciones -->
               <div class="acciones-grid">
                 <button class="acc-btn btn-ver" [routerLink]="['/detalle-tour', tour.id]">
                   <ion-icon name="eye-outline"></ion-icon> Ver
@@ -121,7 +114,6 @@
 
   </div>
 
-  <!-- ── FAB ─────────────────────────────────── -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed"
     *ngIf="!cargando && misTours.length > 0">
     <ion-fab-button class="fab-custom" routerLink="/tabs/crear-tour">
@@ -129,9 +121,6 @@
     </ion-fab-button>
   </ion-fab>
 
-  <!-- ══════════════════════════════════════════ -->
-  <!-- ── MODAL DE EDICIÓN ─────────────────────── -->
-  <!-- ══════════════════════════════════════════ -->
   <ion-modal [isOpen]="isModalOpen" (didDismiss)="cerrarModal()">
     <ng-template>
 
@@ -156,13 +145,11 @@
 
       <ion-content class="modal-content" *ngIf="tourEditando">
 
-        <!-- Banner de aviso -->
         <div class="aviso-auditoria">
           <ion-icon name="alert-circle-outline"></ion-icon>
           <p>Al modificar tu servicio pasará temporalmente a <strong>"En Auditoría"</strong> hasta que un administrador verifique los cambios.</p>
         </div>
 
-        <!-- ── Información básica ── -->
         <p class="modal-sec-label">Información básica</p>
         <div class="modal-card">
 
@@ -252,7 +239,6 @@
 
         </div>
 
-        <!-- ── Habitaciones (hoteles) ── -->
         <ng-container *ngIf="tourEditando.categoria === 'hoteles'">
           <p class="modal-sec-label">
             <ion-icon name="bed-outline"></ion-icon> Habitaciones
@@ -292,7 +278,6 @@
           </div>
         </ng-container>
 
-        <!-- ── Extras (tours) ── -->
         <ng-container *ngIf="tourEditando.categoria !== 'hoteles'">
           <p class="modal-sec-label">
             <ion-icon name="ribbon-outline"></ion-icon> Extras opcionales
@@ -320,7 +305,6 @@
           </div>
         </ng-container>
 
-        <!-- ── Detalles ── -->
         <p class="modal-sec-label">Detalles del servicio</p>
         <div class="modal-card">
           <div class="modal-campo">
@@ -343,7 +327,6 @@
           </div>
         </div>
 
-        <!-- ── Galería ── -->
         <p class="modal-sec-label">
           <ion-icon name="images-outline"></ion-icon> Galería de fotos
         </p>

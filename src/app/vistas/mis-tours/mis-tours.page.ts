@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import {
   IonContent, IonHeader, IonTitle, IonToolbar, IonButton,
   IonIcon, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent,
@@ -16,7 +16,7 @@ import {
   textOutline, timeOutline, callOutline, locationOutline, star, ribbonOutline, 
   documentTextOutline, checkmarkCircleOutline, imageOutline, moonOutline, 
   mapOutline, alertCircleOutline, bedOutline, peopleOutline, informationCircleOutline,
-  businessOutline, imagesOutline, checkmarkOutline
+  businessOutline, imagesOutline, checkmarkOutline, personOutline
 } from 'ionicons/icons';
 import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
 
@@ -43,6 +43,7 @@ export class MisToursPage implements OnInit {
   private authService = inject(AuthService);
   private alertController = inject(AlertController);
   private firestore = inject(Firestore);
+  private router = inject(Router);
 
   misTours: Tour[] = [];
   cargando: boolean = true;
@@ -52,7 +53,6 @@ export class MisToursPage implements OnInit {
   tourEditando: any = null;
   guardandoEdicion: boolean = false;
 
-  // ── Getters para stats ─────────────────────
   get toursPublicos(): number {
     return this.misTours.filter(t => (t as any).estado === 'aprobado').length;
   }
@@ -68,8 +68,12 @@ export class MisToursPage implements OnInit {
       textOutline, timeOutline, callOutline, locationOutline, star, ribbonOutline, 
       documentTextOutline, checkmarkCircleOutline, imageOutline, moonOutline, 
       mapOutline, alertCircleOutline, bedOutline, peopleOutline, informationCircleOutline,
-      businessOutline, imagesOutline, checkmarkOutline
+      businessOutline, imagesOutline, checkmarkOutline, personOutline
     });
+  }
+
+  navegar(ruta: string) {
+    this.router.navigateByUrl(ruta);
   }
 
   async ngOnInit() {
@@ -82,7 +86,7 @@ export class MisToursPage implements OnInit {
           this.cargando = false;
         },
         error: (err) => {
-          console.error('Error al cargar los tours', err);
+          console.error(err);
           this.cargando = false;
         }
       });
@@ -206,7 +210,7 @@ export class MisToursPage implements OnInit {
       this.cerrarModal();
 
     } catch (err) {
-      console.error('Error al guardar la edición:', err);
+      console.error(err);
       alert('❌ Hubo un error al guardar. Revisa que tu conexión esté bien.');
     } finally {
       this.guardandoEdicion = false;

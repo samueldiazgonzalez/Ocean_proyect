@@ -6,14 +6,15 @@ import {
   IonContent, IonHeader, IonTitle, IonToolbar, IonButton,
   IonIcon, IonList, IonItem, IonLabel, IonSpinner,
   IonBadge, IonListHeader, IonCard, AlertController,
-  IonButtons, IonBackButton
+  IonButtons, IonBackButton, IonModal
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { 
   personCircle, briefcaseOutline, settingsOutline, 
   helpCircleOutline, logOutOutline, ticketOutline,
   logInOutline, personAddOutline, shieldCheckmark, heartOutline,
-  pencilOutline, chevronForwardOutline, swapHorizontalOutline
+  pencilOutline, chevronForwardOutline, swapHorizontalOutline,
+  closeCircle
 } from 'ionicons/icons';
 import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
 
@@ -28,7 +29,7 @@ import { DatabaseService } from '../../core/services/database';
   imports: [
     IonContent, IonHeader, IonTitle, IonToolbar, IonButton,
     IonIcon, IonList, IonItem, IonLabel, IonSpinner,
-    IonBadge, IonListHeader, IonCard, IonButtons, IonBackButton,
+    IonBadge, IonListHeader, IonCard, IonButtons, IonBackButton, IonModal,
     CommonModule, FormsModule, RouterModule 
   ]
 })
@@ -47,12 +48,17 @@ export class PerfilPage {
   cargandoDatos: boolean = true;
   esInvitado: boolean = false; 
 
+  mostrarConfig: boolean = false;
+  correoUsuario: string = '';
+  compania: string = ''; // 👈 Añadimos la variable para guardar la compañía
+
   constructor() {
     addIcons({ 
       personCircle, briefcaseOutline, settingsOutline, 
       helpCircleOutline, logOutOutline, ticketOutline,
       logInOutline, personAddOutline, shieldCheckmark, heartOutline,
-      pencilOutline, chevronForwardOutline, swapHorizontalOutline
+      pencilOutline, chevronForwardOutline, swapHorizontalOutline,
+      closeCircle
     });
   }
 
@@ -70,6 +76,8 @@ export class PerfilPage {
       this.apodo = (usuarioActual as any).apodo || '';
       this.fotoUrl = (usuarioActual as any).fotoUrl || '';
       this.rol = usuarioActual.rol || '';
+      this.correoUsuario = usuarioActual.email || '';
+      this.compania = (usuarioActual as any).compania || ''; // 👈 Leemos si ya tiene compañía guardada
       this.esInvitado = false;
     } else {
       this.esInvitado = true;
@@ -109,16 +117,106 @@ export class PerfilPage {
     await alert.present();
   }
 
-  async cambiarRol() {
+  abrirConfiguracion() {
+    this.mostrarConfig = true;
+  }
+
+  cerrarConfiguracion() {
+    this.mostrarConfig = false;
+  }
+
+  async iniciarCambioRol() {
+    this.cerrarConfiguracion();
+
+    if (this.rol === 'viajero') {
+      
+      // 👇 MAGIA AQUÍ: Comprobamos si YA TIENE una compañía registrada
+      if (this.compania && this.compania.trim() !== '') {
+        // Ya es agencia, solo confirmamos el regreso
+        const alert = await this.alertController.create({
+          header: 'Modo Agencia',
+          message: `Vas a volver a operar como **${this.compania}**. Tus tours y datos están a salvo.`,
+          buttons: [
+            { text: 'Cancelar', role: 'cancel' },
+            {
+              text: 'Confirmar',
+              handler: async () => {
+                await this.ejecutarCambioRol('proveedor');
+              }
+            }
+          ]
+        });
+        await alert.present();
+        
+      } else {
+        // Es la primera vez, le pedimos el nombre de la compañía
+        const alert = await this.alertController.create({
+          header: 'Convertirse en Agencia',
+          message: `Vas a vincular tu cuenta actual (${this.correoUsuario}) para operar como Proveedor. Por favor, ingresa el nombre de tu compañía o agencia.`,
+          inputs: [
+            {
+              name: 'nombreCompania',
+              type: 'text',
+              placeholder: 'Ej: Ocean Tours S.A.S'
+            }
+          ],
+          buttons: [
+            { text: 'Cancelar', role: 'cancel' },
+            {
+              text: 'Confirmar',
+              handler: async (data) => {
+                if (!data.nombreCompania || data.nombreCompania.trim() === '') {
+                  return false; 
+                }
+                await this.ejecutarCambioRol('proveedor', data.nombreCompania);
+                return true;
+              }
+            }
+          ]
+        });
+        await alert.present();
+      }
+
+    } else {
+      // De proveedor a viajero
+      const alert = await this.alertController.create({
+        header: 'Cambiar a Turista',
+        message: `Vas a usar tu cuenta en modo explorador. Tus tours como agencia seguirán guardados en el sistema.`,
+        buttons: [
+          { text: 'Cancelar', role: 'cancel' },
+          {
+            text: 'Confirmar',
+            handler: async () => {
+              await this.ejecutarCambioRol('viajero');
+            }
+          }
+        ]
+      });
+      await alert.present();
+    }
+  }
+
+  async ejecutarCambioRol(nuevoRol: string, nombreCompania?: string) {
     if (!this.uid) return;
-    
     this.cargandoDatos = true;
-    const nuevoRol = this.rol === 'viajero' ? 'proveedor' : 'viajero';
     
     try {
       const userRef = doc(this.firestore, `usuarios/${this.uid}`);
-      await updateDoc(userRef, { rol: nuevoRol });
-      window.location.replace('/tabs/catalogo');
+      let updateData: any = { rol: nuevoRol };
+      
+      // Si nos pasaron un nombre nuevo, lo guardamos
+      if (nombreCompania) {
+        updateData.compania = nombreCompania;
+      }
+
+      await updateDoc(userRef, updateData);
+      
+      if (nuevoRol === 'proveedor') {
+        window.location.replace('/tabs/mis-tours');
+      } else {
+        window.location.replace('/tabs/catalogo');
+      }
+      
     } catch (error) {
       console.error('Error al cambiar rol', error);
       this.cargandoDatos = false;
