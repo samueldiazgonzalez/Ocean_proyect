@@ -1,16 +1,16 @@
-import { Component, OnInit, inject, ViewChild} from '@angular/core';
+import { Component, OnInit, inject, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { 
   IonContent, IonHeader, IonTitle, IonToolbar,
   IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent,
   IonButton, IonButtons, IonIcon, IonGrid, IonRow, IonCol, IonSpinner,
   IonSearchbar, IonSegment, IonSegmentButton, IonLabel, IonBadge, 
-  IonPopover, IonList, IonItem,
+  IonPopover, IonList, IonItem, IonBackButton
 } from '@ionic/angular/standalone';
 import { AuthService } from '../../core/services/auth'; 
-
 import { addIcons } from 'ionicons';
 import { cashOutline, arrowForwardOutline, star, water, search, notificationsOutline, personCircleOutline, heartOutline, heart, searchOutline, compassOutline, personOutline, optionsOutline, waterOutline, gridOutline, checkmark, leafOutline, peopleOutline, flameOutline, bookOutline, flowerOutline, ribbonOutline, businessOutline, briefcaseOutline } from 'ionicons/icons';
 import { DatabaseService } from '../../core/services/database';
@@ -23,15 +23,17 @@ import { DatabaseService } from '../../core/services/database';
   imports: [
     IonContent, IonHeader, IonTitle, IonToolbar,
     IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent,
-    IonButton,IonButtons, IonIcon, IonGrid, IonRow, IonCol, IonSpinner,
+    IonButton, IonButtons, IonIcon, IonGrid, IonRow, IonCol, IonSpinner,
     IonSearchbar, IonSegment, IonSegmentButton, IonLabel, IonBadge,
-    CommonModule, FormsModule, RouterModule, IonPopover, IonList, IonItem
+    CommonModule, FormsModule, RouterModule, IonPopover, IonList, IonItem, IonBackButton
   ]
 })
 export class CatalogoPage implements OnInit {
   private databaseService = inject(DatabaseService);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private sanitizer = inject(DomSanitizer); // ✅ NUEVO
+
   @ViewChild('popoverFiltros') popover!: IonPopover;
 
   tours: any[] = []; 
@@ -41,54 +43,91 @@ export class CatalogoPage implements OnInit {
   categoriaSeleccionada: string = 'todos';
   textoBusqueda: string = '';
   tipoInventario: string = 'aventuras'; 
-
   rol: string = 'viajero';
-
   isHeaderHidden: boolean = false;
   private lastScrollPosition = 0;
-navegar(ruta: string) {
-    this.router.navigateByUrl(ruta);
-  }
+
+  // ✅ VARIABLES DEL VIDEO HERO
+  mostrarImagenHero: boolean = false;
+  reproduccionesHero: number = 0;
+  reproduccionesMaximas: number = 3;
+  youtubeHeroUrl!: SafeResourceUrl;
+  private heroPlayer: any;
+
   constructor() {
     addIcons({
-      waterOutline,
-      heartOutline,
-      notificationsOutline,
-      personOutline,
-      searchOutline,
-      optionsOutline,
-      gridOutline,
-      checkmark,
-      leafOutline,
-      peopleOutline,
-      flameOutline,
-      bookOutline,
-      flowerOutline,
-      ribbonOutline,
-      businessOutline,
-      compassOutline,
-      star,
-      cashOutline,
-      arrowForwardOutline,
-      water,
-      personCircleOutline,
-      search,
-      heart,
-      briefcaseOutline
+      waterOutline, heartOutline, notificationsOutline, personOutline,
+      searchOutline, optionsOutline, gridOutline, checkmark, leafOutline,
+      peopleOutline, flameOutline, bookOutline, flowerOutline, ribbonOutline,
+      businessOutline, compassOutline, star, cashOutline, arrowForwardOutline,
+      water, personCircleOutline, search, heart, briefcaseOutline
     });
   }
 
+  async ngOnInit() {
+    // ✅ Generar URL segura del video
+    this.youtubeHeroUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+      'https://www.youtube.com/embed/UYea7UOs_es?autoplay=1&mute=1&controls=0&enablejsapi=1&playsinline=1&rel=0&showinfo=0'
+    );
 
+    // ✅ Cargar la API de YouTube
+    this.cargarYouTubeAPI();
 
-  async ionViewWillEnter() {
-    this.cargarCatalogo();
-  }
-
-  async ngOnInit() { 
     const usuario = await this.authService.obtenerDatosUsuarioActual();
     if (usuario) {
       this.rol = usuario.rol;
     }
+  }
+
+  // ✅ Carga el script de YouTube una sola vez
+  cargarYouTubeAPI() {
+    if ((window as any)['YT']?.Player) {
+      this.iniciarHeroPlayer();
+      return;
+    }
+
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.body.appendChild(tag);
+
+    (window as any)['onYouTubeIframeAPIReady'] = () => {
+      this.iniciarHeroPlayer();
+    };
+  }
+
+  // ✅ Inicializa el player y escucha cuando termina el video
+  iniciarHeroPlayer() {
+    setTimeout(() => {
+      this.heroPlayer = new (window as any)['YT'].Player('hero-youtube-player', {
+        events: {
+          onStateChange: (event: any) => {
+            if (event.data === 0) { // 0 = video terminó
+              this.onHeroVideoEnded();
+            }
+          }
+        }
+      });
+    }, 1000); // Pequeño delay para asegurar que el iframe esté en el DOM
+  }
+
+  // ✅ Controla las repeticiones
+  onHeroVideoEnded() {
+    this.reproduccionesHero++;
+
+    if (this.reproduccionesHero < this.reproduccionesMaximas) {
+      this.heroPlayer.seekTo(0);
+      this.heroPlayer.playVideo();
+    } else {
+      this.mostrarImagenHero = true; // Muestra la imagen estática
+    }
+  }
+
+  navegar(ruta: string) {
+    this.router.navigateByUrl(ruta);
+  }
+
+  async ionViewWillEnter() {
+    this.cargarCatalogo();
   }
 
   async abrirFiltros(event: Event) {
@@ -96,28 +135,23 @@ navegar(ruta: string) {
     await this.popover.present();
   }
 
- async cargarCatalogo() {
+  async cargarCatalogo() {
     this.cargando = true;
-    
-    // Obtenemos el usuario al iniciar para saber si tiene favoritos guardados
     const usuarioActual = await this.authService.obtenerDatosUsuarioActual();
 
     this.databaseService.obtenerTours().subscribe({
       next: (data) => {
         this.tours = data;
         
-        // 1. CARGAR FAVORITOS: Si el usuario tiene sesión, buscamos sus corazones rojos
         if (usuarioActual && usuarioActual.uid) {
           this.databaseService.obtenerFavoritosPorTurista(usuarioActual.uid).subscribe(favoritos => {
-            const idsFavoritos = favoritos.map((f:any) => f.tourId);
+            const idsFavoritos = favoritos.map((f: any) => f.tourId);
             this.tours.forEach(tour => {
-              // Si el ID del tour está en su lista de favoritos, pintamos el corazón
               tour.esFavorito = idsFavoritos.includes(tour.id);
             });
           });
         }
 
-        // 2. CARGAR RESEÑAS
         this.tours.forEach(tour => {
           if (tour.id) {
             this.databaseService.obtenerResenasPorTour(tour.id).subscribe(resenas => {
@@ -145,42 +179,30 @@ navegar(ruta: string) {
   }
 
   async toggleFavorito(tour: any, event?: Event) {
-    // Esto evita que al tocar el corazón se abra la tarjeta del tour accidentalmente
-    if (event) {
-      event.stopPropagation();
-    }
+    if (event) event.stopPropagation();
 
     const usuarioActual = await this.authService.obtenerDatosUsuarioActual();
 
     if (!usuarioActual || !usuarioActual.uid) {
-      // Usamos alert en vez de console.log para que el usuario entienda qué pasa
       alert('❤️ Debes iniciar sesión como Turista para guardar tus lugares favoritos.');
       return;
     }
 
-    // Efecto visual instantáneo (cambiamos el color del corazón antes de consultar a Firebase)
     const estadoAnterior = !!tour.esFavorito;
     tour.esFavorito = !estadoAnterior;
 
     try {
-      await this.databaseService.alternarFavorito(
-        usuarioActual.uid, 
-        tour.id,           
-        estadoAnterior     
-      );
+      await this.databaseService.alternarFavorito(usuarioActual.uid, tour.id, estadoAnterior);
     } catch (error) {
-      console.error('Error al sincronizar el favorito con la base de datos', error);
-      // Si el internet falla, devolvemos el corazón a su estado original
-      tour.esFavorito = estadoAnterior; 
+      console.error('Error al sincronizar el favorito', error);
+      tour.esFavorito = estadoAnterior;
     }
   }
   
   cambiarTipoInventario(event: any) {
     this.tipoInventario = event.detail.value;
-    
     this.categoriaSeleccionada = 'todos';
     this.textoBusqueda = '';
-    
     this.filtrarTours();
   }
 
@@ -214,18 +236,11 @@ navegar(ruta: string) {
   cambiarCategoria(categoria: string) {
     this.categoriaSeleccionada = categoria;
     this.filtrarTours();
-    
-    if (this.popover) {
-      this.popover.dismiss();
-    }
+    if (this.popover) this.popover.dismiss();
   }
 
   buscar(event: any) {
     this.textoBusqueda = event.detail.value;
-    if (!this.textoBusqueda || this.textoBusqueda.trim() === '') {
-      this.filtrarTours();
-      return;
-    }
     this.filtrarTours();
   }
 
@@ -233,21 +248,16 @@ navegar(ruta: string) {
     this.textoBusqueda = '';
     this.categoriaSeleccionada = 'todos';
     this.toursFiltrados = [...this.tours];
-    this.filtrarTours(); 
+    this.filtrarTours();
   }
-
-
 
   handleScroll(event: any) {
     const currentScrollPosition = event.detail.scrollTop;
-
     if (currentScrollPosition > 100 && currentScrollPosition > this.lastScrollPosition) {
       this.isHeaderHidden = true;
-    }   
-    else if (currentScrollPosition < this.lastScrollPosition) {
+    } else if (currentScrollPosition < this.lastScrollPosition) {
       this.isHeaderHidden = false;
     }
-
     this.lastScrollPosition = currentScrollPosition;
   }
 }

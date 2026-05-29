@@ -7,7 +7,7 @@ import {
   IonIcon, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent,
   IonGrid, IonRow, IonCol, IonSpinner, IonFab, IonFabButton,
   AlertController, IonBadge, IonModal, IonList, IonItem, IonInput, IonTextarea,
-  IonSelect, IonSelectOption, IonListHeader, IonLabel, IonButtons
+  IonSelect, IonSelectOption, IonListHeader, IonLabel, IonButtons, IonBackButton
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { 
@@ -34,7 +34,7 @@ import { Tour } from '../../core/models/tour.model';
     IonIcon, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent,
     IonGrid, IonRow, IonCol, IonSpinner, IonFab, IonFabButton,
     IonBadge, IonModal, IonList, IonItem, IonInput, IonTextarea,
-    IonSelect, IonSelectOption, IonListHeader, IonLabel, IonButtons,
+    IonSelect, IonSelectOption, IonListHeader, IonLabel, IonButtons, IonBackButton,
     CommonModule, FormsModule, RouterModule
   ]
 })
